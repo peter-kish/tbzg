@@ -1,3 +1,4 @@
+// All possible inputs
 var INPUT_NONE = -1;
 var INPUT_UP = 0;
 var INPUT_DOWN = 1;
@@ -5,23 +6,27 @@ var INPUT_LEFT = 2;
 var INPUT_RIGHT = 3;
 var INPUT_SKIP = 4;
 
+// Minimum swipe distance
 var INPUT_MIN_SWIPE_DISTANCE = 8;
 
 var canvas = document.getElementById('myCanvas');
 
-var lastInput; // TODO: Make multiple inputs instances possible
+var lastInput; // TODO: Make multiple input instances possible
 
+// Input class constructor
 var Input = function() {
   this.handlers = [];
   this.params = [];
   lastInput = this;
 }
 
+// Add an input hanler
 Input.prototype.addHandler = function (f, p) {
   this.handlers.push(f);
   this.params.push(p);
 };
 
+// Clear all input handlers
 Input.prototype.clearHandlers = function () {
   this.handlers = [];
   this.params = [];
