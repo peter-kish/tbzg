@@ -1,0 +1,282 @@
+// Constants
+var SIM_MAP_WIDTH = 64;
+var SIM_MAP_HEIGHT = 64;
+var SIM_MAP_FIELD_SIZE = 32;
+
+var ST_MV_PLAYER = 0;
+var ST_MV_AI = 1;
+
+var VISIBILITY_RANGE = 15;
+
+var tile_colors = [];
+tile_colors[TILE_VOID] = '#FFFFFF';
+tile_colors[TILE_WALL] = '#7d0000';
+tile_colors[TILE_ROAD] = '#888888';
+tile_colors[TILE_PAVEMENT] = '#BBBBBB';
+tile_colors[TILE_GRASS] = '#00BB00';
+tile_colors[TILE_HEDGE] = '#008800';
+
+var canvas = document.getElementById('myCanvas');
+
+var Simulation = function() {
+  this.map = new MapGen(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
+  this.map.generateMap();
+  this.turnState = new StateMachine(ST_MV_PLAYER);
+  this.camera = new Rect2d(0, 0, canvas.width, canvas.height);
+  this.mapFieldSize = SIM_MAP_FIELD_SIZE;
+  this.input = new Input();
+  this.input.addHandler(inputHandler, this);
+  this.turnNumber = 0;
+
+  this.player = null;
+  this.enemies = [];
+  this.createPlayer(new Vector2d(5, 5));
+  this.createEnemy(new Vector2d(15, 5));
+  this.createEnemy(new Vector2d(15, 10));
+  this.player.takeTurn();
+
+  this.visibilityMap = create2dArray(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
+  for (var i = 0; i < SIM_MAP_WIDTH; i++) {
+    for (var j = 0; j < SIM_MAP_HEIGHT; j++) {
+      this.visibilityMap[i][j] = 1.0;
+    }
+  }
+}
+
+function inputHandler(input, sim) {
+  switch (input) {
+  case INPUT_LEFT:
+    sim.player.walkAttack(CHR_DIR_LEFT);
+    break;
+  case INPUT_UP:
+    sim.player.walkAttack(CHR_DIR_UP);
+    break;
+  case INPUT_RIGHT:
+    sim.player.walkAttack(CHR_DIR_RIGHT);
+    break;
+  case INPUT_DOWN:
+    sim.player.walkAttack(CHR_DIR_DOWN);
+    break;
+  case INPUT_SKIP:
+    sim.player.doNothing();
+    break;
+  }
+}
+
+Simulation.prototype.update = function () {
+  this.player.update();
+  this.cameraFollow(this.player.getWorldPosition());
+  this.updateEnemies();
+  this.updateVisibilityMap();
+
+  if (this.turnState.getState() == ST_MV_PLAYER) {
+    if (this.player.isTurnFinished()) {
+      this.turnState.setState(ST_MV_AI);
+      //console.log("(" + this.turnNumber + ") AI turn");
+      if (this.enemiesTurnFinished()) {
+        this.enemiesTakeTurn();
+        this.turnNumber++;
+      }
+    }
+  } else if (this.turnState.getState() == ST_MV_AI) {
+    if (this.enemiesTurnFinished()) {
+      this.turnState.setState(ST_MV_PLAYER);
+      //console.log("(" + this.turnNumber + ") Player turn");
+      if (this.player.isTurnFinished()) {
+        this.player.takeTurn();
+      }
+    }
+  }
+}
+
+Simulation.prototype.render = function () {
+  for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
+    for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
+      var color = tile_colors[this.map.getField(i,j)];
+      drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
+        j * SIM_MAP_FIELD_SIZE - this.camera.y,
+        SIM_MAP_FIELD_SIZE,
+        SIM_MAP_FIELD_SIZE,
+        color);
+    }
+  }
+
+  this.player.render();
+  this.renderEnemies();
+  this.renderVisibilityMap();
+};
+
+Simulation.prototype.updateVisibilityMap = function () {
+  for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
+    for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
+      var target = new Vector2d(i, j);
+      target.add(v2dNormalized(v2dSub(this.player.position, target)));
+      if (i > this.player.position.x) {
+        target.x = Math.floor(target.x);
+      } else {
+        target.x = Math.ceil(target.x);
+      }
+      if (j > this.player.position.y) {
+        target.y = Math.floor(target.y);
+      } else {
+        target.y = Math.ceil(target.y);
+      }
+      if (this.testVisibility(this.player.position, target)) {
+        var dx = Math.abs(i - this.player.position.x);
+        var dy = Math.abs(j - this.player.position.y);
+        var distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > VISIBILITY_RANGE) {
+          this.visibilityMap[i][j] = 1.0;
+        } else {
+          this.visibilityMap[i][j] = distance / VISIBILITY_RANGE;
+        }
+      } else {
+        this.visibilityMap[i][j] = 1.0;
+      }
+    }
+  }
+};
+
+Simulation.prototype.renderVisibilityMap = function () {
+  for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
+    for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
+      //if (this.visibilityMap[i][j] < 1.0) {
+        drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
+          j * SIM_MAP_FIELD_SIZE - this.camera.y,
+          SIM_MAP_FIELD_SIZE,
+          SIM_MAP_FIELD_SIZE,
+          "rgba(0,0,0," + this.visibilityMap[i][j] + ")");
+      //}
+    }
+  }
+};
+
+Simulation.prototype.isObstacle = function(position) {
+  var tile = this.map.getField(position.x, position.y);
+  return tile == TILE_WALL || tile == TILE_HEDGE || tile == TILE_INVALID;
+};
+
+Simulation.prototype.isFreeField = function (position) {
+  if (this.isObstacle(position))
+    return false;
+
+  if (this.player.position.x == position.x && this.player.position.y == position.y)
+    return false;
+
+  for (var i = 0; i < this.enemies.length; i++) {
+    if (this.enemies[i].position.x == position.x && this.enemies[i].position.y == position.y)
+      return false;
+  }
+
+  return true;
+};
+
+Simulation.prototype.getEnemyAt = function (position) {
+  for (var i = 0; i < this.enemies.length; i++) {
+    if (this.enemies[i].position.equals(position)) {
+      return this.enemies[i];
+    }
+  }
+  return null;
+};
+
+Simulation.prototype.getCharacterAt = function (position) {
+  var enemy = this.getEnemyAt(position);
+  if (enemy)
+    return enemy;
+
+  if (this.player.position.equals(position))
+    return this.player;
+
+  return null;
+};
+
+Simulation.prototype.getWorldCoords = function (position) {
+  return v2dMultiply(position, this.mapFieldSize);
+};
+
+Simulation.prototype.getScreenCoords = function (position) {
+  return v2dSub(this.getWorldCoords(position), this.camera);
+};
+
+Simulation.prototype.cameraFollow = function (position) {
+  this.camera.x = position.x;
+  this.camera.y = position.y;
+  this.camera.x -= this.camera.width / 2;
+  this.camera.y -= this.camera.height / 2;
+  this.camera.x = Math.max(0, this.camera.x);
+  this.camera.x = Math.min(this.map.width * this.mapFieldSize - this.camera.width, this.camera.x);
+  this.camera.y = Math.max(0, this.camera.y);
+  this.camera.y = Math.min(this.map.height * this.mapFieldSize - this.camera.height, this.camera.y);
+  this.camera.x = Math.floor(this.camera.x);
+  this.camera.y = Math.floor(this.camera.y);
+};
+
+Simulation.prototype.getCameraPosition = function () {
+  return new Vector2d(this.camera.x, this.camera.y);
+};
+
+Simulation.prototype.enemiesTurnFinished = function () {
+  for (var i = 0; i < this.enemies.length; i++) {
+    if (!this.enemies[i].isTurnFinished()) {
+      return false;
+    }
+  }
+  return true;
+};
+
+Simulation.prototype.enemiesTakeTurn = function () {
+  for (var i = 0; i < this.enemies.length; i++) {
+    this.enemies[i].takeTurn();
+  }
+};
+
+Simulation.prototype.createPlayer = function (position) {
+  this.player = new Character(this, position);
+};
+
+Simulation.prototype.createEnemy = function (position) {
+  this.enemies.push(new AI(this, position));
+};
+
+Simulation.prototype.updateEnemies = function () {
+  for (var i = 0; i < this.enemies.length; i++) {
+    this.enemies[i].update();
+  }
+};
+
+Simulation.prototype.renderEnemies = function () {
+  for (var i = 0; i < this.enemies.length; i++) {
+    this.enemies[i].render();
+  }
+};
+
+Simulation.prototype.getFieldRect = function (position) {
+  return new Rect2d(position.x * this.mapFieldSize,
+    position.y * this.mapFieldSize,
+    this.mapFieldSize,
+    this.mapFieldSize);
+};
+
+Simulation.prototype.testVisibility = function (p1, p2) {
+  var xMin = Math.min(p1.x, p2.x);
+  var xMax = Math.max(p1.x, p2.x);
+  var yMin = Math.min(p1.y, p2.y);
+  var yMax = Math.max(p1.y, p2.y);
+  var centerOffset = new Vector2d(this.mapFieldSize / 2, this.mapFieldSize / 2);
+  var p1center = v2dAdd(v2dMultiply(p1, this.mapFieldSize), centerOffset);
+  var p2center = v2dAdd(v2dMultiply(p2, this.mapFieldSize), centerOffset);
+
+  for (var x = xMin; x <= xMax; x++) {
+    for (var y = yMin; y <= yMax; y++) {
+      if (this.isObstacle(new Vector2d(x, y))) {
+        var fieldRect = this.getFieldRect(new Vector2d(x, y));
+        if (lineIntersectsRect(p1center, p2center, fieldRect)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+};
