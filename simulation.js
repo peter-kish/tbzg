@@ -8,6 +8,7 @@ var ST_MV_AI = 1;
 
 var VISIBILITY_RANGE = 15;
 
+// Tile colors
 var tile_colors = [];
 tile_colors[TILE_VOID] = '#FFFFFF';
 tile_colors[TILE_WALL] = '#7d0000';
@@ -18,6 +19,7 @@ tile_colors[TILE_HEDGE] = '#008800';
 
 var canvas = document.getElementById('myCanvas');
 
+// Simulation class constructor
 var Simulation = function() {
   this.map = new MapGen(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
   this.map.generateMap();
@@ -43,6 +45,7 @@ var Simulation = function() {
   }
 }
 
+// Main input handler
 function inputHandler(input, sim) {
   switch (input) {
   case INPUT_LEFT:
@@ -63,6 +66,7 @@ function inputHandler(input, sim) {
   }
 }
 
+// Update the simulation
 Simulation.prototype.update = function () {
   this.player.update();
   this.cameraFollow(this.player.getWorldPosition());
@@ -89,6 +93,7 @@ Simulation.prototype.update = function () {
   }
 }
 
+// Render the simulation
 Simulation.prototype.render = function () {
   for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
     for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
@@ -106,6 +111,7 @@ Simulation.prototype.render = function () {
   this.renderVisibilityMap();
 };
 
+// Update the visibility map
 Simulation.prototype.updateVisibilityMap = function () {
   for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
     for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
@@ -137,6 +143,7 @@ Simulation.prototype.updateVisibilityMap = function () {
   }
 };
 
+// Reneder the visibility map
 Simulation.prototype.renderVisibilityMap = function () {
   for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
     for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
@@ -151,11 +158,13 @@ Simulation.prototype.renderVisibilityMap = function () {
   }
 };
 
+// Checks if there is an obstacle at the given coordinates
 Simulation.prototype.isObstacle = function(position) {
   var tile = this.map.getField(position.x, position.y);
   return tile == TILE_WALL || tile == TILE_HEDGE || tile == TILE_INVALID;
 };
 
+// Checks if the field is free at the given coordinates (no obstacles or objects)
 Simulation.prototype.isFreeField = function (position) {
   if (this.isObstacle(position))
     return false;
@@ -171,6 +180,7 @@ Simulation.prototype.isFreeField = function (position) {
   return true;
 };
 
+// Returns the enemy at the given coordinates
 Simulation.prototype.getEnemyAt = function (position) {
   for (var i = 0; i < this.enemies.length; i++) {
     if (this.enemies[i].position.equals(position)) {
@@ -180,6 +190,7 @@ Simulation.prototype.getEnemyAt = function (position) {
   return null;
 };
 
+// Returns the character at the given coordinates
 Simulation.prototype.getCharacterAt = function (position) {
   var enemy = this.getEnemyAt(position);
   if (enemy)
@@ -191,14 +202,17 @@ Simulation.prototype.getCharacterAt = function (position) {
   return null;
 };
 
+// Converts the given map coordinates to world coordinates
 Simulation.prototype.getWorldCoords = function (position) {
   return v2dMultiply(position, this.mapFieldSize);
 };
 
+// Converts the given map coordinates to screen coordinates
 Simulation.prototype.getScreenCoords = function (position) {
   return v2dSub(this.getWorldCoords(position), this.camera);
 };
 
+// Center the camera at the given coordinates
 Simulation.prototype.cameraFollow = function (position) {
   this.camera.x = position.x;
   this.camera.y = position.y;
@@ -212,10 +226,12 @@ Simulation.prototype.cameraFollow = function (position) {
   this.camera.y = Math.floor(this.camera.y);
 };
 
+// Returns the camera position
 Simulation.prototype.getCameraPosition = function () {
   return new Vector2d(this.camera.x, this.camera.y);
 };
 
+// Checks if all enemies have finished their turns
 Simulation.prototype.enemiesTurnFinished = function () {
   for (var i = 0; i < this.enemies.length; i++) {
     if (!this.enemies[i].isTurnFinished()) {
@@ -225,32 +241,38 @@ Simulation.prototype.enemiesTurnFinished = function () {
   return true;
 };
 
+// Make all enemies take their turns
 Simulation.prototype.enemiesTakeTurn = function () {
   for (var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].takeTurn();
   }
 };
 
+// Creates a player at the given coordinates
 Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
 };
 
+// Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
   this.enemies.push(new AI(this, position));
 };
 
+// Update all enemies
 Simulation.prototype.updateEnemies = function () {
   for (var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].update();
   }
 };
 
+// Render all enemies
 Simulation.prototype.renderEnemies = function () {
   for (var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].render();
   }
 };
 
+// Returns the rectangle of the given field
 Simulation.prototype.getFieldRect = function (position) {
   return new Rect2d(position.x * this.mapFieldSize,
     position.y * this.mapFieldSize,
@@ -258,6 +280,7 @@ Simulation.prototype.getFieldRect = function (position) {
     this.mapFieldSize);
 };
 
+// Checks if the field p2 is visible from the field p1
 Simulation.prototype.testVisibility = function (p1, p2) {
   var xMin = Math.min(p1.x, p2.x);
   var xMax = Math.max(p1.x, p2.x);
