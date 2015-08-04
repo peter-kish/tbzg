@@ -9,12 +9,13 @@ var TILE_HEDGE = 5;
 
 var PARK_MAX_AREA = 150;
 
+// Returns a random number in range [min, max]
 function getRandomIndex(min, max)
 {
 	return min + Math.floor(Math.random() * (max - min));
 }
 
-
+// Create a 2d array
 function create2dArray(a, b) {
 	a = a > 0 ? a : 0;
     var arr = [];
@@ -26,14 +27,14 @@ function create2dArray(a, b) {
     return arr;
 }
 
-
+// MapGen class constructor
 var MapGen = function(w, h) {
   this.width = w;
   this.height = h;
   this.map = create2dArray(w, h);
 }
 
-
+// Generate a map
 MapGen.prototype.generateMap = function() {
 	var mapRect = new Rect2d(0, 0, this.width, this.height);
 	this.fill(mapRect, TILE_VOID);
@@ -70,14 +71,11 @@ MapGen.prototype.splitBlock = function(rect, lanes) {
 }
 
 MapGen.prototype.generateRoad = function(rect, position, lanes, horizontal) {
-	//LOG(rect + " Generating " + (horizontal?"horizontal":"vertical") + " road with " + lanes + " lanes at " + position);
-
 	this.fillLine(rect, position, lanes, horizontal, TILE_ROAD);
 }
 
 MapGen.prototype.generateBlock = function(rect) {
 	var area = rect.area();
-	//LOG(rect + " Generating street block (area:", area, ")");
 	this.fillBorder(rect, TILE_PAVEMENT);
 	var innerRect = new Rect2d(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
 	if (innerRect.width <= 4 || innerRect.height <= 4) {
@@ -141,9 +139,8 @@ MapGen.prototype.generateBuilding = function(rect) {
 	//this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y + rect.height) - 1] = TILE_VOID;
 }
 
-
+// Fill a rectangular area with the given field type
 MapGen.prototype.fill = function(rect, field) {
-	//LOG("Filling " + rect);
 	for (var i = rect.x; i < rect.x + rect.width; i++) {
 		for (var j = rect.y; j < rect.y + rect.height; j++) {
 			this.map[Math.floor(i)][Math.floor(j)] = field;
@@ -151,8 +148,8 @@ MapGen.prototype.fill = function(rect, field) {
 	}
 }
 
+// Fill only the border of a rectangular area with the given field type
 MapGen.prototype.fillBorder = function(rect, field) {
-	//LOG("Filling border " + rect);
 	for (var i = rect.x; i < rect.x + rect.width; i++) {
 		this.map[Math.floor(i)][Math.floor(rect.y)] = field;
 		this.map[Math.floor(i)][Math.floor(rect.y + rect.height) - 1] = field;
@@ -163,6 +160,7 @@ MapGen.prototype.fillBorder = function(rect, field) {
 	}
 }
 
+// Fill a horizontal or vertical line area with the given field type and width
 MapGen.prototype.fillLine = function(rect, offset, width, horizontal, field) {
 	var lineRect;
 	if (horizontal) {
@@ -173,6 +171,7 @@ MapGen.prototype.fillLine = function(rect, offset, width, horizontal, field) {
 	this.fill(lineRect, field);
 }
 
+// Returns the rectangular area at the given coordinates
 MapGen.prototype.getFillRect = function(x, y) {
   var field = this.map[x][y];
 	var rect = new Rect2d(x, y, 0, 0);
@@ -200,6 +199,7 @@ MapGen.prototype.getFillRect = function(x, y) {
 	return rect;
 }
 
+// Returns the field type at the given coordinates
 MapGen.prototype.getField = function(x, y) {
 	if (x < 0 || x > this.width - 1 || y < 0 || y > this.height - 1) {
 		return TILE_INVALID;
