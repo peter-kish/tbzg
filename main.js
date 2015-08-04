@@ -30,13 +30,17 @@
 }());
 
 
+// Get the canvas
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
+// Use the whole window area for drawing
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Create a simulation instance
 var simulation = new Simulation();
 
+// Adjust the canvas size on resize
 function onWindowResize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -45,18 +49,22 @@ function onWindowResize() {
 }
 window.addEventListener("resize", onWindowResize, false);
 
+// Clear the screen with black color
 function clearScreen() {
 	drawRect(0, 0, canvas.width, canvas.height, '#FFFFFF');
 }
 
+// Render everything
 function render() {
   simulation.render();
 }
 
+// Update everything
 function update() {
   simulation.update();
 }
 
+// Main loop
 function main() {
   requestAnimationFrame(main);
 
@@ -66,4 +74,5 @@ function main() {
   render();
 }
 
+// Initial main() call
 main();
