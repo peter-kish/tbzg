@@ -1,17 +1,21 @@
+// Character directions
 var CHR_DIR_LEFT = 0;
 var CHR_DIR_RIGHT = 1;
 var CHR_DIR_UP = 2;
 var CHR_DIR_DOWN = 3;
 var CHR_DIR_INVALID = 4;
 
+// Character states
 var CHR_ST_IDLE = 0;
 var CHR_ST_MOVE = 1;
 var CHR_ST_ATTACK = 2
 var CHR_ST_TURN_END = 3
 
+// State transition speeds (in ms)
 var CHR_WALK_SPEED = 150;
 var CHR_ATTACK_SPEED = 150;
 
+// Character class constructor
 var Character = function(parentSim, position) {
   this.position = new Vector2d(position.x, position.y);
   this.prevPosition = new Vector2d(position.x, position.y);
@@ -21,18 +25,21 @@ var Character = function(parentSim, position) {
   this.color = '#1839c8';
 }
 
+// Render the character
 Character.prototype.render = function () {
   var screenPosition = this.getWorldPosition();
   screenPosition.sub(this.parentSim.getCameraPosition());
   drawRect(screenPosition.x, screenPosition.y, 32, 32, this.color);
 };
 
+// Update the character
 Character.prototype.update = function () {
   if (this.isInSolidState(CHR_ST_MOVE) || this.isInSolidState(CHR_ST_ATTACK)) {
     this.stateMachine.setState(CHR_ST_TURN_END, 0);
   }
 };
 
+// Get the parameters of the given adjacent field
 Character.prototype.getAdjacentField = function (direction) {
   switch (direction) {
     case CHR_DIR_LEFT:
@@ -52,6 +59,7 @@ Character.prototype.getAdjacentField = function (direction) {
   }
 };
 
+// Walk in the given direction
 Character.prototype.walk  = function (direction) {
   if (this.isInSolidState(CHR_ST_IDLE)) {
     return this.move(direction, CHR_WALK_SPEED);
@@ -60,6 +68,7 @@ Character.prototype.walk  = function (direction) {
   }
 };
 
+// Move in the given direction with the given speed (in ms)
 Character.prototype.move = function (direction, speed) {
   var targetField = this.getAdjacentField(direction);
 
@@ -74,6 +83,7 @@ Character.prototype.move = function (direction, speed) {
   return true;
 };
 
+// Attack in the given direction
 Character.prototype.attack = function (position, direction) {
   if (this.isInSolidState(CHR_ST_IDLE)) {
     var character = this.parentSim.getCharacterAt(position);
@@ -88,6 +98,7 @@ Character.prototype.attack = function (position, direction) {
   return false;
 };
 
+// Attack or walk in the given direction, depending on the adjacent field
 Character.prototype.walkAttack = function (direction) {
   var attackPosition = this.getAdjacentField(direction);
   var character = this.parentSim.getCharacterAt(attackPosition);
@@ -98,6 +109,7 @@ Character.prototype.walkAttack = function (direction) {
   }
 };
 
+// Returns the character position in the 2d world
 Character.prototype.getWorldPosition = function () {
 if (this.isInState(CHR_ST_MOVE)) {
     var prevPosition = this.parentSim.getWorldCoords(this.prevPosition);
@@ -111,6 +123,7 @@ if (this.isInState(CHR_ST_MOVE)) {
   }
 };
 
+// Returns the direction of the given adjacent field
 Character.prototype.getDirection = function (position) {
   for (var i = 0; i < CHR_DIR_INVALID; i++) {
     if (position.equals(this.getAdjacentField(i))) {
@@ -120,30 +133,37 @@ Character.prototype.getDirection = function (position) {
   return CHR_DIR_INVALID;
 };
 
+// Checks if the character is in the given state
 Character.prototype.isInState = function (state) {
   return this.stateMachine.getState() == state;
 };
 
+// Checks if the character is in the given solid state (the transition is finished)
 Character.prototype.isInSolidState = function (state) {
   return (this.stateMachine.getState() == state && !this.stateMachine.isInTransition());
 };
 
+// Checks if the character is translating to the given state
 Character.prototype.translatesToState = function (state) {
   return (this.stateMachine.getState() == state && this.stateMachine.isInTransition());
 };
 
+// Checks if the character has finished its turn
 Character.prototype.isTurnFinished = function () {
   return this.isInSolidState(CHR_ST_TURN_END);
 };
 
+// Prepares the character for a new turn
 Character.prototype.takeTurn = function () {
   this.stateMachine.setState(CHR_ST_IDLE, 0);
 };
 
+// Skip a turn
 Character.prototype.doNothing = function () {
   this.stateMachine.setState(CHR_ST_TURN_END, 0);
 };
 
+// AI class constructor
 var AI = function(parentSim, position) {
   this.position = new Vector2d(position.x, position.y);
   this.prevPosition = new Vector2d(position.x, position.y);
@@ -152,30 +172,34 @@ var AI = function(parentSim, position) {
   this.playerSeenPosition = null;
 }
 
+// AI class inherits the Character class
 AI.prototype = Object.create(Character.prototype);
 AI.prototype.constructor = AI;
 
+// Updates the AI
 AI.prototype.update = function() {
   Character.prototype.update.call(this);
   if (this.isInSolidState(CHR_ST_IDLE)) {
     var stepsToPlayer = this.getStepsToPlayer();
     if (stepsToPlayer < 5 && stepsToPlayer > 1) {
+      // Remember the player location if he's in range
       if (this.parentSim.testVisibility(this.position, this.parentSim.player.position)) {
         this.playerSeenPosition = new Vector2d(this.parentSim.player.position.x, this.parentSim.player.position.y);
-        //this.walkTo(this.parentSim.player.position);
-        //return;
       }
     } else if (stepsToPlayer == 1) {
+      // Attack if close enough to the player
       var direction = this.getDirection(this.parentSim.player.position);
       this.attack(this.parentSim.player.position, direction);
       return;
     }
 
+    // Walk towards the last known player location
     if (this.playerSeenPosition && !this.playerSeenPosition.equals(this.position)) {
       this.walkTo(this.parentSim.player.position);
       return;
     }
 
+    // Skip turn
     this.doNothing();
   }
 }
@@ -189,6 +213,7 @@ AI.prototype.update = function() {
   }
 };*/
 
+// Walk closer to the given parameters
 AI.prototype.walkTo = function (position) {
   var dx = this.position.x - this.parentSim.player.position.x;
   var dy = this.position.y - this.parentSim.player.position.y;
