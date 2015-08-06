@@ -1,12 +1,4 @@
 // Constants
-var TILE_INVALID = -1;
-var TILE_VOID = 0;
-var TILE_WALL = 1;
-var TILE_ROAD = 2;
-var TILE_PAVEMENT = 3;
-var TILE_GRASS = 4;
-var TILE_HEDGE = 5;
-
 var PARK_MAX_AREA = 150;
 
 // MapGen class constructor
@@ -19,7 +11,7 @@ var MapGen = function(w, h) {
 // Generate a map
 MapGen.prototype.generateMap = function() {
 	var mapRect = new Rect2d(0, 0, this.width, this.height);
-	this.fill(mapRect, TILE_VOID);
+	this.fill(mapRect, TILE_INTERIOR);
 	this.splitBlock(mapRect, 7);
 }
 
@@ -110,15 +102,15 @@ MapGen.prototype.generateBuilding = function(rect) {
 	// Generate an entrance on random side of the building
 	var rand = getRandomIndex(0, 3);
 	if (rand == 0) {
-		this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y)] = TILE_VOID;
+		this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y)] = TILE_INTERIOR;
 	} else if (rand == 1) {
-		this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y + rect.height) - 1] = TILE_VOID;
+		this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y + rect.height) - 1] = TILE_INTERIOR;
 	} else if (rand == 2) {
-		this.map[Math.floor(rect.x)][Math.floor(rect.y + rect.height / 2)] = TILE_VOID;
+		this.map[Math.floor(rect.x)][Math.floor(rect.y + rect.height / 2)] = TILE_INTERIOR;
 	} else {
-		this.map[Math.floor(rect.x + rect.width - 1)][Math.floor(rect.y + rect.height / 2)] = TILE_VOID;
+		this.map[Math.floor(rect.x + rect.width - 1)][Math.floor(rect.y + rect.height / 2)] = TILE_INTERIOR;
 	}
-	//this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y + rect.height) - 1] = TILE_VOID;
+	//this.map[Math.floor(rect.x + rect.width / 2)][Math.floor(rect.y + rect.height) - 1] = TILE_INTERIOR;
 }
 
 // Fill a rectangular area with the given field type
@@ -210,8 +202,11 @@ TileMapGen.prototype.generateMap = function () {
 TileMapGen.prototype.generateTileMap = function () {
 	for (var i = 0; i < this.width; i++) {
 		for (var j = 0; j < this.height; j++) {
-			// TODO: Generate tiles
-			this.tileMap[i][j] = new Vector2d(0, 0);
+			this.tileMap[i][j] = null;
 		}
+	}
+
+	for (var i = 0; i < tilePatternList.length; i++) {
+		tilePatternList[i].generateTileMap(this.map, this.tileMap);
 	}
 };
