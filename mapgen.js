@@ -207,3 +207,29 @@ MapGen.prototype.getField = function(x, y) {
 		return this.map[x][y];
 	}
 }
+
+// TileMapGen class constructor
+var TileMapGen = function(w, h) {
+	MapGen.prototype.constructor.call(this, w, h);
+	this.tileMap = create2dArray(w, h);
+}
+
+// TileMapGen class inherits the MapGen class
+TileMapGen.prototype = Object.create(MapGen.prototype);
+TileMapGen.prototype.constructor = TileMapGen;
+
+// Generates a map
+TileMapGen.prototype.generateMap = function () {
+	MapGen.prototype.generateMap.call(this);
+	this.generateTileMap();
+};
+
+// Generates the tile map
+TileMapGen.prototype.generateTileMap = function () {
+	for (var i = 0; i < this.width; i++) {
+		for (var j = 0; j < this.height; j++) {
+			// TODO: Generate tiles
+			this.tileMap[i][j] = new Vector2d(0, 0);
+		}
+	}
+};

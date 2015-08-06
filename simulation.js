@@ -21,7 +21,7 @@ var canvas = document.getElementById('myCanvas');
 
 // Simulation class constructor
 var Simulation = function() {
-  this.map = new MapGen(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
+  this.map = new TileMapGen(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
   this.map.generateMap();
   this.turnState = new StateMachine(ST_MV_PLAYER);
   this.camera = new Rect2d(0, 0, canvas.width, canvas.height);
@@ -43,6 +43,9 @@ var Simulation = function() {
       this.visibilityMap[i][j] = 1.0;
     }
   }
+
+  this.resourceManager = new ResourceManager();
+  this.loadResources();
 }
 
 // Main input handler
@@ -68,6 +71,9 @@ function inputHandler(input, sim) {
 
 // Update the simulation
 Simulation.prototype.update = function () {
+  if (!this.tileset)
+    this.tileset = new Tileset(this.resourceManager.getResource("tileset"), 32, 32);
+
   this.player.update();
   this.cameraFollow(this.player.getWorldPosition());
   this.updateEnemies();
@@ -302,4 +308,9 @@ Simulation.prototype.testVisibility = function (p1, p2) {
   }
 
   return true;
+};
+
+// Loads all the resources
+Simulation.prototype.loadResources = function () {
+  this.resourceManager.loadImage("images/tileset.png", "tileset");
 };

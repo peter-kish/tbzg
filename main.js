@@ -68,10 +68,12 @@ function update() {
 function main() {
   requestAnimationFrame(main);
 
-  update();
+  if (simulation.resourceManager.loaded()) {
+    update();
 
-	clearScreen();
-  render();
+  	clearScreen();
+    render();
+  }
 }
 
 // Initial main() call
