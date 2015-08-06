@@ -26,7 +26,7 @@ window.addEventListener("resize", onWindowResize, false);
 
 // Tile colors
 var tile_colors = [];
-tile_colors[TILE_VOID] = '#FFFFFF';
+tile_colors[TILE_INTERIOR] = '#FFFFFF';
 tile_colors[TILE_WALL] = '#000000';
 tile_colors[TILE_ROAD] = '#888888';
 tile_colors[TILE_PAVEMENT] = '#BBBBBB';
