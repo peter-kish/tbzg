@@ -105,12 +105,6 @@ Simulation.prototype.update = function () {
 Simulation.prototype.render = function () {
   for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
     for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
-      var color = tile_colors[this.map.getField(i,j)];
-      drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
-        j * SIM_MAP_FIELD_SIZE - this.camera.y,
-        SIM_MAP_FIELD_SIZE,
-        SIM_MAP_FIELD_SIZE,
-        color);
       if (this.tileset && this.map.tileMap[i][j]) {
         this.tileset.drawTile(this.map.tileMap[i][j], new Vector2d(i * SIM_MAP_FIELD_SIZE - this.camera.x, j * SIM_MAP_FIELD_SIZE - this.camera.y));
       }
