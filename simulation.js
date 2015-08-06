@@ -46,6 +46,8 @@ var Simulation = function() {
 
   this.resourceManager = new ResourceManager();
   this.loadResources();
+
+  this.updateVisibilityMap();
 }
 
 // Main input handler
@@ -77,7 +79,6 @@ Simulation.prototype.update = function () {
   this.player.update();
   this.cameraFollow(this.player.getWorldPosition());
   this.updateEnemies();
-  this.updateVisibilityMap();
 
   if (this.turnState.getState() == ST_MV_PLAYER) {
     if (this.player.isTurnFinished()) {
@@ -93,6 +94,7 @@ Simulation.prototype.update = function () {
       this.turnState.setState(ST_MV_PLAYER);
       //console.log("(" + this.turnNumber + ") Player turn");
       if (this.player.isTurnFinished()) {
+        this.updateVisibilityMap();
         this.player.takeTurn();
       }
     }
