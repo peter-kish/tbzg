@@ -37,9 +37,6 @@ var context = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Create a simulation instance
-var simulation = new Simulation();
-
 // Adjust the canvas size on resize
 function onWindowResize() {
   canvas.width = window.innerWidth;
@@ -66,6 +63,18 @@ function update() {
   simulation.update();
 }
 
+// Draws the loading screen
+function drawLoadingScreen() {
+  drawText(canvas.width / 2, canvas.height / 2, "Loading...", "Calibri", 32, "#888888", "bold", "center", "middle");
+}
+
+// Draw the loading screen before any map generation
+clearScreen();
+drawLoadingScreen();
+
+// Create a simulation instance
+var simulation = new Simulation();
+
 // Main loop
 function main() {
   requestAnimationFrame(main);
@@ -77,7 +86,7 @@ function main() {
     render();
   } else {
     clearScreen();
-    drawText(canvas.width / 2, canvas.height / 2, "Loading...", "Calibri", 32, "#888888", "bold", "center", "middle")
+    drawLoadingScreen();
   }
 }
 
