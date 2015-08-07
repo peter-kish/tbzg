@@ -35,9 +35,8 @@ var Simulation = function() {
 
   this.player = null;
   this.enemies = [];
-  this.createPlayer(new Vector2d(5, 5));
-  this.createEnemy(new Vector2d(15, 5));
-  this.createEnemy(new Vector2d(15, 10));
+  this.createPlayer(this.findFreeField(new Vector2d(Math.floor(SIM_MAP_WIDTH / 2), Math.floor(SIM_MAP_HEIGHT / 2))));
+  this.createRandomEnemies(20);
   this.player.takeTurn();
 
   this.visibilityMap = create2dArray(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
@@ -47,6 +46,7 @@ var Simulation = function() {
     }
   }
 
+  this.cameraFocus(this.player.getWorldPosition());
   this.updateVisibilityMap();
 }
 
@@ -77,7 +77,7 @@ Simulation.prototype.update = function () {
     this.tileset = new Tileset(this.resourceManager.getResource("tileset"), 32, 32);
 
   this.player.update();
-  this.cameraFollow(this.player.getWorldPosition());
+  this.cameraFocus(this.player.getWorldPosition());
   this.updateEnemies();
 
   if (this.turnState.getState() == ST_MV_PLAYER) {
@@ -181,13 +181,49 @@ Simulation.prototype.isObstacle = function(position) {
   return tile == TILE_WALL || tile == TILE_HEDGE || tile == TILE_INVALID;
 };
 
+// Finds the nearest free field to the given coordinates
+Simulation.prototype.findFreeField = function (position) {
+  if (this.isFreeField(position)) {
+    return position;
+  } else {
+    var result = new Vector2d(0, 0);
+    for (var d = 1; d < 10; d++) {
+      for (var i = 0; i < 3 + d; i++) {
+        result.x = position.x - d + i;
+        result.y = position.y - d;
+        if (this.isFreeField(result)) {
+          return result;
+        }
+        result.x = position.x - d + i;
+        result.y = position.y + d;
+        if (this.isFreeField(result)) {
+          return result;
+        }
+      }
+      for (var j = 1; j < 2 + d; j++) {
+        result.x = position.x - d;
+        result.y = position.y - d + j;
+        if (this.isFreeField(result)) {
+          return result;
+        }
+        result.x = position.x + d;
+        result.y = position.y - d + j;
+        if (this.isFreeField(result)) {
+          return result;
+        }
+      }
+    }
+  }
+};
+
 // Checks if the field is free at the given coordinates (no obstacles or objects)
 Simulation.prototype.isFreeField = function (position) {
   if (this.isObstacle(position))
     return false;
 
-  if (this.player.position.x == position.x && this.player.position.y == position.y)
-    return false;
+  if (this.player)
+    if (this.player.position.x == position.x && this.player.position.y == position.y)
+      return false;
 
   for (var i = 0; i < this.enemies.length; i++) {
     if (this.enemies[i].position.x == position.x && this.enemies[i].position.y == position.y)
@@ -229,8 +265,8 @@ Simulation.prototype.getScreenCoords = function (position) {
   return v2dSub(this.getWorldCoords(position), this.camera);
 };
 
-// Center the camera at the given coordinates
-Simulation.prototype.cameraFollow = function (position) {
+// Focus the camera on the given coordinates
+Simulation.prototype.cameraFocus = function (position) {
   this.camera.x = position.x;
   this.camera.y = position.y;
   this.camera.x -= this.camera.width / 2;
@@ -278,6 +314,17 @@ Simulation.prototype.createEnemy = function (position) {
   newAI.image_left = this.resourceManager.getResource("zombie_l");
   newAI.image_right = this.resourceManager.getResource("zombie_r");
   this.enemies.push(newAI);
+};
+
+// Creates n enemies at random locations
+Simulation.prototype.createRandomEnemies = function (n) {
+  var position = new Vector2d(0, 0);
+  for (var i = 0; i < n; i++) {
+    position.x = getRandomIndex(0, SIM_MAP_WIDTH - 1);
+    position.y = getRandomIndex(0, SIM_MAP_HEIGHT - 1);
+    position = this.findFreeField(position);
+    this.createEnemy(position);
+  }
 };
 
 // Update all enemies
