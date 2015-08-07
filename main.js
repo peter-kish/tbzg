@@ -73,6 +73,9 @@ function main() {
 
   	clearScreen();
     render();
+  } else {
+    clearScreen();
+    drawText(canvas.width / 2, canvas.height / 2, "Loading...", "Calibri", 32, "#888888", "bold", "center", "middle")
   }
 }
 
