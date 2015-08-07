@@ -103,8 +103,12 @@ Simulation.prototype.update = function () {
 
 // Render the simulation
 Simulation.prototype.render = function () {
-  for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
-    for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
+  var iStart = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE);
+  var iEnd = Math.min(Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1, this.map.tileMap.length);
+  var jStart = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE);
+  var jEnd = Math.min(Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1, this.map.tileMap[0].length);
+  for (var i = iStart; i < iEnd; i++) {
+    for (var j = jStart; j < jEnd; j++) {
       if (this.tileset && this.map.tileMap[i][j]) {
         this.tileset.drawTile(this.map.tileMap[i][j], new Vector2d(i * SIM_MAP_FIELD_SIZE - this.camera.x, j * SIM_MAP_FIELD_SIZE - this.camera.y));
       }
@@ -118,8 +122,12 @@ Simulation.prototype.render = function () {
 
 // Update the visibility map
 Simulation.prototype.updateVisibilityMap = function () {
-  for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
-    for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
+  var iStart = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE);
+  var iEnd = Math.min(Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1, this.visibilityMap.length);
+  var jStart = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE);
+  var jEnd = Math.min(Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1, this.visibilityMap[0].length);
+  for (var i = iStart; i < iEnd; i++) {
+    for (var j = jStart; j < jEnd; j++) {
       var target = new Vector2d(i, j);
       target.add(v2dNormalized(v2dSub(this.player.position, target)));
       if (i > this.player.position.x) {
@@ -150,8 +158,12 @@ Simulation.prototype.updateVisibilityMap = function () {
 
 // Render the visibility map
 Simulation.prototype.renderVisibilityMap = function () {
-  for (var i = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE); i < Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1; i++) {
-    for (var j = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE); j < Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1; j++) {
+  var iStart = Math.floor(this.camera.x / SIM_MAP_FIELD_SIZE);
+  var iEnd = Math.min(Math.floor((this.camera.width + this.camera.x) / SIM_MAP_FIELD_SIZE) + 1, this.visibilityMap.length);
+  var jStart = Math.floor(this.camera.y / SIM_MAP_FIELD_SIZE);
+  var jEnd = Math.min(Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1, this.visibilityMap[0].length);
+  for (var i = iStart; i < iEnd; i++) {
+    for (var j = jStart; j < jEnd; j++) {
       //if (this.visibilityMap[i][j] < 1.0) {
         drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
           j * SIM_MAP_FIELD_SIZE - this.camera.y,
