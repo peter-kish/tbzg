@@ -21,6 +21,9 @@ var canvas = document.getElementById('myCanvas');
 
 // Simulation class constructor
 var Simulation = function() {
+  this.resourceManager = new ResourceManager();
+  this.loadResources();
+
   this.map = new TileMapGen(SIM_MAP_WIDTH, SIM_MAP_HEIGHT);
   this.map.generateMap();
   this.turnState = new StateMachine(ST_MV_PLAYER);
@@ -43,9 +46,6 @@ var Simulation = function() {
       this.visibilityMap[i][j] = 1.0;
     }
   }
-
-  this.resourceManager = new ResourceManager();
-  this.loadResources();
 
   this.updateVisibilityMap();
 }
@@ -268,11 +268,16 @@ Simulation.prototype.enemiesTakeTurn = function () {
 // Creates a player at the given coordinates
 Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
+  this.player.image_left = this.resourceManager.getResource("hero_l");
+  this.player.image_right = this.resourceManager.getResource("hero_r");
 };
 
 // Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
-  this.enemies.push(new AI(this, position));
+  var newAI = new AI(this, position);
+  newAI.image_left = this.resourceManager.getResource("zombie_l");
+  newAI.image_right = this.resourceManager.getResource("zombie_r");
+  this.enemies.push(newAI);
 };
 
 // Update all enemies
@@ -324,4 +329,8 @@ Simulation.prototype.testVisibility = function (p1, p2) {
 // Loads all the resources
 Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/tileset.png", "tileset");
+  this.resourceManager.loadImage("images/hero_r.png", "hero_r");
+  this.resourceManager.loadImage("images/hero_l.png", "hero_l");
+  this.resourceManager.loadImage("images/zombie_r.png", "zombie_r");
+  this.resourceManager.loadImage("images/zombie_l.png", "zombie_l");
 };

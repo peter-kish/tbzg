@@ -29,7 +29,15 @@ var Character = function(parentSim, position) {
 Character.prototype.render = function () {
   var screenPosition = this.getWorldPosition();
   screenPosition.sub(this.parentSim.getCameraPosition());
-  drawRect(screenPosition.x, screenPosition.y, 32, 32, this.color);
+  if (this.image_left && this.image_right) {
+    if (this.facing == CHR_DIR_LEFT) {
+      drawImage(this.image_left, screenPosition.x, screenPosition.y);
+    } else {
+      drawImage(this.image_right, screenPosition.x, screenPosition.y);
+    }
+  } else {
+    drawRect(screenPosition.x, screenPosition.y, 32, 32, this.color);
+  }
 };
 
 // Update the character
@@ -59,9 +67,20 @@ Character.prototype.getAdjacentField = function (direction) {
   }
 };
 
+// Face to the given direction
+Character.prototype.faceTo = function (direction) {
+  if (direction == CHR_DIR_LEFT) {
+    this.facing = CHR_DIR_LEFT;
+  } else if (direction == CHR_DIR_RIGHT) {
+    this.facing = CHR_DIR_RIGHT;
+  }
+};
+
 // Walk in the given direction
 Character.prototype.walk  = function (direction) {
   if (this.isInSolidState(CHR_ST_IDLE)) {
+    this.faceTo(direction);
+
     return this.move(direction, CHR_WALK_SPEED);
   } else {
     return false;
@@ -90,6 +109,7 @@ Character.prototype.attack = function (position, direction) {
     if (!character)
       return false;
 
+    this.faceTo(direction);
     if (this.parentSim.isFreeField(character.getAdjacentField(direction)))
       character.move(direction, CHR_WALK_SPEED);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
