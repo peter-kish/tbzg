@@ -29,13 +29,34 @@ TilePattern.prototype.checkMap = function (map, position) {
   return true;
 };
 
-// Apply the pattern to the given tilemap at the given position
-TilePattern.prototype.applyTiles = function (tilemap, position) {
+// Checks if the pattern would overwrite any existing tiles in the tilemap
+TilePattern.prototype.overwrites = function (tilemap, position) {
   for (var i = 0; i < this.getWidth(); i++) {
     for (var j = 0; j < this.getHeight(); j++) {
-      if (position.x + i < tilemap.length && position.y + j < tilemap[0].length) {
-        if (!tilemap[position.x + i][position.y + j] || this.overwrite) {
-          tilemap[position.x + i][position.y + j] = this.tiles[i][j];
+      if (this.tiles[i][j]) {
+        if (position.x + i < tilemap.length && position.y + j < tilemap[0].length) {
+          if (tilemap[position.x + i][position.y + j]) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+};
+
+// Apply the pattern to the given tilemap at the given position
+TilePattern.prototype.applyTiles = function (tilemap, position) {
+  if (!this.overwrite && this.overwrites(tilemap, position))
+    return;
+
+  for (var i = 0; i < this.getWidth(); i++) {
+    for (var j = 0; j < this.getHeight(); j++) {
+      if (this.tiles[i][j]) {
+        if (position.x + i < tilemap.length && position.y + j < tilemap[0].length) {
+          if (!tilemap[position.x + i][position.y + j] || this.overwrite) {
+            tilemap[position.x + i][position.y + j] = this.tiles[i][j];
+          }
         }
       }
     }
