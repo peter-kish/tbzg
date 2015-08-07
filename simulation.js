@@ -381,3 +381,7 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/zombie_r.png", "zombie_r");
   this.resourceManager.loadImage("images/zombie_l.png", "zombie_l");
 };
+
+Simulation.prototype.onWindowResize = function (first_argument) {
+  this.updateVisibilityMap();
+};

@@ -46,6 +46,8 @@ function onWindowResize() {
   canvas.height = window.innerHeight;
   simulation.camera.width = canvas.width;
   simulation.camera.height = canvas.height;
+  if (simulation)
+    simulation.onWindowResize();
 }
 window.addEventListener("resize", onWindowResize, false);
 
