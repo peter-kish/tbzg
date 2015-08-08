@@ -204,6 +204,7 @@ var AI = function(parentSim, position) {
   this.prevPosition = new Vector2d(position.x, position.y);
   Character.prototype.constructor.call(this, parentSim, position);
   this.playerSeenPosition = null;
+  this.visionRange = 5;
 }
 
 // AI class inherits the Character class
@@ -218,7 +219,7 @@ AI.prototype.update = function() {
       this.doNothing();
 
     var stepsToPlayer = this.getStepsToPlayer();
-    if (stepsToPlayer < 5 && stepsToPlayer > 1) {
+    if (stepsToPlayer < this.visionRange && stepsToPlayer > 1) {
       // Remember the player location if he's in range
       if (this.parentSim.testVisibility(this.position, this.parentSim.player.position)) {
         this.playerSeenPosition = new Vector2d(this.parentSim.player.position.x, this.parentSim.player.position.y);
