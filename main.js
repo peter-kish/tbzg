@@ -50,7 +50,7 @@ window.addEventListener("resize", onWindowResize, false);
 
 // Clear the screen with black color
 function clearScreen() {
-	drawRect(0, 0, canvas.width, canvas.height, '#FFFFFF');
+	drawRect(0, 0, canvas.width, canvas.height, '#000000');
 }
 
 // Render everything
