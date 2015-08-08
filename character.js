@@ -30,11 +30,11 @@ var Character = function(parentSim, position) {
 // Render the character
 Character.prototype.render = function () {
   var screenPosition = this.getScreenPosition();
-  if (this.image_left && this.image_right) {
+  if (this.image_idle) {
     if (this.facing == CHR_DIR_LEFT) {
-      drawImage(this.image_left, screenPosition.x, screenPosition.y);
+      drawImage(this.image_idle, screenPosition.x, screenPosition.y, true, false);
     } else {
-      drawImage(this.image_right, screenPosition.x, screenPosition.y);
+      drawImage(this.image_idle, screenPosition.x, screenPosition.y);
     }
   } else {
     drawRect(screenPosition.x, screenPosition.y, 32, 32, this.color);

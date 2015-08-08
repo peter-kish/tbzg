@@ -92,11 +92,11 @@ function drawImage(image, x, y, hflip, vflip) {
 
 	if (hflip) {
 		context.scale(-1, 1);
-		x = -x;
+		x = -x - image.naturalWidth;
 	}
 	if (vflip) {
 		context.scale(1, -1);
-		y = -y;
+		y = -y- image.naturalHeight;
 	}
 
 	context.drawImage(image, x, y);

@@ -304,15 +304,13 @@ Simulation.prototype.enemiesTakeTurn = function () {
 // Creates a player at the given coordinates
 Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
-  this.player.image_left = this.resourceManager.getResource("hero_l");
-  this.player.image_right = this.resourceManager.getResource("hero_r");
+  this.player.image_idle = this.resourceManager.getResource("hero");
 };
 
 // Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
-  newAI.image_left = this.resourceManager.getResource("zombie_l");
-  newAI.image_right = this.resourceManager.getResource("zombie_r");
+  newAI.image_idle = this.resourceManager.getResource("zombie");
   this.enemies.push(newAI);
 };
 
@@ -376,10 +374,8 @@ Simulation.prototype.testVisibility = function (p1, p2) {
 // Loads all the resources
 Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/tileset.png", "tileset");
-  this.resourceManager.loadImage("images/hero_r.png", "hero_r");
-  this.resourceManager.loadImage("images/hero_l.png", "hero_l");
-  this.resourceManager.loadImage("images/zombie_r.png", "zombie_r");
-  this.resourceManager.loadImage("images/zombie_l.png", "zombie_l");
+  this.resourceManager.loadImage("images/hero.png", "hero");
+  this.resourceManager.loadImage("images/zombie.png", "zombie");
 };
 
 Simulation.prototype.onWindowResize = function (first_argument) {
