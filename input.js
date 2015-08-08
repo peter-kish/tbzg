@@ -5,6 +5,7 @@ var INPUT_DOWN = 1;
 var INPUT_LEFT = 2;
 var INPUT_RIGHT = 3;
 var INPUT_SKIP = 4;
+var INPUT_CLICK = 5;
 
 // Minimum swipe distance
 var INPUT_MIN_SWIPE_DISTANCE = 8;
@@ -67,10 +68,23 @@ window.addEventListener('keydown', function(event) {
 canvas.addEventListener('click', handleMouseClick, false);
 
 function handleMouseClick(e) {
-  input = INPUT_SKIP;
+  input = INPUT_CLICK;
+
+  var x;
+  var y;
+  if (e.pageX || e.pageY) {
+    x = e.pageX;
+    y = e.pageY;
+  }
+  else {
+    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+  }
+  x -= canvas.offsetLeft;
+  y -= canvas.offsetTop;
 
   for (var i = 0; i < lastInput.handlers.length; i++) {
-    lastInput.handlers[i](input, lastInput.params[i]);
+    lastInput.handlers[i](input, lastInput.params[i], x, y);
   }
 }
 

@@ -105,7 +105,11 @@ Character.prototype.attack = function (position, direction) {
     if (!character)
       return false;
 
-    this.faceTo(direction);
+    if (position.x < this.position.x) {
+      this.faceTo(CHR_DIR_LEFT);
+    } else {
+      this.faceTo(CHR_DIR_RIGHT);
+    }
     character.takeDamage(new Damage(DMG_MELEE, 5, true), direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     return true;
@@ -290,7 +294,5 @@ AI.prototype.walkTo = function (position) {
 
 // Returns the Chebyshev distance (not Euclidean)
 AI.prototype.getStepsToPlayer = function() {
-  var dx = Math.abs(this.position.x - this.parentSim.player.position.x);
-  var dy = Math.abs(this.position.y - this.parentSim.player.position.y);
-  return dx + dy;
+  return this.position.chebyshevDistance(this.parentSim.player.position);
 }

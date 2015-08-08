@@ -51,7 +51,7 @@ var Simulation = function() {
 }
 
 // Main input handler
-function inputHandler(input, sim) {
+function inputHandler(input, sim, x, y) {
   switch (input) {
   case INPUT_LEFT:
     sim.player.walkAttack(CHR_DIR_LEFT);
@@ -67,6 +67,9 @@ function inputHandler(input, sim) {
     break;
   case INPUT_SKIP:
     sim.player.doNothing();
+    break;
+  case INPUT_CLICK:
+    sim.onFieldClick(sim.getMapCoords(new Vector2d(x + sim.camera.x, y + sim.camera.y)));
     break;
   }
 }
@@ -260,6 +263,12 @@ Simulation.prototype.getWorldCoords = function (position) {
   return v2dMultiply(position, this.mapFieldSize);
 };
 
+// Converts the given world coordinates to map coordinates
+Simulation.prototype.getMapCoords = function (position) {
+  return new Vector2d(Math.floor(position.x / this.mapFieldSize),
+    Math.floor(position.y / this.mapFieldSize));
+};
+
 // Converts the given map coordinates to screen coordinates
 Simulation.prototype.getScreenCoords = function (position) {
   return v2dSub(this.getWorldCoords(position), this.camera);
@@ -382,6 +391,19 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 };
 
-Simulation.prototype.onWindowResize = function (first_argument) {
+// Handles a window resize
+Simulation.prototype.onWindowResize = function () {
   this.updateVisibilityMap();
+};
+
+// Handles a click on a field
+Simulation.prototype.onFieldClick = function (position) {
+  var enemy = this.getEnemyAt(position);
+  if (enemy) {
+    if (enemy.isAlive()) {
+      this.player.attack(position, CHR_DIR_RIGHT);
+    }
+  } else {
+    this.player.doNothing();
+  }
 };
