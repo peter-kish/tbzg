@@ -15,3 +15,12 @@ function getRandomIndex(min, max)
 {
 	return min + Math.floor(Math.random() * (max - min));
 }
+
+// Draw a progress bar
+function drawProgressBar(x, y, w, h, progress, color) {
+	if (!color)
+		color = '#FFFFFF';
+
+	drawRect(x, y, w, h, '#000000')
+	drawRect(x, y, w * progress, h, color)
+}

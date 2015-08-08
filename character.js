@@ -22,13 +22,14 @@ var Character = function(parentSim, position) {
   this.parentSim = parentSim;
   this.stateMachine = new FuzzyStateMachine(CHR_ST_IDLE);
   this.facing = CHR_DIR_RIGHT;
+  this.maxhitPoints = 15;
+  this.hitPoints = this.maxhitPoints;
   this.color = '#1839c8';
 }
 
 // Render the character
 Character.prototype.render = function () {
-  var screenPosition = this.getWorldPosition();
-  screenPosition.sub(this.parentSim.getCameraPosition());
+  var screenPosition = this.getScreenPosition();
   if (this.image_left && this.image_right) {
     if (this.facing == CHR_DIR_LEFT) {
       drawImage(this.image_left, screenPosition.x, screenPosition.y);
@@ -110,12 +111,25 @@ Character.prototype.attack = function (position, direction) {
       return false;
 
     this.faceTo(direction);
-    if (this.parentSim.isFreeField(character.getAdjacentField(direction)))
-      character.move(direction, CHR_WALK_SPEED);
+    character.takeDamage(new Damage(DMG_MELEE, 5, true), direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     return true;
   }
   return false;
+};
+
+
+// Apply the given damage on the character
+Character.prototype.takeDamage = function (damage, direction) {
+  this.hitPoints = Math.max(this.hitPoints - damage.hitPoints, 0);
+  if (damage.knockback) {
+    if (this.parentSim.isFreeField(this.getAdjacentField(direction)))
+      this.move(direction, CHR_WALK_SPEED);
+  }
+};
+
+Character.prototype.isAlive = function () {
+  return this.hitPoints > 0;
 };
 
 // Attack or walk in the given direction, depending on the adjacent field
@@ -141,6 +155,12 @@ if (this.isInState(CHR_ST_MOVE)) {
   } else {
     return this.parentSim.getWorldCoords(this.position);
   }
+};
+
+Character.prototype.getScreenPosition = function () {
+  var screenPosition = this.getWorldPosition();
+  screenPosition.sub(this.parentSim.getCameraPosition());
+  return screenPosition;
 };
 
 // Returns the direction of the given adjacent field
@@ -200,6 +220,9 @@ AI.prototype.constructor = AI;
 AI.prototype.update = function() {
   Character.prototype.update.call(this);
   if (this.isInSolidState(CHR_ST_IDLE)) {
+    if (!this.isAlive())
+      this.doNothing();
+
     var stepsToPlayer = this.getStepsToPlayer();
     if (stepsToPlayer < 5 && stepsToPlayer > 1) {
       // Remember the player location if he's in range
@@ -224,14 +247,17 @@ AI.prototype.update = function() {
   }
 }
 
-/*AI.prototype.render = function () {
+AI.prototype.render = function () {
   Character.prototype.render.call(this);
-  if (this.playerSeenPosition) {
+  var screenPosition = this.getScreenPosition();
+  /*if (this.playerSeenPosition) {
     var screenPosition = v2dMultiply(this.playerSeenPosition, this.parentSim.mapFieldSize);
     screenPosition.sub(this.parentSim.getCameraPosition());
     drawRectOutline(screenPosition.x+8, screenPosition.y+8, 16, 16, 1, this.color);
-  }
-};*/
+  }*/
+  if (this.hitPoints > 0)
+    drawProgressBar(screenPosition.x, screenPosition.y + 32, 32, 4, this.hitPoints / this.maxhitPoints, '#00FF00');
+};
 
 // Walk closer to the given parameters
 AI.prototype.walkTo = function (position) {
