@@ -85,6 +85,9 @@ function loadImage(imagePath, callback) {
 }
 
 function drawImage(image, x, y, hflip, vflip) {
+	if (!image)
+		return;
+
 	if (!hflip)
 		hflip = false;
 	if (!vflip)
@@ -110,6 +113,9 @@ function drawImage(image, x, y, hflip, vflip) {
 }
 
 function drawImageResized(image, x, y, w, h, hflip, vflip) {
+	if (!image)
+		return;
+
 	if (!hflip)
 		hflip = false;
 	if (!vflip)
@@ -138,6 +144,9 @@ function drawImageResized(image, x, y, w, h, hflip, vflip) {
 
 function drawImageCropped(image, sourceX, sourceY, sourceW, sourceH,
 	destX, destY, destW, destH, hflip, vflip) {
+	if (!image)
+		return;
+
 	if (!hflip)
 		hflip = false;
 	if (!vflip)

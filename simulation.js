@@ -305,12 +305,15 @@ Simulation.prototype.enemiesTakeTurn = function () {
 Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
   this.player.image_idle = this.resourceManager.getResource("hero");
+  this.player.maxHitPoints = 100;
+  this.player.hitPoints = this.player.maxHitPoints;
 };
 
 // Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
   newAI.image_idle = this.resourceManager.getResource("zombie");
+  newAI.image_dead = this.resourceManager.getResource("zombie_dead");
   this.enemies.push(newAI);
 };
 
@@ -376,6 +379,7 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/tileset.png", "tileset");
   this.resourceManager.loadImage("images/hero.png", "hero");
   this.resourceManager.loadImage("images/zombie.png", "zombie");
+  this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 };
 
 Simulation.prototype.onWindowResize = function (first_argument) {

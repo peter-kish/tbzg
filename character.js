@@ -22,22 +22,17 @@ var Character = function(parentSim, position) {
   this.parentSim = parentSim;
   this.stateMachine = new FuzzyStateMachine(CHR_ST_IDLE);
   this.facing = CHR_DIR_RIGHT;
-  this.maxhitPoints = 15;
-  this.hitPoints = this.maxhitPoints;
-  this.color = '#1839c8';
+  this.maxHitPoints = 15;
+  this.hitPoints = this.maxHitPoints;
 }
 
 // Render the character
 Character.prototype.render = function () {
   var screenPosition = this.getScreenPosition();
-  if (this.image_idle) {
-    if (this.facing == CHR_DIR_LEFT) {
-      drawImage(this.image_idle, screenPosition.x, screenPosition.y, true, false);
-    } else {
-      drawImage(this.image_idle, screenPosition.x, screenPosition.y);
-    }
+  if (this.isAlive()) {
+    drawImage(this.image_idle, screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
   } else {
-    drawRect(screenPosition.x, screenPosition.y, 32, 32, this.color);
+    drawImage(this.image_dead, screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
   }
 };
 
@@ -208,7 +203,6 @@ var AI = function(parentSim, position) {
   this.position = new Vector2d(position.x, position.y);
   this.prevPosition = new Vector2d(position.x, position.y);
   Character.prototype.constructor.call(this, parentSim, position);
-  this.color = '#8519a4';
   this.playerSeenPosition = null;
 }
 
@@ -253,10 +247,10 @@ AI.prototype.render = function () {
   /*if (this.playerSeenPosition) {
     var screenPosition = v2dMultiply(this.playerSeenPosition, this.parentSim.mapFieldSize);
     screenPosition.sub(this.parentSim.getCameraPosition());
-    drawRectOutline(screenPosition.x+8, screenPosition.y+8, 16, 16, 1, this.color);
+    drawRectOutline(screenPosition.x+8, screenPosition.y+8, 16, 16, 1, '#FFFFFF');
   }*/
   if (this.hitPoints > 0)
-    drawProgressBar(screenPosition.x, screenPosition.y + 32, 32, 4, this.hitPoints / this.maxhitPoints, '#00FF00');
+    drawProgressBar(screenPosition.x, screenPosition.y + 32, 32, 4, this.hitPoints / this.maxHitPoints, '#00FF00');
 };
 
 // Walk closer to the given parameters
