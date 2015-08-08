@@ -215,8 +215,10 @@ AI.prototype.constructor = AI;
 AI.prototype.update = function() {
   Character.prototype.update.call(this);
   if (this.isInSolidState(CHR_ST_IDLE)) {
-    if (!this.isAlive())
+    if (!this.isAlive()) {
       this.doNothing();
+      return;
+    }
 
     var stepsToPlayer = this.getStepsToPlayer();
     if (stepsToPlayer < this.visionRange && stepsToPlayer > 1) {
@@ -233,7 +235,7 @@ AI.prototype.update = function() {
 
     // Walk towards the last known player location
     if (this.playerSeenPosition && !this.playerSeenPosition.equals(this.position)) {
-      this.walkTo(this.parentSim.player.position);
+      this.walkTo(this.playerSeenPosition);
       return;
     }
 
@@ -246,9 +248,10 @@ AI.prototype.render = function () {
   Character.prototype.render.call(this);
   var screenPosition = this.getScreenPosition();
   /*if (this.playerSeenPosition) {
-    var screenPosition = v2dMultiply(this.playerSeenPosition, this.parentSim.mapFieldSize);
-    screenPosition.sub(this.parentSim.getCameraPosition());
-    drawRectOutline(screenPosition.x+8, screenPosition.y+8, 16, 16, 1, '#FFFFFF');
+    var targetScreenPosition = v2dMultiply(this.playerSeenPosition, this.parentSim.mapFieldSize);
+    targetScreenPosition.sub(this.parentSim.getCameraPosition());
+    drawRectOutline(targetScreenPosition.x+8, targetScreenPosition.y+8, 16, 16, 1, '#FFFFFF');
+    drawLine(screenPosition.x+16, screenPosition.y+16, targetScreenPosition.x+16, targetScreenPosition.y+16, 1, "#FFFFFF");
   }*/
   if (this.hitPoints > 0)
     drawProgressBar(screenPosition.x, screenPosition.y + 32, 32, 4, this.hitPoints / this.maxHitPoints, '#00FF00');
@@ -256,8 +259,8 @@ AI.prototype.render = function () {
 
 // Walk closer to the given parameters
 AI.prototype.walkTo = function (position) {
-  var dx = this.position.x - this.parentSim.player.position.x;
-  var dy = this.position.y - this.parentSim.player.position.y;
+  var dx = this.position.x - position.x;
+  var dy = this.position.y - position.y;
   var moved = false;
   if (Math.abs(dx) > Math.abs(dy)) {
     if(dx < 0) {
