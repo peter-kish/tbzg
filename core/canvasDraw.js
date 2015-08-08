@@ -84,16 +84,76 @@ function loadImage(imagePath, callback) {
 	return imageObj;
 }
 
-function drawImage(image, x, y) {
+function drawImage(image, x, y, hflip, vflip) {
+	if (!hflip)
+		hflip = false;
+	if (!vflip)
+		vflip = false;
+
+	if (hflip) {
+		context.scale(-1, 1);
+		x = -x;
+	}
+	if (vflip) {
+		context.scale(1, -1);
+		y = -y;
+	}
+
 	context.drawImage(image, x, y);
+
+	if (hflip) {
+		context.scale(-1, 1);
+	}
+	if (vflip) {
+		context.scale(1, -1);
+	}
 }
 
-function drawImageResized(image, x, y, w, h) {
+function drawImageResized(image, x, y, w, h, hflip, vflip) {
+	if (!hflip)
+		hflip = false;
+	if (!vflip)
+		vflip = false;
+
+	if (hflip) {
+		context.scale(-1, 1);
+		x = -x;
+		w = -w;
+	}
+	if (vflip) {
+		context.scale(1, -1);
+		y = -y;
+		h = -h;
+	}
+
 	context.drawImage(image, x, y, w, h);
+
+	if (hflip) {
+		context.scale(-1, 1);
+	}
+	if (vflip) {
+		context.scale(1, -1);
+	}
 }
 
 function drawImageCropped(image, sourceX, sourceY, sourceW, sourceH,
-	destX, destY, destW, destH) {
+	destX, destY, destW, destH, hflip, vflip) {
+	if (!hflip)
+		hflip = false;
+	if (!vflip)
+		vflip = false;
+
+	if (hflip) {
+		context.scale(-1, 1);
+		destX = -destX;
+		destW = -destW;
+	}
+	if (vflip) {
+		context.scale(1, -1);
+		destY = -destY;
+		destH = -destH;
+	}
+
 	context.drawImage(image,
 		sourceX,
 		sourceY,
@@ -103,4 +163,11 @@ function drawImageCropped(image, sourceX, sourceY, sourceW, sourceH,
 		destY,
 		destW,
 		destH);
+
+	if (hflip) {
+		context.scale(-1, 1);
+	}
+	if (vflip) {
+		context.scale(1, -1);
+	}
 }
