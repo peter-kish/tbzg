@@ -36,6 +36,10 @@ Vector2d.prototype.distance = function(vector) {
 	return Math.sqrt(Math.pow(vector.x - this.x, 2) + Math.pow(vector.y - this.y, 2));
 }
 
+Vector2d.prototype.chebyshevDistance = function(vector) {
+  return Math.abs(this.x - vector.x) + Math.abs(this.y - vector.y);
+}
+
 Vector2d.prototype.projection = function(vector) {
 	var result = new Vector2d(vector.x, vector.y);
 	var scalar = (this.dot(vector)) / (Math.pow(vector.length(), 2));

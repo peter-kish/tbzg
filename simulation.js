@@ -112,7 +112,7 @@ Simulation.prototype.render = function () {
   var jEnd = Math.min(Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1, this.map.tileMap[0].length);
   for (var i = iStart; i < iEnd; i++) {
     for (var j = jStart; j < jEnd; j++) {
-      if (this.tileset && this.map.tileMap[i][j]) {
+      if (this.tileset && this.map.tileMap[i][j] && this.isVisible(new Vector2d(i, j))) {
         this.tileset.drawTile(this.map.tileMap[i][j], new Vector2d(i * SIM_MAP_FIELD_SIZE - this.camera.x, j * SIM_MAP_FIELD_SIZE - this.camera.y));
       }
     }
@@ -167,15 +167,20 @@ Simulation.prototype.renderVisibilityMap = function () {
   var jEnd = Math.min(Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1, this.visibilityMap[0].length);
   for (var i = iStart; i < iEnd; i++) {
     for (var j = jStart; j < jEnd; j++) {
-      //if (this.visibilityMap[i][j] < 1.0) {
+      if (this.visibilityMap[i][j] < 1) {
         drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
           j * SIM_MAP_FIELD_SIZE - this.camera.y,
           SIM_MAP_FIELD_SIZE,
           SIM_MAP_FIELD_SIZE,
           "rgba(0,0,0," + this.visibilityMap[i][j] + ")");
-      //}
+      }
     }
   }
+};
+
+// Checks if the given field is visible
+Simulation.prototype.isVisible = function (position) {
+  return this.visibilityMap[position.x][position.y] != 1;
 };
 
 // Checks if there is an obstacle at the given coordinates
@@ -347,7 +352,8 @@ Simulation.prototype.updateEnemies = function () {
 // Render all enemies
 Simulation.prototype.renderEnemies = function () {
   for (var i = 0; i < this.enemies.length; i++) {
-    this.enemies[i].render();
+    if (this.isVisible(this.enemies[i].position))
+      this.enemies[i].render();
   }
 };
 
