@@ -405,8 +405,8 @@ Simulation.prototype.onWindowResize = function () {
 // Handles a click on a field
 Simulation.prototype.onFieldClick = function (position) {
   var enemy = this.getEnemyAt(position);
-  if (enemy) {
-    if (enemy.isAlive()) {
+  if (enemy && this.isVisible(position)) {
+    if (enemy.isAlive() && enemy.position.chebyshevDistance(this.player.position) < 5) {
       this.player.attack(position, CHR_DIR_RIGHT);
     }
   } else {
