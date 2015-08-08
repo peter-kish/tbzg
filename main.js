@@ -65,7 +65,7 @@ function update() {
 
 // Draws the loading screen
 function drawLoadingScreen() {
-  drawText(canvas.width / 2, canvas.height / 2, "Loading...", "Calibri", 32, "#888888", "bold", "center", "middle");
+  drawText(canvas.width / 2, canvas.height / 2, "Loading...", "Arial", 32, "#888888", "bold", "center", "middle");
 }
 
 // Draw the loading screen before any map generation
@@ -75,15 +75,32 @@ drawLoadingScreen();
 // Create a simulation instance
 var simulation = new Simulation();
 
+// FPS counter
+var fps = {
+  current: 0,
+  last: 0,
+  lastUpdated: Date.now(),
+  update: function() {
+		fps.current++;
+		if (Date.now() - fps.lastUpdated >= 1000) {
+        fps.last = fps.current;
+        fps.current = 0;
+        fps.lastUpdated = Date.now();
+    }
+	}
+};
+
 // Main loop
 function main() {
   requestAnimationFrame(main);
 
   if (simulation.resourceManager.loaded()) {
     update();
+    fps.update();
 
   	clearScreen();
     render();
+    debugText(0, 0, "FPS: " + fps.last);
   } else {
     clearScreen();
     drawLoadingScreen();
