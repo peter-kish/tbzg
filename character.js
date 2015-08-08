@@ -290,7 +290,5 @@ AI.prototype.walkTo = function (position) {
 
 // Returns the Chebyshev distance (not Euclidean)
 AI.prototype.getStepsToPlayer = function() {
-  var dx = Math.abs(this.position.x - this.parentSim.player.position.x);
-  var dy = Math.abs(this.position.y - this.parentSim.player.position.y);
-  return dx + dy;
+  return this.position.chebyshevDistance(this.parentSim.player.position);
 }
