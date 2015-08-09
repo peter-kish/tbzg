@@ -15,7 +15,7 @@ var Animation = function(image, frameDelay, frameW, frameH) {
   }
   this.currentFrame = 0;
   this.frameDelay = frameDelay;
-  this.state = new StateMachine(ANM_ST_PLAYING);
+  this.state = new StateMachine(ANM_ST_STOPPED);
   this.frameTimer = new Timer();
 }
 
