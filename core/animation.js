@@ -7,11 +7,10 @@ var ANM_ST_PAUSED = 2;
 var Animation = function(image, frameDelay, frameW, frameH) {
   this.image = image;
   this.frameWidth = frameW;
-  this.frameHeight = frameHeight;
+  this.frameHeight = frameH;
+  this.frameCount = 0;
   if (image) {
-    this.frameCount = Math.floor(getImageWidth(image) / frameWidth);
-  } else {
-    this.frameCount = 0;
+    this.frameCount = Math.floor(getImageWidth(image) / frameW);
   }
   this.currentFrame = 0;
   this.frameDelay = frameDelay;
@@ -21,17 +20,33 @@ var Animation = function(image, frameDelay, frameW, frameH) {
 
 // Renders the current animation frame at the given coordinates
 Animation.prototype.render = function (x, y, hflip, vflip) {
-  var imgW = getImageWidth(this.image);
-  var imgH = getImageHeight(this.image);
-  drawImageCropped(this.image, this.currentFrame * imgW, 0, imgW, imgH, x, y, imgW, imgH, hflip, vflip);
+  drawImageCropped(this.image,
+    this.currentFrame * this.frameWidth,
+    0,
+    this.frameWidth,
+    this.frameHeight,
+    x,
+    y,
+    this.frameWidth,
+    this.frameHeight,
+    hflip,
+    vflip);
 };
 
 // Renders the animation frame at the given progress
 Animation.prototype.renderProgress = function (x, y, progress, hflip, vflip) {
-  var imgW = getImageWidth(this.image);
-  var imgH = getImageHeight(this.image);
   var frameNum = Math.floor(progress * this.frameCount);
-  drawImageCropped(this.image, frameNum * imgW, 0, imgW, imgH, x, y, imgW, imgH, hflip, vflip);
+  drawImageCropped(this.image,
+    frameNum * this.frameWidth,
+    0,
+    this.frameWidth,
+    this.frameHeight,
+    x,
+    y,
+    this.frameWidth,
+    this.frameHeight,
+    hflip,
+    vflip);
 };
 
 // Starts the animation with the given delay between frames
