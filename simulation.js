@@ -321,6 +321,8 @@ Simulation.prototype.createPlayer = function (position) {
   this.player.image_idle = this.resourceManager.getResource("hero");
   this.player.maxHitPoints = 100;
   this.player.hitPoints = this.player.maxHitPoints;
+  this.player.meleeDamage = new Damage(DMG_MELEE, 5, true);
+  this.player.rangedDamage = new Damage(DMG_BULLET, 5, false);
 };
 
 // Creates an enemy at the given coordinates
@@ -328,6 +330,7 @@ Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
   newAI.image_idle = this.resourceManager.getResource("zombie");
   newAI.image_dead = this.resourceManager.getResource("zombie_dead");
+  newAI.meleeDamage = new Damage(DMG_MELEE, 5, true);
   this.enemies.push(newAI);
 };
 
@@ -407,7 +410,7 @@ Simulation.prototype.onFieldClick = function (position) {
   var enemy = this.getEnemyAt(position);
   if (enemy && this.isVisible(position)) {
     if (enemy.isAlive() && enemy.position.chebyshevDistance(this.player.position) < 5) {
-      this.player.attack(position, this.player.getDirection(position));
+      this.player.rangedAttack(position, this.player.getDirection(position));
     }
   } else {
     this.player.doNothing();

@@ -24,6 +24,8 @@ var Character = function(parentSim, position) {
   this.facing = CHR_DIR_RIGHT;
   this.maxHitPoints = 15;
   this.hitPoints = this.maxHitPoints;
+  this.meleeDamage = null;
+  this.rangedDamage = null;
 }
 
 // Render the character
@@ -98,9 +100,9 @@ Character.prototype.move = function (direction, speed) {
   return true;
 };
 
-// Attack in the given direction
-Character.prototype.attack = function (position, direction) {
-  if (this.isInSolidState(CHR_ST_IDLE)) {
+// Perform a melee Attack in the given direction
+Character.prototype.meleeAttack = function (position, direction) {
+  if (this.isInSolidState(CHR_ST_IDLE) && this.meleeDamage) {
     var character = this.parentSim.getCharacterAt(position);
     if (!character)
       return false;
@@ -110,13 +112,31 @@ Character.prototype.attack = function (position, direction) {
     } else {
       this.faceTo(CHR_DIR_RIGHT);
     }
-    character.takeDamage(new Damage(DMG_MELEE, 5, true), direction);
+    character.takeDamage(this.meleeDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     return true;
   }
   return false;
 };
 
+// Perform a ranged Attack in the given direction
+Character.prototype.rangedAttack = function (position, direction) {
+  if (this.isInSolidState(CHR_ST_IDLE) && this.rangedDamage) {
+    var character = this.parentSim.getCharacterAt(position);
+    if (!character)
+      return false;
+
+    if (position.x < this.position.x) {
+      this.faceTo(CHR_DIR_LEFT);
+    } else {
+      this.faceTo(CHR_DIR_RIGHT);
+    }
+    character.takeDamage(this.rangedDamage, direction);
+    this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
+    return true;
+  }
+  return false;
+};
 
 // Apply the given damage on the character
 Character.prototype.takeDamage = function (damage, direction) {
@@ -136,7 +156,7 @@ Character.prototype.walkAttack = function (direction) {
   var attackPosition = this.getAdjacentField(direction);
   var character = this.parentSim.getCharacterAt(attackPosition);
   if (character) {
-    this.attack(attackPosition, direction);
+    this.meleeAttack(attackPosition, direction);
   } else {
     this.walk(direction);
   }
@@ -239,7 +259,7 @@ AI.prototype.update = function() {
     } else if (stepsToPlayer == 1) {
       // Attack if close enough to the player
       var direction = this.getDirection(this.parentSim.player.position);
-      this.attack(this.parentSim.player.position, direction);
+      this.meleeAttack(this.parentSim.player.position, direction);
       return;
     }
 
