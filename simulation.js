@@ -407,7 +407,7 @@ Simulation.prototype.onFieldClick = function (position) {
   var enemy = this.getEnemyAt(position);
   if (enemy && this.isVisible(position)) {
     if (enemy.isAlive() && enemy.position.chebyshevDistance(this.player.position) < 5) {
-      this.player.attack(position, CHR_DIR_RIGHT);
+      this.player.attack(position, this.player.getDirection(position));
     }
   } else {
     this.player.doNothing();

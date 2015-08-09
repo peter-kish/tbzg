@@ -164,11 +164,17 @@ Character.prototype.getScreenPosition = function () {
 
 // Returns the direction of the given adjacent field
 Character.prototype.getDirection = function (position) {
-  for (var i = 0; i < CHR_DIR_INVALID; i++) {
-    if (position.equals(this.getAdjacentField(i))) {
-      return i;
-    }
+  var delta = v2dSub(position, this.position);
+  if (delta.x > Math.abs(delta.y)) {
+    return CHR_DIR_RIGHT;
+  } else if (delta.x < -Math.abs(delta.y)) {
+    return CHR_DIR_LEFT;
+  } else if (delta.y > Math.abs(delta.x)) {
+    return CHR_DIR_DOWN;
+  } else if (delta.y < -Math.abs(delta.x)) {
+    return CHR_DIR_UP;
   }
+
   return CHR_DIR_INVALID;
 };
 
