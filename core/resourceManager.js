@@ -1,5 +1,6 @@
 var lastRM = null;
 
+// PendingAnimationResource class constructor
 var PendingAnimationResource = function(image, key, frameW, frameH, frameDelay) {
   this.image = image;
   this.key = key;
@@ -23,6 +24,7 @@ function onLoadCallback() {
   lastRM.nLoadedResources++;
   console.log("Loaded image " + this.src);
 
+  // Check if there is an animation resource waiting for this image
   for (var i = 0; i < lastRM.pendingAnimations.length; i++) {
     var pendingAnim = lastRM.pendingAnimations[i];
     if (pendingAnim.image && pendingAnim.image == this) {
@@ -37,17 +39,16 @@ function onLoadCallback() {
 
 // Load an image from the given path and with the given key
 ResourceManager.prototype.loadImage = function (path, key) {
-  console.log("Loading image " + path);
   this.nResources++;
   var image = loadImage(path, onLoadCallback);
   this.resources[key] = image;
   return image;
 };
 
+// Load an animation from the given path and with the given key, frame dimnsions and delay
 ResourceManager.prototype.loadAnimation = function (imagePath, key, frameW, frameH, frameDelay) {
   var image = this.loadImage(imagePath, imagePath);
   this.nResources++;
-  console.log("Loading animation " + imagePath);
   this.pendingAnimations.push(new PendingAnimationResource(image, key, frameW, frameH, frameDelay));
   return image;
 };
