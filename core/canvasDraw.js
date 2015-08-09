@@ -84,6 +84,20 @@ function loadImage(imagePath, callback) {
 	return imageObj;
 }
 
+function getImageWidth(image) {
+	if (image)
+		return image.naturalWidth;
+
+	return 0;
+}
+
+function getImageHeight(image) {
+	if (image)
+		return image.naturalHeight;
+
+	return 0;
+}
+
 function drawImage(image, x, y, hflip, vflip) {
 	if (!image)
 		return;
@@ -95,11 +109,11 @@ function drawImage(image, x, y, hflip, vflip) {
 
 	if (hflip) {
 		context.scale(-1, 1);
-		x = -x - image.naturalWidth;
+		x = -x - getImageWidth(image);
 	}
 	if (vflip) {
 		context.scale(1, -1);
-		y = -y- image.naturalHeight;
+		y = -y - getImageWidth(image);
 	}
 
 	context.drawImage(image, x, y);
