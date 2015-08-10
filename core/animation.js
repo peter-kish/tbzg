@@ -51,7 +51,7 @@ Animation.prototype.renderProgress = function (x, y, progress, hflip, vflip) {
 };
 
 // Starts the animation with the given delay between frames
-Animation.prototype.start = function (frameDelay) {
+Animation.prototype.play = function (frameDelay) {
   this.state.setState(ANM_ST_PLAYING);
   if (frameDelay)
     this.frameDelay = frameDelay;
@@ -59,7 +59,7 @@ Animation.prototype.start = function (frameDelay) {
 };
 
 // Starts looping the animation with the given delay between frames
-Animation.prototype.start = function (frameDelay) {
+Animation.prototype.loop = function (frameDelay) {
   this.state.setState(ANM_ST_LOOPING);
   if (frameDelay)
     this.frameDelay = frameDelay;
