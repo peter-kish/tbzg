@@ -13,7 +13,7 @@ var CHR_ST_TURN_END = 3
 
 // State transition speeds (in ms)
 var CHR_WALK_SPEED = 150;
-var CHR_ATTACK_SPEED = 150;
+var CHR_ATTACK_SPEED = 300;
 
 // Character class constructor
 var Character = function(parentSim, position) {
@@ -26,15 +26,37 @@ var Character = function(parentSim, position) {
   this.hitPoints = this.maxHitPoints;
   this.meleeDamage = null;
   this.rangedDamage = null;
+  this.animationSet = null;
+  this.animation = null;
 }
+
+Character.prototype.playAnimation = function (animationKey) {
+  this.animation = this.parentSim.resourceManager.getAnimationInstance(animationKey);
+  if (this.animation)
+    this.animation.play();
+};
+
+Character.prototype.stopAnimation = function () {
+  this.animation = null;
+};
 
 // Render the character
 Character.prototype.render = function () {
   var screenPosition = this.getScreenPosition();
   if (this.isAlive()) {
-    drawImage(this.image_idle, screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
+    if (this.animation) {
+      if (this.animation.isPlaying()) {
+        this.animation.render(screenPosition.x,
+          screenPosition.y,
+          this.facing == CHR_DIR_LEFT, false);
+        return;
+      } else {
+        this.animation = null;
+      }
+    }
+    drawImage(this.parentSim.resourceManager.getResource(this.animationSet.idle), screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
   } else {
-    drawImage(this.image_dead, screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
+    drawImage(this.parentSim.resourceManager.getResource(this.animationSet.dead), screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
   }
 };
 
@@ -43,6 +65,8 @@ Character.prototype.update = function () {
   if (this.isInSolidState(CHR_ST_MOVE) || this.isInSolidState(CHR_ST_ATTACK)) {
     this.stateMachine.setState(CHR_ST_TURN_END, 0);
   }
+  if (this.animation)
+    this.animation.update();
 };
 
 // Get the parameters of the given adjacent field
@@ -133,6 +157,7 @@ Character.prototype.rangedAttack = function (position, direction) {
     }
     character.takeDamage(this.rangedDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
+    this.playAnimation(this.animationSet.ranged);
     return true;
   }
   return false;
