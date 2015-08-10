@@ -70,6 +70,7 @@ Animation.prototype.loop = function (frameDelay) {
 Animation.prototype.stop = function () {
   this.state.setState(ANM_ST_STOPPED);
   this.currentFrame = 0;
+  this.frameTimer.stop();
 };
 
 // Pauses the animation
@@ -88,16 +89,15 @@ Animation.prototype.update = function () {
   var currentState = this.state.getState();
   if (currentState == ANM_ST_PLAYING || currentState == ANM_ST_LOOPING) {
     if (this.frameTimer.isTimeUp()) {
+      this.frameTimer.reset();
       this.currentFrame = this.currentFrame + 1;
-      if (currentFrame >= this.frameCount) {
+      if (this.currentFrame >= this.frameCount) {
         if (currentState == ANM_ST_PLAYING) {
           // playing state
-          this.state.setState(ANM_ST_STOPPED);
-          this.frameTimer.stop();
+          this.stop();
         } else {
           // looping state
           this.currentFrame -= this.frameCount;
-          this.frameTimer.reset();
         }
       }
     }
