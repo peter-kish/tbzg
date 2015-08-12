@@ -58,15 +58,15 @@ Character.prototype.render = function () {
     }
     image = this.parentSim.resourceManager.getResource(this.animationSet.idle);
     drawImage(image,
-      screenPosition.x + this.parentSim.mapFieldSize / 2 - getImageWidth(image) / 2,
-      screenPosition.y + this.parentSim.mapFieldSize / 2 - getImageHeight(image) / 2,
+      Math.floor(screenPosition.x + this.parentSim.mapFieldSize / 2 - getImageWidth(image) / 2),
+      Math.floor(screenPosition.y + this.parentSim.mapFieldSize / 2 - getImageHeight(image) / 2),
       this.facing == CHR_DIR_LEFT,
       false);
   } else {
     image = this.parentSim.resourceManager.getResource(this.animationSet.dead);
     drawImage(this.parentSim.resourceManager.getResource(this.animationSet.dead),
-      screenPosition.x + this.parentSim.mapFieldSize / 2 - getImageWidth(image) / 2,
-      screenPosition.y + this.parentSim.mapFieldSize / 2 - getImageHeight(image) / 2,
+      Math.floor(screenPosition.x + this.parentSim.mapFieldSize / 2 - getImageWidth(image) / 2),
+      Math.floor(screenPosition.y + this.parentSim.mapFieldSize / 2 - getImageHeight(image) / 2),
       this.facing == CHR_DIR_LEFT,
       false);
   }
