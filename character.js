@@ -12,7 +12,7 @@ var CHR_ST_ATTACK = 2
 var CHR_ST_TURN_END = 3
 
 // State transition speeds (in ms)
-var CHR_WALK_SPEED = 150;
+var CHR_WALK_SPEED = 300;
 var CHR_ATTACK_SPEED = 300;
 
 // Character class constructor
@@ -115,6 +115,7 @@ Character.prototype.walk  = function (direction) {
   if (this.isInSolidState(CHR_ST_IDLE)) {
     this.faceTo(direction);
 
+    this.playAnimation(this.animationSet.walk);
     return this.move(direction, CHR_WALK_SPEED);
   } else {
     return false;

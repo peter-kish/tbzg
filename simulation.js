@@ -23,14 +23,16 @@ playerAnimationSet = {
   idle: "hero",
   dead: null,
   ranged: "hero_shoot",
-  melee: "hero_melee"
+  melee: "hero_melee",
+  walk: "hero_walk"
 }
 
 enemyAnimationSet = {
   idle: "zombie",
   dead: "zombie_dead",
   ranged: null,
-  melee: "zombie_melee"
+  melee: "zombie_melee",
+  walk: "zombie_walk"
 }
 
 // Simulation class constructor
@@ -414,8 +416,10 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/hero.png", "hero");
   this.resourceManager.loadAnimation("images/hero_shoot.png", "hero_shoot", 40, 32, CHR_ATTACK_SPEED);
   this.resourceManager.loadAnimation("images/hero_melee.png", "hero_melee", 40, 32, CHR_ATTACK_SPEED);
+  this.resourceManager.loadAnimation("images/hero_walk.png", "hero_walk", 40, 32, CHR_WALK_SPEED);
   this.resourceManager.loadImage("images/zombie.png", "zombie");
   this.resourceManager.loadAnimation("images/zombie_melee.png", "zombie_melee", 32, 32, CHR_ATTACK_SPEED);
+  this.resourceManager.loadAnimation("images/zombie_walk.png", "zombie_walk", 40, 32, CHR_WALK_SPEED);
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 };
 
