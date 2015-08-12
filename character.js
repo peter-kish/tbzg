@@ -138,6 +138,7 @@ Character.prototype.meleeAttack = function (position, direction) {
     }
     character.takeDamage(this.meleeDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
+    this.playAnimation(this.animationSet.melee);
     return true;
   }
   return false;
