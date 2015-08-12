@@ -43,20 +43,32 @@ Character.prototype.stopAnimation = function () {
 // Render the character
 Character.prototype.render = function () {
   var screenPosition = this.getScreenPosition();
+  var image = null;
   if (this.isAlive()) {
     if (this.animation) {
       if (this.animation.isPlaying()) {
-        this.animation.render(screenPosition.x,
-          screenPosition.y,
+        // Render the animation centered
+        this.animation.render(screenPosition.x + this.parentSim.mapFieldSize / 2 - this.animation.frameWidth / 2,
+          screenPosition.y + this.parentSim.mapFieldSize / 2 - this.animation.frameHeight / 2,
           this.facing == CHR_DIR_LEFT, false);
         return;
       } else {
         this.animation = null;
       }
     }
-    drawImage(this.parentSim.resourceManager.getResource(this.animationSet.idle), screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
+    image = this.parentSim.resourceManager.getResource(this.animationSet.idle);
+    drawImage(image,
+      screenPosition.x + this.parentSim.mapFieldSize / 2 - getImageWidth(image) / 2,
+      screenPosition.y + this.parentSim.mapFieldSize / 2 - getImageHeight(image) / 2,
+      this.facing == CHR_DIR_LEFT,
+      false);
   } else {
-    drawImage(this.parentSim.resourceManager.getResource(this.animationSet.dead), screenPosition.x, screenPosition.y, this.facing == CHR_DIR_LEFT, false);
+    image = this.parentSim.resourceManager.getResource(this.animationSet.dead);
+    drawImage(this.parentSim.resourceManager.getResource(this.animationSet.dead),
+      screenPosition.x + this.parentSim.mapFieldSize / 2 - getImageWidth(image) / 2,
+      screenPosition.y + this.parentSim.mapFieldSize / 2 - getImageHeight(image) / 2,
+      this.facing == CHR_DIR_LEFT,
+      false);
   }
 };
 
