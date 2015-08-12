@@ -334,21 +334,20 @@ Simulation.prototype.enemiesTakeTurn = function () {
 // Creates a player at the given coordinates
 Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
-  this.player.image_idle = this.resourceManager.getResource("hero");
   this.player.maxHitPoints = 100;
   this.player.hitPoints = this.player.maxHitPoints;
-  this.player.meleeDamage = new Damage(DMG_MELEE, 5, true);
+  this.player.meleeDamage = new Damage(DMG_MELEE, 1, true);
   this.player.rangedDamage = new Damage(DMG_BULLET, 5, false);
   this.player.animationSet = playerAnimationSet;
+  this.player.setImage(playerAnimationSet.idle);
 };
 
 // Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
-  newAI.image_idle = this.resourceManager.getResource("zombie");
-  newAI.image_dead = this.resourceManager.getResource("zombie_dead");
   newAI.meleeDamage = new Damage(DMG_MELEE, 5, true);
   newAI.animationSet = enemyAnimationSet;
+  newAI.setImage(enemyAnimationSet.idle);
   this.enemies.push(newAI);
 };
 
