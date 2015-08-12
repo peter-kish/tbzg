@@ -5,7 +5,7 @@ var ANM_ST_LOOPING = 2;
 var ANM_ST_PAUSED = 3;
 
 // Animation class constructor
-var Animation = function(image, frameDelay, frameW, frameH) {
+var Animation = function(image, duration, frameW, frameH) {
   this.image = image;
   this.frameWidth = frameW;
   this.frameHeight = frameH;
@@ -14,24 +14,14 @@ var Animation = function(image, frameDelay, frameW, frameH) {
     this.frameCount = Math.floor(getImageWidth(image) / frameW);
   }
   this.currentFrame = 0;
-  this.frameDelay = frameDelay;
+  this.duration = duration;
   this.state = new StateMachine(ANM_ST_STOPPED);
-  this.frameTimer = new Timer();
+  this.timer = new Timer();
 }
 
 // Renders the current animation frame at the given coordinates
 Animation.prototype.render = function (x, y, hflip, vflip) {
-  drawImageCropped(this.image,
-    this.currentFrame * this.frameWidth,
-    0,
-    this.frameWidth,
-    this.frameHeight,
-    x,
-    y,
-    this.frameWidth,
-    this.frameHeight,
-    hflip,
-    vflip);
+  this.renderProgress(x, y, this.timer.getProgress(), hflip, vflip)
 };
 
 // Renders the animation frame at the given progress
@@ -51,26 +41,26 @@ Animation.prototype.renderProgress = function (x, y, progress, hflip, vflip) {
 };
 
 // Starts the animation with the given delay between frames
-Animation.prototype.play = function (frameDelay) {
+Animation.prototype.play = function (duration) {
   this.state.setState(ANM_ST_PLAYING);
-  if (frameDelay)
-    this.frameDelay = frameDelay;
-  this.frameTimer.start(this.frameDelay);
+  if (duration)
+    this.duration = duration;
+  this.timer.start(this.duration);
 };
 
 // Starts looping the animation with the given delay between frames
-Animation.prototype.loop = function (frameDelay) {
+Animation.prototype.loop = function (duration) {
   this.state.setState(ANM_ST_LOOPING);
-  if (frameDelay)
-    this.frameDelay = frameDelay;
-  this.frameTimer.start(this.frameDelay);
+  if (duration)
+    this.duration = duration;
+  this.timer.start(this.duration);
 };
 
 // Stops the animation
 Animation.prototype.stop = function () {
   this.state.setState(ANM_ST_STOPPED);
   this.currentFrame = 0;
-  this.frameTimer.stop();
+  this.timer.stop();
 };
 
 // Pauses the animation
@@ -88,17 +78,13 @@ Animation.prototype.isPlaying = function () {
 Animation.prototype.update = function () {
   var currentState = this.state.getState();
   if (currentState == ANM_ST_PLAYING || currentState == ANM_ST_LOOPING) {
-    if (this.frameTimer.isTimeUp()) {
-      this.frameTimer.reset();
-      this.currentFrame = this.currentFrame + 1;
-      if (this.currentFrame >= this.frameCount) {
-        if (currentState == ANM_ST_PLAYING) {
-          // playing state
-          this.stop();
-        } else {
-          // looping state
-          this.currentFrame -= this.frameCount;
-        }
+    if (this.timer.isTimeUp()) {
+      if (currentState == ANM_ST_PLAYING) {
+        // playing state
+        this.stop();
+      } else {
+        // looping state
+        this.timer.reset();
       }
     }
   }

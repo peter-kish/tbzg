@@ -412,7 +412,7 @@ Simulation.prototype.testVisibility = function (p1, p2) {
 Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/tileset.png", "tileset");
   this.resourceManager.loadImage("images/hero.png", "hero");
-  this.resourceManager.loadAnimation("images/hero_shoot.png", "hero_shoot", 32, 32, 100);
+  this.resourceManager.loadAnimation("images/hero_shoot.png", "hero_shoot", 32, 32, 300);
   this.resourceManager.loadImage("images/zombie.png", "zombie");
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 };

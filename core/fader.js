@@ -36,20 +36,20 @@ Timer.prototype.isTimeUp = function() {
   }
 }
 
+Timer.prototype.getProgress = function () {
+  if (!this.isRunning()) {
+    return 0;
+  } else {
+    return Math.min(this.getElapsedTime() / this.timeout, 1.0);
+  }
+};
+
 var Fader = function() {
 
 }
 
 Fader.prototype = new Timer();
 Fader.prototype.constructor = Fader;
-
-Fader.prototype.getProgress = function() {
-  if (!this.isRunning()) {
-    return 0;
-  } else {
-    return Math.min(this.getElapsedTime() / this.timeout, 1.0);
-  }
-}
 
 Fader.prototype.getEasing = function(f) {
   return f(this.getProgress());

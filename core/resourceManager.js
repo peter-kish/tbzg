@@ -38,10 +38,10 @@ ResourceManager.prototype.loadImage = function (path, key) {
 };
 
 // Load an animation from the given path and with the given key, frame dimnsions and delay
-ResourceManager.prototype.loadAnimation = function (imagePath, key, frameW, frameH, frameDelay) {
+ResourceManager.prototype.loadAnimation = function (imagePath, key, frameW, frameH, duration) {
   var image = loadImage(imagePath, onAnimationLoadCallback);
   this.nResources++;
-  this.resources[key] = new AnimationResource(image, frameW, frameH, frameDelay);
+  this.resources[key] = new AnimationResource(image, frameW, frameH, duration);
   return image;
 };
 
