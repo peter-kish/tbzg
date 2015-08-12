@@ -20,19 +20,23 @@ tile_colors[TILE_HEDGE] = '#008800';
 var canvas = document.getElementById('myCanvas');
 
 playerAnimationSet = {
-  idle: "hero",
+  idle_ranged: "hero",
+  idle_melee: "hero_idle_melee",
   dead: null,
   ranged: "hero_shoot",
   melee: "hero_melee",
-  walk: "hero_walk"
+  walk_ranged: "hero_walk",
+  walk_melee: "hero_walk_melee"
 }
 
 enemyAnimationSet = {
-  idle: "zombie",
+  idle_ranged: null,
+  idle_melee: "zombie",
   dead: "zombie_dead",
   ranged: null,
   melee: "zombie_melee",
-  walk: "zombie_walk"
+  walk_ranged: null,
+  walk_ranged: "zombie_walk"
 }
 
 // Simulation class constructor
@@ -339,7 +343,7 @@ Simulation.prototype.createPlayer = function (position) {
   this.player.meleeDamage = new Damage(DMG_MELEE, 1, true);
   this.player.rangedDamage = new Damage(DMG_BULLET, 5, false);
   this.player.animationSet = playerAnimationSet;
-  this.player.setImage(playerAnimationSet.idle);
+  this.player.setImage(playerAnimationSet.idle_ranged);
 };
 
 // Creates an enemy at the given coordinates
@@ -347,7 +351,7 @@ Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
   newAI.meleeDamage = new Damage(DMG_MELEE, 5, true);
   newAI.animationSet = enemyAnimationSet;
-  newAI.setImage(enemyAnimationSet.idle);
+  newAI.setImage(enemyAnimationSet.idle_melee);
   this.enemies.push(newAI);
 };
 
@@ -413,9 +417,11 @@ Simulation.prototype.testVisibility = function (p1, p2) {
 Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/tileset.png", "tileset");
   this.resourceManager.loadImage("images/hero.png", "hero");
+  this.resourceManager.loadImage("images/hero_idle_melee.png", "hero_idle_melee");
   this.resourceManager.loadAnimation("images/hero_shoot.png", "hero_shoot", 40, 32, CHR_ATTACK_SPEED);
   this.resourceManager.loadAnimation("images/hero_melee.png", "hero_melee", 40, 32, CHR_ATTACK_SPEED);
   this.resourceManager.loadAnimation("images/hero_walk.png", "hero_walk", 40, 32, CHR_WALK_SPEED);
+  this.resourceManager.loadAnimation("images/hero_walk_melee.png", "hero_walk_melee", 40, 32, CHR_WALK_SPEED);
   this.resourceManager.loadImage("images/zombie.png", "zombie");
   this.resourceManager.loadAnimation("images/zombie_melee.png", "zombie_melee", 32, 32, CHR_ATTACK_SPEED);
   this.resourceManager.loadAnimation("images/zombie_walk.png", "zombie_walk", 40, 32, CHR_WALK_SPEED);

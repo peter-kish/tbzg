@@ -110,11 +110,15 @@ Character.prototype.faceTo = function (direction) {
 };
 
 // Walk in the given direction
-Character.prototype.walk  = function (direction) {
+Character.prototype.walk = function (direction) {
   if (this.isInSolidState(CHR_ST_IDLE)) {
     this.faceTo(direction);
 
-    this.playAnimation(this.animationSet.walk);
+    if (this.image == this.parentSim.resourceManager.getResource(this.animationSet.idle_melee)) {
+      this.playAnimation(this.animationSet.walk_melee);
+    } else if (this.image == this.parentSim.resourceManager.getResource(this.animationSet.idle_ranged)) {
+      this.playAnimation(this.animationSet.walk_ranged);
+    }
     return this.move(direction, CHR_WALK_SPEED);
   } else {
     return false;
@@ -151,6 +155,7 @@ Character.prototype.meleeAttack = function (position, direction) {
     character.takeDamage(this.meleeDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     this.playAnimation(this.animationSet.melee);
+    this.setImage(this.animationSet.idle_melee);
     return true;
   }
   return false;
@@ -171,6 +176,7 @@ Character.prototype.rangedAttack = function (position, direction) {
     character.takeDamage(this.rangedDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     this.playAnimation(this.animationSet.ranged);
+    this.setImage(this.animationSet.idle_ranged);
     return true;
   }
   return false;
