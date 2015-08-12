@@ -66,3 +66,8 @@ ResourceManager.prototype.loaded = function () {
 
   return false;
 };
+
+// Returns the amount of the loaded resources in range [0-1]
+ResourceManager.prototype.getProgress = function () {
+  return this.nLoadedResources / this.nResources;
+};

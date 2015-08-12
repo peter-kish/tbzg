@@ -65,7 +65,10 @@ function update() {
 
 // Draws the loading screen
 function drawLoadingScreen() {
-  drawText(canvas.width / 2, canvas.height / 2, "Loading...", "Arial", 32, "#888888", "bold", "center", "middle");
+  if (simulation) {
+    drawProgressBar(canvas.width / 2 - 100, canvas.height / 2 - 8, 200, 16, simulation.resourceManager.getProgress(), "#888888");
+    drawRectOutline(canvas.width / 2 - 100, canvas.height / 2 - 8, 200, 16, 1, "#888888")
+  }
 }
 
 // Draw the loading screen before any map generation
