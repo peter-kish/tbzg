@@ -41,16 +41,20 @@ window.addEventListener('keydown', function(event) {
 
   var input = INPUT_NONE;
   switch (event.keyCode) {
-    case 37: // Left
+    case 37: // Left arrow
+    case 65: // 'A'
       input = INPUT_LEFT;
       break;
-    case 38: // Up
+    case 38: // Up arrow
+    case 87: // 'W'
       input = INPUT_UP;
       break;
-    case 39: // Right
+    case 39: // Right arrow
+    case 68: // 'D'
       input = INPUT_RIGHT;
       break;
-    case 40: // Down
+    case 40: // Down arrow
+    case 83: // 'S'
       input = INPUT_DOWN;
       break;
     case 32: // Space
