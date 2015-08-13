@@ -27,26 +27,46 @@ var Character = function(parentSim, position) {
   this.meleeDamage = null;
   this.rangedDamage = null;
   this.animationSet = null;
-  this.sprite = new Sprite();
+  this.torsoSprite = new Sprite();
+  this.legsSprite = new Sprite();
 }
 
+// Play a torso sprite animation
 Character.prototype.playAnimation = function (animationKey) {
-  this.sprite.playAnimation(this.parentSim.resourceManager.getAnimationInstance(animationKey));
+  this.torsoSprite.playAnimation(this.parentSim.resourceManager.getAnimationInstance(animationKey));
 };
 
+// Stops the torso sprite animation
 Character.prototype.stopAnimation = function () {
-  this.sprite.stopAnimation();
+  this.torsoSprite.stopAnimation();
 };
 
+// Sets the torso sprite image
 Character.prototype.setImage = function (imageKey) {
-  this.sprite.setImage(this.parentSim.resourceManager.getResource(imageKey));
+  this.torsoSprite.setImage(this.parentSim.resourceManager.getResource(imageKey));
+};
+
+// Play a legs sprite animation
+Character.prototype.playLegsAnimation = function (animationKey) {
+  this.legsSprite.playAnimation(this.parentSim.resourceManager.getAnimationInstance(animationKey));
+};
+
+// Stops the legs sprite animation
+Character.prototype.stopLegsAnimation = function () {
+  this.legsSprite.stopAnimation();
+};
+
+// Sets the legs sprite image
+Character.prototype.setLegsImage = function (imageKey) {
+  this.legsSprite.setImage(this.parentSim.resourceManager.getResource(imageKey));
 };
 
 // Render the character
 Character.prototype.render = function () {
   var screenPosition = this.getScreenPosition();
   screenPosition.add(new Vector2d(this.parentSim.mapFieldSize / 2, this.parentSim.mapFieldSize / 2));
-  this.sprite.render(screenPosition, true, this.facing == CHR_DIR_LEFT, false);
+  this.torsoSprite.render(screenPosition, true, this.facing == CHR_DIR_LEFT, false);
+  this.legsSprite.render(screenPosition, true, this.facing == CHR_DIR_LEFT, false);
 };
 
 // Update the character
@@ -54,7 +74,8 @@ Character.prototype.update = function () {
   if (this.isInSolidState(CHR_ST_MOVE) || this.isInSolidState(CHR_ST_ATTACK)) {
     this.stateMachine.setState(CHR_ST_TURN_END, 0);
   }
-  this.sprite.update();
+  this.torsoSprite.update();
+  this.legsSprite.update();
 };
 
 // Get the parameters of the given adjacent field
@@ -90,12 +111,7 @@ Character.prototype.faceTo = function (direction) {
 Character.prototype.walk = function (direction) {
   if (this.isInSolidState(CHR_ST_IDLE)) {
     this.faceTo(direction);
-
-    if (this.sprite.image == this.parentSim.resourceManager.getResource(this.animationSet.idle_melee)) {
-      this.playAnimation(this.animationSet.walk_melee);
-    } else if (this.sprite.image == this.parentSim.resourceManager.getResource(this.animationSet.idle_ranged)) {
-      this.playAnimation(this.animationSet.walk_ranged);
-    }
+    this.playLegsAnimation(this.animationSet.legs_walk);
     return this.move(direction, CHR_WALK_SPEED);
   } else {
     return false;
@@ -131,7 +147,7 @@ Character.prototype.meleeAttack = function (position, direction) {
     }
     character.takeDamage(this.meleeDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
-    this.playAnimation(this.animationSet.melee);
+    this.playAnimation(this.animationSet.attack_melee);
     this.setImage(this.animationSet.idle_melee);
     return true;
   }
@@ -152,7 +168,7 @@ Character.prototype.rangedAttack = function (position, direction) {
     }
     character.takeDamage(this.rangedDamage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
-    this.playAnimation(this.animationSet.ranged);
+    this.playAnimation(this.animationSet.attack_ranged);
     this.setImage(this.animationSet.idle_ranged);
     return true;
   }
@@ -168,6 +184,7 @@ Character.prototype.takeDamage = function (damage, direction) {
   }
   if (!this.isAlive()) {
     this.setImage(this.animationSet.dead);
+    this.setLegsImage(null);
   }
 };
 

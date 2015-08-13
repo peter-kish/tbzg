@@ -20,23 +20,23 @@ tile_colors[TILE_HEDGE] = '#008800';
 var canvas = document.getElementById('myCanvas');
 
 playerAnimationSet = {
-  idle_ranged: "hero",
+  idle_ranged: "hero_idle_ranged",
   idle_melee: "hero_idle_melee",
   dead: null,
-  ranged: "hero_shoot",
-  melee: "hero_melee",
-  walk_ranged: "hero_walk",
-  walk_melee: "hero_walk_melee"
+  attack_ranged: "hero_attack_ranged",
+  attack_melee: "hero_attack_melee",
+  legs_idle: "legs_idle",
+  legs_walk: "legs_walk"
 }
 
 enemyAnimationSet = {
   idle_ranged: null,
-  idle_melee: "zombie",
+  idle_melee: "zombie_idle_melee",
   dead: "zombie_dead",
-  ranged: null,
-  melee: "zombie_melee",
-  walk_ranged: null,
-  walk_ranged: "zombie_walk"
+  attack_ranged: null,
+  attack_melee: "zombie_attack_melee",
+  legs_idle: "legs_idle",
+  legs_walk: "legs_walk"
 }
 
 // Simulation class constructor
@@ -344,6 +344,7 @@ Simulation.prototype.createPlayer = function (position) {
   this.player.rangedDamage = new Damage(DMG_BULLET, 5, false);
   this.player.animationSet = playerAnimationSet;
   this.player.setImage(playerAnimationSet.idle_ranged);
+  this.player.setLegsImage(playerAnimationSet.legs_idle);
 };
 
 // Creates an enemy at the given coordinates
@@ -352,6 +353,7 @@ Simulation.prototype.createEnemy = function (position) {
   newAI.meleeDamage = new Damage(DMG_MELEE, 5, true);
   newAI.animationSet = enemyAnimationSet;
   newAI.setImage(enemyAnimationSet.idle_melee);
+  newAI.setLegsImage(enemyAnimationSet.legs_idle);
   this.enemies.push(newAI);
 };
 
@@ -416,15 +418,17 @@ Simulation.prototype.testVisibility = function (p1, p2) {
 // Loads all the resources
 Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/tileset.png", "tileset");
-  this.resourceManager.loadImage("images/hero.png", "hero");
+
+  this.resourceManager.loadImage("images/legs_idle.png", "legs_idle");
+  this.resourceManager.loadAnimation("images/legs_walk.png", "legs_walk", 40, 32, CHR_WALK_SPEED);
+
   this.resourceManager.loadImage("images/hero_idle_melee.png", "hero_idle_melee");
-  this.resourceManager.loadAnimation("images/hero_shoot.png", "hero_shoot", 40, 32, CHR_ATTACK_SPEED);
-  this.resourceManager.loadAnimation("images/hero_melee.png", "hero_melee", 40, 32, CHR_ATTACK_SPEED);
-  this.resourceManager.loadAnimation("images/hero_walk.png", "hero_walk", 40, 32, CHR_WALK_SPEED);
-  this.resourceManager.loadAnimation("images/hero_walk_melee.png", "hero_walk_melee", 40, 32, CHR_WALK_SPEED);
-  this.resourceManager.loadImage("images/zombie.png", "zombie");
-  this.resourceManager.loadAnimation("images/zombie_melee.png", "zombie_melee", 32, 32, CHR_ATTACK_SPEED);
-  this.resourceManager.loadAnimation("images/zombie_walk.png", "zombie_walk", 40, 32, CHR_WALK_SPEED);
+  this.resourceManager.loadImage("images/hero_idle_ranged.png", "hero_idle_ranged");
+  this.resourceManager.loadAnimation("images/hero_attack_ranged.png", "hero_attack_ranged", 40, 32, CHR_ATTACK_SPEED);
+  this.resourceManager.loadAnimation("images/hero_attack_melee.png", "hero_attack_melee", 40, 32, CHR_ATTACK_SPEED);
+
+  this.resourceManager.loadImage("images/zombie_idle_melee.png", "zombie_idle_melee");
+  this.resourceManager.loadAnimation("images/zombie_attack_melee.png", "zombie_attack_melee", 32, 32, CHR_ATTACK_SPEED);
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 };
 
