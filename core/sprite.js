@@ -77,3 +77,9 @@ Sprite.prototype.render = function (position, centered, hflip, vflip) {
     }
   }
 };
+
+// Updates the sprite animation
+Sprite.prototype.update = function () {
+  if (this.animation)
+    this.animation.update();
+};
