@@ -6,6 +6,7 @@ var SIM_MAP_FIELD_SIZE = 32;
 var ST_MV_PLAYER = 0;
 var ST_MV_AI = 1;
 
+var ENABLE_VISIBILITY_GRADIENT = false;
 var VISIBILITY_RANGE = 15;
 
 // Tile colors
@@ -187,12 +188,14 @@ Simulation.prototype.renderVisibilityMap = function () {
   var jEnd = Math.min(Math.floor((this.camera.height + this.camera.y) / SIM_MAP_FIELD_SIZE) + 1, this.visibilityMap[0].length);
   for (var i = iStart; i < iEnd; i++) {
     for (var j = jStart; j < jEnd; j++) {
-      if (this.visibilityMap[i][j] < 1) {
-        drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
-          j * SIM_MAP_FIELD_SIZE - this.camera.y,
-          SIM_MAP_FIELD_SIZE,
-          SIM_MAP_FIELD_SIZE,
-          "rgba(0,0,0," + this.visibilityMap[i][j] + ")");
+      if (ENABLE_VISIBILITY_GRADIENT) {
+        if (this.visibilityMap[i][j] < 1) {
+          drawRect(i * SIM_MAP_FIELD_SIZE - this.camera.x,
+            j * SIM_MAP_FIELD_SIZE - this.camera.y,
+            SIM_MAP_FIELD_SIZE,
+            SIM_MAP_FIELD_SIZE,
+            "rgba(0,0,0," + this.visibilityMap[i][j] + ")");
+        }
       }
     }
   }
