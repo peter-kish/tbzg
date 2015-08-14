@@ -56,10 +56,12 @@ function clearScreen() {
 // Render everything
 function render() {
   simulation.render();
+  gui.render();
 }
 
 // Update everything
 function update() {
+  gui.update();
   simulation.update();
 }
 
@@ -77,6 +79,47 @@ drawLoadingScreen();
 
 // Create a simulation instance
 var simulation = new Simulation();
+
+// Create the GUI elements
+var gui = new Gui(canvas.width, canvas.height);
+var button_skip_turn = new GuiImageButton(new Rect2d(canvas.width - 32, 0, 32, 32),
+  simulation.resourceManager.getResource("button_skip_turn"),
+  function() {simulation.player.doNothing();});
+var button_inventory = new GuiImageButton(new Rect2d(canvas.width - 64, 0, 32, 32),
+  simulation.resourceManager.getResource("button_inventory"),
+  function() {alert("Inventory not yet implemented.");});
+var button_menu = new GuiImageButton(new Rect2d(canvas.width - 96, 0, 32, 32),
+  simulation.resourceManager.getResource("button_menu"),
+  function() {alert("Main menu not yet implemented.")});
+gui.mainFrame.addChild(button_skip_turn);
+gui.mainFrame.addChild(button_inventory);
+gui.mainFrame.addChild(button_menu);
+
+function inputHandler(input, sim, x, y) {
+  switch (input) {
+  case INPUT_LEFT:
+    simulation.player.walkAttack(CHR_DIR_LEFT);
+    break;
+  case INPUT_UP:
+    simulation.player.walkAttack(CHR_DIR_UP);
+    break;
+  case INPUT_RIGHT:
+    simulation.player.walkAttack(CHR_DIR_RIGHT);
+    break;
+  case INPUT_DOWN:
+    simulation.player.walkAttack(CHR_DIR_DOWN);
+    break;
+  case INPUT_SKIP:
+    simulation.player.doNothing();
+    break;
+  case INPUT_CLICK:
+    if (!gui.handleMouseClick(x, y))
+      simulation.onFieldClick(simulation.getMapCoords(new Vector2d(x + simulation.camera.x, y + simulation.camera.y)));
+    break;
+  }
+}
+
+simulation.input.addHandler(inputHandler, gui);
 
 // FPS counter
 var fps = {

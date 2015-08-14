@@ -29,6 +29,7 @@ GuiImageButton = function(rect, image, onClickCallback) {
 // Image button inherits the button class
 inherit(GuiImageButton, GuiButton);
 
+// Render only the image (skip the panel rendering)
 GuiImageButton.prototype.render = function () {
   if (this.visible) {
     this.guiImage.render();

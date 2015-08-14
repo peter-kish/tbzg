@@ -53,7 +53,7 @@ var Simulation = function() {
   this.camera = new Rect2d(0, 0, canvas.width, canvas.height);
   this.mapFieldSize = SIM_MAP_FIELD_SIZE;
   this.input = new Input();
-  this.input.addHandler(inputHandler, this);
+  //this.input.addHandler(inputHandler, this);
   this.turnNumber = 0;
 
   this.player = null;
@@ -436,6 +436,10 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadAnimation("images/zombie_attack_melee.png", "zombie_attack_melee", 32, 32, CHR_ATTACK_SPEED);
   this.resourceManager.loadAnimation("images/zombie_die.png", "zombie_die", 32, 32, 300);
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
+
+  this.resourceManager.loadImage("images/gui/button_skip_turn.png", "button_skip_turn");
+  this.resourceManager.loadImage("images/gui/button_inventory.png", "button_inventory");
+  this.resourceManager.loadImage("images/gui/button_menu.png", "button_menu");
 };
 
 // Handles a window resize
