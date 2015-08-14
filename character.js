@@ -279,8 +279,7 @@ var AI = function(parentSim, position) {
 }
 
 // AI class inherits the Character class
-AI.prototype = Object.create(Character.prototype);
-AI.prototype.constructor = AI;
+inherit(AI, Character);
 
 // Updates the AI
 AI.prototype.update = function() {

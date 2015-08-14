@@ -48,8 +48,7 @@ var Fader = function() {
 
 }
 
-Fader.prototype = new Timer();
-Fader.prototype.constructor = Fader;
+inherit(Fader, Timer);
 
 Fader.prototype.getEasing = function(f) {
   return f(this.getProgress());

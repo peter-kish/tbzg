@@ -17,8 +17,7 @@ var FuzzyStateMachine = function(startState) {
   this.fader = new Fader();
 }
 
-FuzzyStateMachine.prototype = new StateMachine();
-FuzzyStateMachine.constructor = FuzzyStateMachine;
+inherit(FuzzyStateMachine, StateMachine);
 
 FuzzyStateMachine.prototype.setState = function(state, time) {
   if (time == 0) {
