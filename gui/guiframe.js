@@ -1,5 +1,5 @@
 // Frame class constructor
-var Frame = function (rect) {
+var GuiFrame = function (rect) {
   this.rect = new Rect2d(rect.x, rect.y, rect.width, rect.height);
   this.children = [];
   this.parentFrame = null;
@@ -7,7 +7,7 @@ var Frame = function (rect) {
 }
 
 // Returns the frame screen position
-Frame.prototype.getScreenPosition = function () {
+GuiFrame.prototype.getScreenPosition = function () {
   if (this.parentFrame) {
     var delta = this.parentFrame.getScreenPosition();
     return new Vector2d(this.rect.x + delta.x, this.rect.y + delta.y);
@@ -17,14 +17,14 @@ Frame.prototype.getScreenPosition = function () {
 };
 
 // Renders the frame and all its children
-Frame.prototype.render = function () {
+GuiFrame.prototype.render = function () {
   for (var i = 0; i < this.children.length; i++) {
     this.children[i].render();
   }
 };
 
 // Updates the frame and all its children. Returns true if mouse input has been handled.
-Frame.prototype.update = function () {
+GuiFrame.prototype.update = function () {
   var mouseHandled = false;
   for (var i = 0; i < this.children.length; i++) {
     mouseHandled = this.children[i].update();
@@ -37,7 +37,7 @@ Frame.prototype.update = function () {
 };
 
 // Adds a child frame
-Frame.prototype.addChild = function (childFrame) {
+GuiFrame.prototype.addChild = function (childFrame) {
   if (childFrame) {
     this.children.push(childFrame);
     childFrame.parentFrame = this;
@@ -45,7 +45,7 @@ Frame.prototype.addChild = function (childFrame) {
 };
 
 // Removes a child frame
-Frame.prototype.removeChild = function (childFrame) {
+GuiFrame.prototype.removeChild = function (childFrame) {
   for (var i = 0; i < this.children.length; i++) {
     if(this.children[i] == childFrame) {
       childFrame.parentFrame = null;
@@ -56,6 +56,6 @@ Frame.prototype.removeChild = function (childFrame) {
 };
 
 // Removes all children
-Frame.prototype.clearChildren = function () {
+GuiFrame.prototype.clearChildren = function () {
   this.children = [];
 };
