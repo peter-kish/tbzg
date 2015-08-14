@@ -17,3 +17,23 @@ var GuiTextButton = function (rect, title, color, onClickCallback) {
 
 // Text button class inherits the button class
 inherit(GuiTextButton, GuiButton);
+
+// Image button class constructor
+GuiImageButton = function(rect, image, onClickCallback) {
+  GuiButton.prototype.constructor.call(this, rect, null, onClickCallback);
+  this.guiImage = new GuiImage(new Rect2d(0, 0, rect.width, rect.height), image);
+  this.addChild(this.guiImage);
+  this.guiImage.onMouseClick = this.onMouseClick;
+}
+
+// Image button inherits the button class
+inherit(GuiImageButton, GuiButton);
+
+GuiImageButton.prototype.render = function () {
+  if (this.visible) {
+    this.guiImage.render();
+    for (var i = 0; i < this.children.length; i++) {
+      this.children[i].render();
+    }
+  }
+};
