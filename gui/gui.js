@@ -14,5 +14,5 @@ Gui.prototype.update = function () {
 };
 
 Gui.prototype.handleMouseClick = function (x, y) {
-  this.mainFrame.handleMouseClick(x, y);
+  return this.mainFrame.handleMouseClick(x, y);
 };

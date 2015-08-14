@@ -6,6 +6,9 @@ var GuiPanel = function (rect, color) {
   } else {
     this.color = "#000000";
   }
+
+  // dont't let the mouse click event go further up the hierarchy
+  this.onMouseClick = function() {};
 }
 
 // Panel class inherits the Frame class
