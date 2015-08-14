@@ -29,16 +29,10 @@ GuiFrame.prototype.render = function () {
 // Updates the frame and all its children. Returns true if mouse input has been handled.
 GuiFrame.prototype.update = function () {
   if (this.visible) {
-    var mouseHandled = false;
     for (var i = 0; i < this.children.length; i++) {
-      mouseHandled = this.children[i].update();
-    }
-    if (!mouseHandled && this.onMouseClick) {
-      this.onMouseClick();
-      return true;
+      this.children[i].update();
     }
   }
-  return false;
 };
 
 // Adds a child frame
@@ -78,4 +72,24 @@ GuiFrame.prototype.show = function () {
 // Hides the frame
 GuiFrame.prototype.hide = function () {
   this.setVisibility(false);
+};
+
+// Handles the mouse input
+GuiFrame.prototype.handleMouseClick = function (x, y) {
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i].handleMouseClick(x, y)) {
+      return true;
+    }
+  }
+
+  var screenPos = this.getScreenPosition();
+  if (x > screenPos.x && x < screenPos.x + this.rect.width) {
+    if (y > screenPos.y && y < screenPos.y + this.rect.height) {
+      if (this.onMouseClick) {
+        this.onMouseClick();
+      }
+      return true;
+    }
+  }
+  return false;
 };

@@ -1,12 +1,15 @@
 // Panel class constructor
 var GuiPanel = function (rect, color) {
   GuiFrame.prototype.constructor.call(this, rect);
-  this.color = color;
+  if (color) {
+    this.color = color;
+  } else {
+    this.color = "#000000";
+  }
 }
 
 // Panel class inherits the Frame class
 inherit(GuiPanel, GuiFrame);
-
 
 // Renders the panel
 GuiPanel.prototype.render = function () {
