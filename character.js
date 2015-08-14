@@ -177,14 +177,17 @@ Character.prototype.rangedAttack = function (position, direction) {
 
 // Apply the given damage on the character
 Character.prototype.takeDamage = function (damage, direction) {
-  this.hitPoints = Math.max(this.hitPoints - damage.hitPoints, 0);
+  if (this.isAlive()) {
+    this.hitPoints = Math.max(this.hitPoints - damage.hitPoints, 0);
+    if (!this.isAlive()) {
+      this.setImage(this.animationSet.dead);
+      this.playAnimation(this.animationSet.die);
+      this.setLegsImage(null);
+    }
+  }
   if (damage.knockback) {
     if (this.parentSim.isFreeField(this.getAdjacentField(direction)))
       this.move(direction, CHR_WALK_SPEED);
-  }
-  if (!this.isAlive()) {
-    this.setImage(this.animationSet.dead);
-    this.setLegsImage(null);
   }
 };
 

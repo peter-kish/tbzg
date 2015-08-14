@@ -24,6 +24,7 @@ playerAnimationSet = {
   idle_ranged: "hero_idle_ranged",
   idle_melee: "hero_idle_melee",
   dead: null,
+  die: null,
   attack_ranged: "hero_attack_ranged",
   attack_melee: "hero_attack_melee",
   legs_idle: "legs_idle",
@@ -34,6 +35,7 @@ enemyAnimationSet = {
   idle_ranged: null,
   idle_melee: "zombie_idle_melee",
   dead: "zombie_dead",
+  die: "zombie_die",
   attack_ranged: null,
   attack_melee: "zombie_attack_melee",
   legs_idle: "legs_idle",
@@ -432,6 +434,7 @@ Simulation.prototype.loadResources = function () {
 
   this.resourceManager.loadImage("images/zombie_idle_melee.png", "zombie_idle_melee");
   this.resourceManager.loadAnimation("images/zombie_attack_melee.png", "zombie_attack_melee", 32, 32, CHR_ATTACK_SPEED);
+  this.resourceManager.loadAnimation("images/zombie_die.png", "zombie_die", 32, 32, 300);
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 };
 
