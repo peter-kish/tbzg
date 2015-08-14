@@ -87,8 +87,8 @@ GuiFrame.prototype.handleMouseClick = function (x, y) {
     if (y > screenPos.y && y < screenPos.y + this.rect.height) {
       if (this.onMouseClick) {
         this.onMouseClick();
+        return true;
       }
-      return true;
     }
   }
   return false;
