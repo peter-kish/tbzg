@@ -4,6 +4,7 @@ var GuiFrame = function (rect) {
   this.children = [];
   this.parentFrame = null;
   this.onMouseClick = null;
+  this.visible = true;
 }
 
 // Returns the frame screen position
@@ -18,20 +19,24 @@ GuiFrame.prototype.getScreenPosition = function () {
 
 // Renders the frame and all its children
 GuiFrame.prototype.render = function () {
-  for (var i = 0; i < this.children.length; i++) {
-    this.children[i].render();
+  if (this.visible) {
+    for (var i = 0; i < this.children.length; i++) {
+      this.children[i].render();
+    }
   }
 };
 
 // Updates the frame and all its children. Returns true if mouse input has been handled.
 GuiFrame.prototype.update = function () {
-  var mouseHandled = false;
-  for (var i = 0; i < this.children.length; i++) {
-    mouseHandled = this.children[i].update();
-  }
-  if (!mouseHandled && this.onMouseClick) {
-    this.onMouseClick();
-    return true;
+  if (this.visible) {
+    var mouseHandled = false;
+    for (var i = 0; i < this.children.length; i++) {
+      mouseHandled = this.children[i].update();
+    }
+    if (!mouseHandled && this.onMouseClick) {
+      this.onMouseClick();
+      return true;
+    }
   }
   return false;
 };
@@ -58,4 +63,19 @@ GuiFrame.prototype.removeChild = function (childFrame) {
 // Removes all children
 GuiFrame.prototype.clearChildren = function () {
   this.children = [];
+};
+
+// Sets the frame visibility
+GuiFrame.prototype.setVisibility  = function (visible) {
+  this.visible = visible;
+};
+
+// Makes the frame visible
+GuiFrame.prototype.show = function () {
+  this.setVisibility(true);
+};
+
+// Hides the frame
+GuiFrame.prototype.hide = function () {
+  this.setVisibility(false);
 };
