@@ -1,3 +1,15 @@
+//Constants
+var GUI_POS_RELATIVE = 0;
+var GUI_POS_ABSOLUTE = 1;
+var GUI_POS_FLOAT_RIGHT = 2;
+var GUI_POS_FLOAT_LEFT = 3;
+var GUI_POS_FLOAT_TOP = 4;
+var GUI_POS_FLOAT_BOTTOM = 5;
+var GUI_POS_FLOAT_TOP_RIGHT = 6;
+var GUI_POS_FLOAT_BOTTOM_RIGHT = 7;
+var GUI_POS_FLOAT_TOP_LEFT = 8;
+var GUI_POS_FLOAT_BOTTOM_LEFT = 9;
+
 // Frame class constructor
 var GuiFrame = function (rect) {
   this.rect = new Rect2d(rect.x, rect.y, rect.width, rect.height);
@@ -5,16 +17,50 @@ var GuiFrame = function (rect) {
   this.parentFrame = null;
   this.onMouseClick = null;
   this.visible = true;
+  this.positioning = GUI_POS_RELATIVE;
 }
 
 // Returns the frame screen position
 GuiFrame.prototype.getScreenPosition = function () {
-  if (this.parentFrame) {
-    var delta = this.parentFrame.getScreenPosition();
-    return new Vector2d(this.rect.x + delta.x, this.rect.y + delta.y);
-  } else {
-    return new Vector2d(this.rect.x, this.rect.y);
+  var result = new Vector2d(this.rect.x, this.rect.y);
+
+  if (!this.parentFrame) {
+    // Ignore positioning. Only absolute is possible.
+    return result;
   }
+
+  switch (this.positioning) {
+  case GUI_POS_RELATIVE:
+    break;
+  case GUI_POS_ABSOLUTE:
+    return result;
+    break;
+  case GUI_POS_FLOAT_RIGHT:
+    result.x = this.parentFrame.rect.width - this.rect.width;
+    break;
+  case GUI_POS_FLOAT_TOP_RIGHT:
+    result.x = this.parentFrame.rect.width - this.rect.width;
+    result.y = 0;
+    break;
+  case GUI_POS_FLOAT_BOTTOM_RIGHT:
+    result.x = this.parentFrame.rect.width - this.rect.width;
+    result.y = this.parentFrame.rect.height - this.rect.height;
+    break;
+  case GUI_POS_FLOAT_LEFT:
+    result.x = 0;
+    break;
+  case GUI_POS_FLOAT_TOP_LEFT:
+    result.x = 0;
+    result.y = 0;
+    break;
+  case GUI_POS_FLOAT_BOTTOM_LEFT:
+    result.x = 0;
+    result.y = this.parentFrame.rect.height - this.rect.height;
+    break;
+  }
+
+  result.add(this.parentFrame.getScreenPosition());
+  return result;
 };
 
 // Renders the frame and all its children
@@ -28,7 +74,7 @@ GuiFrame.prototype.render = function () {
   }
 };
 
-// Updates the frame and all its children. Returns true if mouse input has been handled.
+// Updates the frame and all its children.
 GuiFrame.prototype.update = function () {
   if (this.visible) {
     for (var i = 0; i < this.children.length; i++) {

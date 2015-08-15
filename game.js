@@ -58,22 +58,28 @@ Game.prototype.mainLoop = function () {
 
 // Initialize the GUI elements
 Game.prototype.initGui = function () {
-  var button_skip_turn = new GuiImageButton(new Rect2d(this.scrWidth - 32, 0, 32, 32),
+  var toolbar = new GuiFrame(new Rect2d(0, 0, 96, 32));
+  var button_skip_turn = new GuiImageButton(new Rect2d(64, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_skip_turn"),
     function() {game_instance.simulation.player.doNothing();});
-  var button_inventory = new GuiImageButton(new Rect2d(this.scrWidth - 64, 0, 32, 32),
+  var button_inventory = new GuiImageButton(new Rect2d(32, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_inventory"),
     function() {alert("Inventory not yet implemented.");});
-  var button_menu = new GuiImageButton(new Rect2d(this.scrWidth - 96, 0, 32, 32),
+  var button_menu = new GuiImageButton(new Rect2d(0, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_menu"),
     function() {alert("Main menu not yet implemented.")});
+  toolbar.addChild(button_skip_turn);
+  toolbar.addChild(button_inventory);
+  toolbar.addChild(button_menu);
+  toolbar.positioning = GUI_POS_FLOAT_TOP_RIGHT;
+
   var button_ranged_slot = new GuiInventoryItemButton(new Rect2d(this.scrWidth - 64, this.scrHeight - 32, 64, 32),
     this.simulation.player.rangedSlot, reloadWeapon);
+  button_ranged_slot.positioning = GUI_POS_FLOAT_BOTTOM_RIGHT;
   var button_melee_slot = new GuiInventoryItemButton(new Rect2d(0, this.scrHeight - 32, 64, 32),
     this.simulation.player.meleeSlot, reloadWeapon);
-  this.gui.mainFrame.addChild(button_skip_turn);
-  this.gui.mainFrame.addChild(button_inventory);
-  this.gui.mainFrame.addChild(button_menu);
+  button_melee_slot.positioning = GUI_POS_FLOAT_BOTTOM_LEFT;
+  this.gui.mainFrame.addChild(toolbar);
   this.gui.mainFrame.addChild(button_ranged_slot);
   this.gui.mainFrame.addChild(button_melee_slot);
 };
@@ -115,4 +121,6 @@ Game.prototype.onWindowResize = function (newWidth, newHeight) {
   this.scrWidth = newWidth;
   this.scrHeight = newHeight;
   this.simulation.onWindowResize(newWidth, newHeight);
+  this.gui.mainFrame.rect.width = newWidth;
+  this.gui.mainFrame.rect.height = newHeight;
 };
