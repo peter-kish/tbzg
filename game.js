@@ -1,6 +1,10 @@
 // Global game instance
 var game_instance = null;
 
+function getGameInstance() {
+  return game_instance;
+}
+
 // Game class constructor
 var Game = function (scrWidth, scrHeight) {
   this.simulation = new Simulation();
@@ -54,19 +58,29 @@ Game.prototype.mainLoop = function () {
 
 // Initialize the GUI elements
 Game.prototype.initGui = function () {
-  var button_skip_turn = new GuiImageButton(new Rect2d(canvas.width - 32, 0, 32, 32),
+  var button_skip_turn = new GuiImageButton(new Rect2d(this.scrWidth - 32, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_skip_turn"),
     function() {game_instance.simulation.player.doNothing();});
-  var button_inventory = new GuiImageButton(new Rect2d(canvas.width - 64, 0, 32, 32),
+  var button_inventory = new GuiImageButton(new Rect2d(this.scrWidth - 64, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_inventory"),
     function() {alert("Inventory not yet implemented.");});
-  var button_menu = new GuiImageButton(new Rect2d(canvas.width - 96, 0, 32, 32),
+  var button_menu = new GuiImageButton(new Rect2d(this.scrWidth - 96, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_menu"),
     function() {alert("Main menu not yet implemented.")});
+  var button_ranged_slot = new GuiInventoryItemButton(new Rect2d(this.scrWidth - 64, this.scrHeight - 32, 64, 32),
+    this.simulation.player.rangedSlot, reloadWeapon);
+  var button_melee_slot = new GuiInventoryItemButton(new Rect2d(0, this.scrHeight - 32, 64, 32),
+    this.simulation.player.meleeSlot, reloadWeapon);
   this.gui.mainFrame.addChild(button_skip_turn);
   this.gui.mainFrame.addChild(button_inventory);
   this.gui.mainFrame.addChild(button_menu);
+  this.gui.mainFrame.addChild(button_ranged_slot);
+  this.gui.mainFrame.addChild(button_melee_slot);
 };
+
+function reloadWeapon() {
+  game_instance.simulation.player.reload();
+}
 
 // Input handler
 function inputHandler(input, game, x, y) {

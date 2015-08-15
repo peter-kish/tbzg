@@ -31,10 +31,8 @@ inherit(GuiImageButton, GuiButton);
 
 // Render only the image (skip the panel rendering)
 GuiImageButton.prototype.render = function () {
-  if (this.visible) {
-    this.guiImage.render();
-    for (var i = 0; i < this.children.length; i++) {
-      this.children[i].render();
-    }
+  this.guiImage.render();
+  for (var i = 0; i < this.children.length; i++) {
+    this.children[i].render();
   }
 };

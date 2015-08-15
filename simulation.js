@@ -345,8 +345,12 @@ Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
   this.player.maxHitPoints = 100;
   this.player.hitPoints = this.player.maxHitPoints;
-  var meleeWeapon = new WeaponInventoryItem("Fists", null, new Damage(DMG_MELEE, 1, true), 1, 1);
-  var rangedWeapon = new WeaponInventoryItem("Shotgun", null, new Damage(DMG_BULLET, 5, false), 8, 8);
+  var meleeWeapon = new WeaponInventoryItem("Fists",
+    this.resourceManager.getResource("item_fists"),
+    new Damage(DMG_MELEE, 1, true), 1, 1);
+  var rangedWeapon = new WeaponInventoryItem("Shotgun",
+    this.resourceManager.getResource("item_shotgun"),
+    new Damage(DMG_BULLET, 5, false), 8, 8);
   rangedWeapon.slowReload = true;
   this.player.equipMelee(meleeWeapon);
   this.player.equipRanged(rangedWeapon);
@@ -445,6 +449,9 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/gui/button_skip_turn.png", "button_skip_turn");
   this.resourceManager.loadImage("images/gui/button_inventory.png", "button_inventory");
   this.resourceManager.loadImage("images/gui/button_menu.png", "button_menu");
+
+  this.resourceManager.loadImage("images/items/item_shotgun.png", "item_shotgun");
+  this.resourceManager.loadImage("images/items/item_fists.png", "item_fists");
 };
 
 // Handles a window resize

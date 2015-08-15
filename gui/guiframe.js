@@ -21,7 +21,9 @@ GuiFrame.prototype.getScreenPosition = function () {
 GuiFrame.prototype.render = function () {
   if (this.visible) {
     for (var i = 0; i < this.children.length; i++) {
-      this.children[i].render();
+      if (this.children[i].visible) {
+        this.children[i].render();
+      }
     }
   }
 };
@@ -30,7 +32,9 @@ GuiFrame.prototype.render = function () {
 GuiFrame.prototype.update = function () {
   if (this.visible) {
     for (var i = 0; i < this.children.length; i++) {
-      this.children[i].update();
+      if (this.children[i].visible) {
+        this.children[i].update();
+      }
     }
   }
 };

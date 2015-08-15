@@ -116,3 +116,32 @@ Inventory.prototype.removeItem = function (item) {
   }
   return false;
 };
+
+
+// Inventory item button class constructor
+var GuiInventoryItemButton = function (rect, item, onClickCallback) {
+  GuiImageButton.prototype.constructor.call(this, rect, item.image, onClickCallback);
+  this.item = item;
+  this.guiText = new GuiText(new Rect2d(0, 0, rect.width, rect.height), "0/0");
+  this.guiText.align = "left";
+  this.guiText.baseline = "top";
+  this.guiText.size = 10;
+  this.guiText.style = "bold";
+  this.addChild(this.guiText);
+  this.guiText.onMouseClick = this.onMouseClick;
+}
+
+// Inventory item button inherits the image button class
+inherit(GuiInventoryItemButton, GuiImageButton);
+
+// Updates the inventory item button
+GuiInventoryItemButton.prototype.update = function () {
+  GuiImageButton.prototype.update.call(this);
+  if (this.item.isStackable()) {
+    this.guiText.show();
+    this.guiText.text = "" + this.item.count + "/" + this.item.maxCount;
+  } else {
+    this.guiText.hide();
+    this.guiText.text = "";
+  }
+};
