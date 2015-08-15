@@ -1,3 +1,6 @@
+// Global game instance
+var game_instance = null;
+
 // Game class constructor
 var Game = function (scrWidth, scrHeight) {
   this.simulation = new Simulation();
@@ -7,6 +10,8 @@ var Game = function (scrWidth, scrHeight) {
 
   this.initGui();
   this.simulation.input.addHandler(inputHandler, this);
+
+  game_instance = this;
 }
 
 // Render the game
@@ -51,7 +56,7 @@ Game.prototype.mainLoop = function () {
 Game.prototype.initGui = function () {
   var button_skip_turn = new GuiImageButton(new Rect2d(canvas.width - 32, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_skip_turn"),
-    function() {this.simulation.player.doNothing();});
+    function() {game_instance.simulation.player.doNothing();});
   var button_inventory = new GuiImageButton(new Rect2d(canvas.width - 64, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_inventory"),
     function() {alert("Inventory not yet implemented.");});
