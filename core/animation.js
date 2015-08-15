@@ -26,9 +26,11 @@ Animation.prototype.render = function (x, y, hflip, vflip) {
 
 // Renders the animation frame at the given progress
 Animation.prototype.renderProgress = function (x, y, progress, hflip, vflip) {
-  if (progress == 1)
-    progress = 0;
   var frameNum = Math.floor(progress * this.frameCount);
+  if (frameNum == this.frameCount) {
+    frameNum = this.frameCount - 1;
+  }
+
   drawImageCropped(this.image,
     frameNum * this.frameWidth,
     0,
