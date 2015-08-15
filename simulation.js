@@ -448,7 +448,9 @@ Simulation.prototype.loadResources = function () {
 };
 
 // Handles a window resize
-Simulation.prototype.onWindowResize = function () {
+Simulation.prototype.onWindowResize = function (newWidth, newHeight) {
+  this.camera.width = canvas.width;
+  this.camera.height = canvas.height;
   this.updateVisibilityMap();
 };
 

@@ -75,12 +75,14 @@ WeaponInventoryItem.prototype.getAmmo = function () {
 
 // Reloads the given amount of ammo
 WeaponInventoryItem.prototype.reload = function (amount) {
-  if (!amount) {
-    amount = this.maxCount - this.count;
-  }
+  if (this.isStackable()) {
+    if (!amount) {
+      amount = this.maxCount - this.count;
+    }
 
-  if (this.count <= this.maxCount - amount) {
-    this.count += amount;
+    if (this.count <= this.maxCount - amount) {
+      this.count += amount;
+    }
   }
 };
 
