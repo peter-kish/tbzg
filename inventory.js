@@ -41,7 +41,7 @@ InventoryItem.prototype.consume = function (amount) {
   }
 
   if (this.isStackable()) {
-    if (this.count > amount) {
+    if (this.count >= amount) {
       this.count -= amount;
       return true;
     }
@@ -56,6 +56,7 @@ var WeaponInventoryItem = function (name, image, damage, ammo, maxAmmo) {
   this.damage = damage;
   this.count = ammo;
   this.maxCount = maxAmmo;
+  this.ammoName = null;
 }
 
 // WeaponInventoryItem class inherits the InventoryItem class
@@ -64,6 +65,18 @@ inherit(WeaponInventoryItem, InventoryItem);
 // Returns true if the weapon is a weapon (Duh!)
 WeaponInventoryItem.prototype.isWeapon = function () {
   return true;
+};
+
+// Returns the amount of ammo left in the weapon
+WeaponInventoryItem.prototype.getAmmo = function () {
+  return this.count;
+};
+
+// Reloads the given amount of ammo
+WeaponInventoryItem.prototype.reload = function (amount) {
+  if (this.count <= this.maxCount - amount) {
+    this.count += amount;
+  }
 };
 
 // Inventory class constructor

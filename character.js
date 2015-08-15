@@ -8,12 +8,14 @@ var CHR_DIR_INVALID = 4;
 // Character states
 var CHR_ST_IDLE = 0;
 var CHR_ST_MOVE = 1;
-var CHR_ST_ATTACK = 2
-var CHR_ST_TURN_END = 3
+var CHR_ST_ATTACK = 2;
+var CHR_ST_RELOAD = 3;
+var CHR_ST_TURN_END = 4;
 
 // State transition speeds (in ms)
 var CHR_WALK_SPEED = 300;
 var CHR_ATTACK_SPEED = 300;
+var CHR_RELOAD_SPEED = 300;
 
 // Character class constructor
 var Character = function(parentSim, position) {
@@ -72,7 +74,9 @@ Character.prototype.render = function () {
 
 // Update the character
 Character.prototype.update = function () {
-  if (this.isInSolidState(CHR_ST_MOVE) || this.isInSolidState(CHR_ST_ATTACK)) {
+  if (this.isInSolidState(CHR_ST_MOVE) ||
+      this.isInSolidState(CHR_ST_ATTACK) ||
+      this.isInSolidState(CHR_ST_RELOAD)) {
     this.stateMachine.setState(CHR_ST_TURN_END, 0);
   }
   this.torsoSprite.update();
@@ -171,14 +175,23 @@ Character.prototype.meleeAttack = function (position, direction) {
 
 // Perform a ranged Attack in the given direction
 Character.prototype.rangedAttack = function (position, direction) {
-  if (!this.rangedSlot)
+  if (!this.rangedSlot) {
     return false;
+  }
+
+  if (this.rangedSlot.isStackable() && this.rangedSlot.getAmmo() < 0) {
+    return false;
+  }
 
   var damage = this.rangedSlot.damage;
   if (this.isInSolidState(CHR_ST_IDLE) && damage) {
     var character = this.parentSim.getCharacterAt(position);
     if (!character)
       return false;
+
+    if (!this.rangedSlot.consume(1)) {
+      return false;
+    }
 
     if (position.x < this.position.x) {
       this.faceTo(CHR_DIR_LEFT);
@@ -190,6 +203,18 @@ Character.prototype.rangedAttack = function (position, direction) {
     this.playAnimation(this.animationSet.attack_ranged);
     this.setImage(this.animationSet.idle_ranged);
     return true;
+  }
+  return false;
+};
+
+// Reloads the ranged weapon
+Character.prototype.reload = function () {
+  if (this.rangedSlot) {
+    if (this.rangedSlot.getAmmo() < this.rangedSlot.maxCount) {
+      this.rangedSlot.reload(1);
+      this.stateMachine.setState(CHR_ST_RELOAD, CHR_RELOAD_SPEED);
+      return true;
+    }
   }
   return false;
 };

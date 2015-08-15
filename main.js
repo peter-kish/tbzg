@@ -112,6 +112,9 @@ function inputHandler(input, sim, x, y) {
   case INPUT_SKIP:
     simulation.player.doNothing();
     break;
+  case INPUT_RELOAD:
+    simulation.player.reload();
+    break;
   case INPUT_CLICK:
     if (!gui.handleMouseClick(x, y))
       simulation.onFieldClick(simulation.getMapCoords(new Vector2d(x + simulation.camera.x, y + simulation.camera.y)));
