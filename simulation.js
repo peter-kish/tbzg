@@ -345,8 +345,10 @@ Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
   this.player.maxHitPoints = 100;
   this.player.hitPoints = this.player.maxHitPoints;
-  this.player.meleeDamage = new Damage(DMG_MELEE, 1, true);
-  this.player.rangedDamage = new Damage(DMG_BULLET, 5, false);
+  var meleeWeapon = new WeaponInventoryItem("Fists", null, new Damage(DMG_MELEE, 1, true), 1, 1);
+  var rangedWeapon = new WeaponInventoryItem("Shotgun", null, new Damage(DMG_BULLET, 5, false), 8, 8);
+  this.player.equipMelee(meleeWeapon);
+  this.player.equipRanged(rangedWeapon);
   this.player.animationSet = playerAnimationSet;
   this.player.setImage(playerAnimationSet.idle_ranged);
   this.player.setLegsImage(playerAnimationSet.legs_idle);
@@ -355,7 +357,9 @@ Simulation.prototype.createPlayer = function (position) {
 // Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
-  newAI.meleeDamage = new Damage(DMG_MELEE, 5, true);
+  var meleeWeapon = new WeaponInventoryItem("Fists", null, new Damage(DMG_MELEE, 5, true), 1, 1);
+  newAI.equipMelee(meleeWeapon);
+  newAI.rangedSlot = null;
   newAI.animationSet = enemyAnimationSet;
   newAI.setImage(enemyAnimationSet.idle_melee);
   newAI.setLegsImage(enemyAnimationSet.legs_idle);

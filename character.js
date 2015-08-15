@@ -24,11 +24,12 @@ var Character = function(parentSim, position) {
   this.facing = CHR_DIR_RIGHT;
   this.maxHitPoints = 15;
   this.hitPoints = this.maxHitPoints;
-  this.meleeDamage = null;
-  this.rangedDamage = null;
   this.animationSet = null;
   this.torsoSprite = new Sprite();
   this.legsSprite = new Sprite();
+  this.inventory = new Inventory(10);
+  this.meleeSlot = null;
+  this.rangedSlot = null;
 }
 
 // Play a torso sprite animation
@@ -133,9 +134,23 @@ Character.prototype.move = function (direction, speed) {
   return true;
 };
 
+// Equips the given melee weapon
+Character.prototype.equipMelee = function (weapon) {
+  this.meleeSlot = weapon;
+};
+
+// Equips the given ranged weapon
+Character.prototype.equipRanged = function (weapon) {
+  this.rangedSlot = weapon;
+};
+
 // Perform a melee Attack in the given direction
 Character.prototype.meleeAttack = function (position, direction) {
-  if (this.isInSolidState(CHR_ST_IDLE) && this.meleeDamage) {
+  if (!this.meleeSlot)
+    return false;
+
+  var damage = this.meleeSlot.damage;
+  if (this.isInSolidState(CHR_ST_IDLE) && damage) {
     var character = this.parentSim.getCharacterAt(position);
     if (!character)
       return false;
@@ -145,7 +160,7 @@ Character.prototype.meleeAttack = function (position, direction) {
     } else {
       this.faceTo(CHR_DIR_RIGHT);
     }
-    character.takeDamage(this.meleeDamage, direction);
+    character.takeDamage(damage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     this.playAnimation(this.animationSet.attack_melee);
     this.setImage(this.animationSet.idle_melee);
@@ -156,7 +171,11 @@ Character.prototype.meleeAttack = function (position, direction) {
 
 // Perform a ranged Attack in the given direction
 Character.prototype.rangedAttack = function (position, direction) {
-  if (this.isInSolidState(CHR_ST_IDLE) && this.rangedDamage) {
+  if (!this.rangedSlot)
+    return false;
+
+  var damage = this.rangedSlot.damage;
+  if (this.isInSolidState(CHR_ST_IDLE) && damage) {
     var character = this.parentSim.getCharacterAt(position);
     if (!character)
       return false;
@@ -166,7 +185,7 @@ Character.prototype.rangedAttack = function (position, direction) {
     } else {
       this.faceTo(CHR_DIR_RIGHT);
     }
-    character.takeDamage(this.rangedDamage, direction);
+    character.takeDamage(damage, direction);
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     this.playAnimation(this.animationSet.attack_ranged);
     this.setImage(this.animationSet.idle_ranged);
