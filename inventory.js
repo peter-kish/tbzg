@@ -57,6 +57,7 @@ var WeaponInventoryItem = function (name, image, damage, ammo, maxAmmo) {
   this.count = ammo;
   this.maxCount = maxAmmo;
   this.ammoName = null;
+  this.slowReload = false;
 }
 
 // WeaponInventoryItem class inherits the InventoryItem class
@@ -74,6 +75,10 @@ WeaponInventoryItem.prototype.getAmmo = function () {
 
 // Reloads the given amount of ammo
 WeaponInventoryItem.prototype.reload = function (amount) {
+  if (!amount) {
+    amount = this.maxCount - this.count;
+  }
+
   if (this.count <= this.maxCount - amount) {
     this.count += amount;
   }

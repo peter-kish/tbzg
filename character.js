@@ -211,7 +211,11 @@ Character.prototype.rangedAttack = function (position, direction) {
 Character.prototype.reload = function () {
   if (this.rangedSlot) {
     if (this.rangedSlot.getAmmo() < this.rangedSlot.maxCount) {
-      this.rangedSlot.reload(1);
+      if (this.rangedSlot.slowReload) {
+        this.rangedSlot.reload(1);
+      } else {
+        this.rangedSlot.reload();
+      }
       this.stateMachine.setState(CHR_ST_RELOAD, CHR_RELOAD_SPEED);
       return true;
     }
