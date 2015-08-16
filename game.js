@@ -79,9 +79,16 @@ Game.prototype.initGui = function () {
   var button_melee_slot = new GuiInventoryItemButton(new Rect2d(0, this.scrHeight - 32, 64, 32),
     this.simulation.player.meleeSlot, reloadWeapon);
   button_melee_slot.positioning = GUI_POS_FLOAT_BOTTOM_LEFT;
-  this.gui.mainFrame.addChild(toolbar);
-  this.gui.mainFrame.addChild(button_ranged_slot);
-  this.gui.mainFrame.addChild(button_melee_slot);
+
+  var hud = new GuiFrame(new Rect2d(0, 0, this.scrWidth, this.scrHeight));
+  hud.name = "gui_hud";
+  hud.dimensions = GUI_DIM_FLOOD;
+
+  hud.addChild(toolbar);
+  hud.addChild(button_ranged_slot);
+  hud.addChild(button_melee_slot);
+
+  this.gui.mainFrame.addChild(hud);
 };
 
 function reloadWeapon() {

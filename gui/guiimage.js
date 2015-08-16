@@ -11,12 +11,12 @@ inherit(GuiImage, GuiFrame);
 
 // Renders the image
 GuiImage.prototype.render = function () {
-  var screenPos = this.getScreenPosition();
+  var screenRect = this.getScreenRect();
   drawImageResized(this.image,
-    screenPos.x,
-    screenPos.y,
-    this.rect.width,
-    this.rect.height,
+    screenRect.x,
+    screenRect.y,
+    screenRect.width,
+    screenRect.height,
     this.hflip,
     this.vflip);
   GuiFrame.prototype.render.call(this);

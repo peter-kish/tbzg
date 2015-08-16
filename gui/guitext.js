@@ -18,9 +18,9 @@ inherit(GuiText, GuiFrame);
 
 // Renders the text centered
 GuiText.prototype.render = function () {
-  var screenPos = this.getScreenPosition();
-  drawText(screenPos.x + this.rect.width / 2,
-    screenPos.y + this.rect.height / 2,
+  var screenRect = this.getScreenRect();
+  drawText(screenRect.x + screenRect.width / 2,
+    screenRect.y + screenRect.height / 2,
     this.text,
     "Arial",
     this.size,

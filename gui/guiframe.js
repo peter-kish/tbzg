@@ -10,6 +10,10 @@ var GUI_POS_FLOAT_BOTTOM_RIGHT = 7;
 var GUI_POS_FLOAT_TOP_LEFT = 8;
 var GUI_POS_FLOAT_BOTTOM_LEFT = 9;
 
+var GUI_DIM_FIXED = 0;
+var GUI_DIM_FLOOD = 1;
+var GUI_DIM_CUTOFF = 1;
+
 // Frame class constructor
 var GuiFrame = function (rect) {
   this.rect = new Rect2d(rect.x, rect.y, rect.width, rect.height);
@@ -18,6 +22,7 @@ var GuiFrame = function (rect) {
   this.onMouseClick = null;
   this.visible = true;
   this.positioning = GUI_POS_RELATIVE;
+  this.dimensions = GUI_DIM_FIXED;
   this.name = "";
 }
 
@@ -37,15 +42,15 @@ GuiFrame.prototype.getScreenPosition = function () {
     return result;
     break;
   case GUI_POS_FLOAT_RIGHT:
-    result.x = this.parentFrame.rect.width - this.rect.width;
+    result.x = this.parentFrame.getWidth() - this.getWidth();
     break;
   case GUI_POS_FLOAT_TOP_RIGHT:
-    result.x = this.parentFrame.rect.width - this.rect.width;
+    result.x = this.parentFrame.getWidth() - this.getWidth();
     result.y = 0;
     break;
   case GUI_POS_FLOAT_BOTTOM_RIGHT:
-    result.x = this.parentFrame.rect.width - this.rect.width;
-    result.y = this.parentFrame.rect.height - this.rect.height;
+    result.x = this.parentFrame.getWidth() - this.getWidth();
+    result.y = this.parentFrame.getHeight() - this.getHeight();
     break;
   case GUI_POS_FLOAT_LEFT:
     result.x = 0;
@@ -56,12 +61,51 @@ GuiFrame.prototype.getScreenPosition = function () {
     break;
   case GUI_POS_FLOAT_BOTTOM_LEFT:
     result.x = 0;
-    result.y = this.parentFrame.rect.height - this.rect.height;
+    result.y = this.parentFrame.getHeight() - this.getHeight();
     break;
   }
 
   result.add(this.parentFrame.getScreenPosition());
   return result;
+};
+
+// Returns the frame width on the screen
+GuiFrame.prototype.getWidth = function () {
+  if (!this.parentFrame || this.dimensions == GUI_DIM_FIXED) {
+    return this.rect.width;
+  }
+
+  if (this.dimensions == GUI_DIM_FLOOD) {
+    return this.parentFrame.getWidth() - this.rect.x;
+  } else if (this.dimensions == GUI_DIM_CUTOFF) {
+    if (this.rect.x + this.rect.width > this.parentFrame.getWidth()) {
+      return this.parentFrame.getWidth() - this.rect.x;
+    }
+  }
+};
+
+// Returns the frame height on the screen
+GuiFrame.prototype.getHeight = function () {
+  if (!this.parentFrame || this.dimensions == GUI_DIM_FIXED) {
+    return this.rect.height;
+  }
+
+  if (this.dimensions == GUI_DIM_FLOOD) {
+    return this.parentFrame.getHeight() - this.rect.y;
+  } else if (this.dimensions == GUI_DIM_CUTOFF) {
+    if (this.rect.y + this.rect.height > this.parentFrame.getHeight()) {
+      return this.parentFrame.getHeight() - this.rect.y;
+    }
+  }
+};
+
+// Returns the frame rectangle on the screen
+GuiFrame.prototype.getScreenRect = function () {
+  var pos = this.getScreenPosition();
+  var w = this.getWidth();
+  var h = this.getHeight();
+
+  return new Rect2d(pos.x, pos.y, w, h);
 };
 
 // Renders the frame and all its children
@@ -133,9 +177,9 @@ GuiFrame.prototype.handleMouseClick = function (x, y) {
     }
   }
 
-  var screenPos = this.getScreenPosition();
-  if (x > screenPos.x && x < screenPos.x + this.rect.width) {
-    if (y > screenPos.y && y < screenPos.y + this.rect.height) {
+  var screenRect = this.getScreenRect();
+  if (x > screenRect.x && x < screenRect.x + screenRect.width) {
+    if (y > screenRect.y && y < screenRect.y + screenRect.height) {
       if (this.onMouseClick) {
         this.onMouseClick();
         return true;

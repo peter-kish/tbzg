@@ -16,8 +16,8 @@ inherit(GuiPanel, GuiFrame);
 
 // Renders the panel
 GuiPanel.prototype.render = function () {
-  var screenPos = this.getScreenPosition();
-  drawRect(screenPos.x, screenPos.y, this.rect.width, this.rect.height, this.color);
+  var screenRect = this.getScreenRect();
+  drawRect(screenRect.x, screenRect.y, screenRect.width, screenRect.height, this.color);
   GuiFrame.prototype.render.call(this);
 };
 
