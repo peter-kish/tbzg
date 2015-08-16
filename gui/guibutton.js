@@ -33,6 +33,8 @@ inherit(GuiImageButton, GuiButton);
 GuiImageButton.prototype.render = function () {
   this.guiImage.render();
   for (var i = 0; i < this.children.length; i++) {
-    this.children[i].render();
+    if (this.children[i].visible) {
+      this.children[i].render();
+    }
   }
 };

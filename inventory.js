@@ -142,6 +142,5 @@ GuiInventoryItemButton.prototype.update = function () {
     this.guiText.text = "" + this.item.count + "/" + this.item.maxCount;
   } else {
     this.guiText.hide();
-    this.guiText.text = "";
   }
 };

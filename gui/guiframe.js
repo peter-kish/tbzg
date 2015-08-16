@@ -15,7 +15,7 @@ var GUI_POS_FLOAT_CENTER = 12;
 
 var GUI_DIM_FIXED = 0;
 var GUI_DIM_FLOOD = 1;
-var GUI_DIM_CUTOFF = 1;
+var GUI_DIM_CUTOFF = 2;
 
 // Frame class constructor
 var GuiFrame = function (rect) {
