@@ -13,6 +13,12 @@ inherit(GuiFrameList, GuiFrame);
 
 // Updates the frame list
 GuiFrameList.prototype.update = function () {
+  if (!this.visible) {
+    return;
+  }
+
+  GuiFrame.prototype.update.call(this);
+
   var offset = 0;
   for (var i = 0; i < this.children.length; i++) {
     this.children[i].positioning = GUI_POS_RELATIVE;

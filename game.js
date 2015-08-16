@@ -95,12 +95,16 @@ Game.prototype.initGui = function () {
   var inv_window = new GuiPanel(new Rect2d(0, 0, 250, 300));
   inv_window.positioning = GUI_POS_FLOAT_CENTER;
   var inv_title = new GuiText(new Rect2d(0, 0, 250, 50), "Inventory not implemented");
+  var inv_list = new GuiInventoryItemList(new Rect2d(0, 50, 250, 200));
+  inv_list.addInventoryItem(this.simulation.player.meleeSlot);
+  inv_list.addInventoryItem(this.simulation.player.rangedSlot);
   var inv_button_close = new GuiTextButton(new Rect2d(10, 250, 230, 40),
     "Close",
     null,
     function() {game_instance.closeInventory()});
   inv_button_close.color = "#888888";
   inv_window.addChild(inv_title);
+  inv_window.addChild(inv_list);
   inv_window.addChild(inv_button_close);
   inventory.addChild(inv_window);
 

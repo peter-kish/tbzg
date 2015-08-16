@@ -144,3 +144,57 @@ GuiInventoryItemButton.prototype.update = function () {
     this.guiText.hide();
   }
 };
+
+// Inventory item list class constructor
+var GuiInventoryItemList = function (rect) {
+  GuiFrameList.prototype.constructor.call(this, rect, false);
+  this.selectedItem = null;
+}
+
+// Inventory item list class inherits the frame list class
+inherit(GuiInventoryItemList, GuiFrameList);
+
+// Unselects all children (assuming all children are selectable frames)
+GuiInventoryItemList.prototype.unselectAll = function () {
+  for (var i = 0; i < this.children.length; i++) {
+    this.children[i].setSelected(false);
+  }
+};
+
+// Returns the currently selected inventory item (assuming all children contain inventory item buttons)
+GuiInventoryItemList.prototype.getSelectedItem = function () {
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i].getSelected()) {
+      return this.children[i].children[0].item;
+    }
+  }
+
+  return false;
+};
+
+// Handles a mouse click
+GuiInventoryItemList.prototype.handleMouseClick = function (x, y) {
+  if (!this.visible) {
+    return false;
+  }
+
+  var screenRect = this.getScreenRect();
+  var result = false;
+  if (x > screenRect.x && x < screenRect.x + screenRect.width) {
+    if (y > screenRect.y && y < screenRect.y + screenRect.height) {
+      this.unselectAll();
+      result = GuiFrameList.prototype.handleMouseClick.call(this, x, y);
+      this.selectedItem = this.getSelectedItem();
+      return result;
+    }
+  }
+  return false;
+};
+
+// Adds the given inventory item to the list
+GuiInventoryItemList.prototype.addInventoryItem = function (item) {
+  var newFrame = new GuiSelectableFrame(new Rect2d(0, 0, 64, 32));
+  var newButton = new GuiInventoryItemButton(new Rect2d(0, 0, 64, 32), item, function(){});
+  newFrame.addChild(newButton);
+  this.addChild(newFrame);
+};
