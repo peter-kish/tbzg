@@ -9,6 +9,9 @@ var GUI_POS_FLOAT_TOP_RIGHT = 6;
 var GUI_POS_FLOAT_BOTTOM_RIGHT = 7;
 var GUI_POS_FLOAT_TOP_LEFT = 8;
 var GUI_POS_FLOAT_BOTTOM_LEFT = 9;
+var GUI_POS_FLOAT_HORIZONTAL_CENTER = 10;
+var GUI_POS_FLOAT_VERTICAL_CENTER = 11;
+var GUI_POS_FLOAT_CENTER = 12;
 
 var GUI_DIM_FIXED = 0;
 var GUI_DIM_FLOOD = 1;
@@ -62,6 +65,15 @@ GuiFrame.prototype.getScreenPosition = function () {
   case GUI_POS_FLOAT_BOTTOM_LEFT:
     result.x = 0;
     result.y = this.parentFrame.getHeight() - this.getHeight();
+    break;
+  case GUI_POS_FLOAT_HORIZONTAL_CENTER:
+    result.x = this.parentFrame.getWidth() / 2 - this.getWidth() / 2;
+    break;
+  case GUI_POS_FLOAT_VERTICAL_CENTER:
+    result.y = this.parentFrame.getHeight() / 2 - this.getHeight() / 2;
+  case GUI_POS_FLOAT_CENTER:
+    result.x = this.parentFrame.getWidth() / 2 - this.getWidth() / 2;
+    result.y = this.parentFrame.getHeight() / 2 - this.getHeight() / 2;
     break;
   }
 
