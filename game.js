@@ -64,7 +64,7 @@ Game.prototype.initGui = function () {
     function() {game_instance.simulation.player.doNothing();});
   var button_inventory = new GuiImageButton(new Rect2d(32, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_inventory"),
-    function() {alert("Inventory not yet implemented.");});
+    function() {game_instance.openInventory()});
   var button_menu = new GuiImageButton(new Rect2d(0, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_menu"),
     function() {alert("Main menu not yet implemented.")});
@@ -88,7 +88,53 @@ Game.prototype.initGui = function () {
   hud.addChild(button_ranged_slot);
   hud.addChild(button_melee_slot);
 
+  var inventory = new GuiFrame(new Rect2d(0, 0, this.scrWidth, this.scrHeight));
+  inventory.name = "gui_inventory"
+  inventory.dimensions = GUI_DIM_FLOOD;
+  inventory.hide();
+  var inv_window = new GuiPanel(new Rect2d(0, 0, 250, 300));
+  inv_window.positioning = GUI_POS_FLOAT_CENTER;
+  var inv_title = new GuiText(new Rect2d(0, 0, 250, 50), "Inventory not implemented");
+  var inv_button_close = new GuiTextButton(new Rect2d(10, 250, 230, 40),
+    "Close",
+    null,
+    function() {game_instance.closeInventory()});
+  inv_button_close.color = "#888888";
+  inv_window.addChild(inv_title);
+  inv_window.addChild(inv_button_close);
+  inventory.addChild(inv_window);
+
   this.gui.mainFrame.addChild(hud);
+  this.gui.mainFrame.addChild(inventory);
+};
+
+Game.prototype.openInventory = function () {
+  var hud = this.gui.getElement("gui_hud");
+  var inventory = this.gui.getElement("gui_inventory");
+
+  if (hud && inventory) {
+    hud.hide();
+    inventory.show();
+  }
+};
+
+Game.prototype.closeInventory = function () {
+  var hud = this.gui.getElement("gui_hud");
+  var inventory = this.gui.getElement("gui_inventory");
+
+  if (hud && inventory) {
+    inventory.hide();
+    hud.show();
+  }
+};
+
+Game.prototype.isInventoryOpen = function () {
+  var inventory = this.gui.getElement("gui_inventory");
+
+  if (inventory) {
+    return inventory.visible;
+  }
+  return false;
 };
 
 function reloadWeapon() {
@@ -115,6 +161,13 @@ function inputHandler(input, game, x, y) {
     break;
   case INPUT_RELOAD:
     game.simulation.player.reload();
+    break;
+  case INPUT_INVENTORY:
+    if (game.isInventoryOpen()) {
+      game.closeInventory();
+    } else {
+      game.openInventory();
+    }
     break;
   case INPUT_CLICK:
     if (!game.gui.handleMouseClick(x, y))

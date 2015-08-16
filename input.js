@@ -6,7 +6,8 @@ var INPUT_LEFT = 2;
 var INPUT_RIGHT = 3;
 var INPUT_SKIP = 4;
 var INPUT_RELOAD = 5;
-var INPUT_CLICK = 6;
+var INPUT_INVENTORY = 6;
+var INPUT_CLICK = 7;
 
 // Minimum swipe distance
 var INPUT_MIN_SWIPE_DISTANCE = 8;
@@ -63,6 +64,9 @@ window.addEventListener('keydown', function(event) {
       break;
     case 82: // 'R'
       input = INPUT_RELOAD;
+      break;
+    case 73: // 'I'
+      input = INPUT_INVENTORY;
       break;
     }
 
