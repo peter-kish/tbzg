@@ -171,6 +171,10 @@ GuiFrame.prototype.hide = function () {
 
 // Handles the mouse input
 GuiFrame.prototype.handleMouseClick = function (x, y) {
+  if (!this.visible) {
+    return false;
+  }
+
   for (var i = 0; i < this.children.length; i++) {
     if (this.children[i].handleMouseClick(x, y)) {
       return true;
