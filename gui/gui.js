@@ -13,6 +13,12 @@ Gui.prototype.update = function () {
   this.mainFrame.update();
 };
 
+// Handles the mouse click
 Gui.prototype.handleMouseClick = function (x, y) {
   return this.mainFrame.handleMouseClick(x, y);
+};
+
+// Returns the GUI element with the given name
+Gui.prototype.getElement = function (name) {
+  return this.mainFrame.getElement(name);
 };

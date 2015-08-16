@@ -18,6 +18,7 @@ var GuiFrame = function (rect) {
   this.onMouseClick = null;
   this.visible = true;
   this.positioning = GUI_POS_RELATIVE;
+  this.name = "";
 }
 
 // Returns the frame screen position
@@ -142,4 +143,23 @@ GuiFrame.prototype.handleMouseClick = function (x, y) {
     }
   }
   return false;
+};
+
+// Returns the GUI child element with the given name
+GuiFrame.prototype.getElement = function (name) {
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i].name == name) {
+      return this.children[i];
+    }
+  }
+
+  var element = null;
+  for (var i = 0; i < this.children.length; i++) {
+    element = this.children[i].getElement(name);
+    if (element) {
+      return element;
+    }
+  }
+
+  return null;
 };
