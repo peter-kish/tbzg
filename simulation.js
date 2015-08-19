@@ -348,10 +348,12 @@ Simulation.prototype.createPlayer = function (position) {
   var meleeWeapon = new WeaponInventoryItem("Fists",
     this.resourceManager.getResource("item_fists"),
     new Damage(DMG_MELEE, 1, true), 1, 1);
+  meleeWeapon.description = "Your bare fists."
   var rangedWeapon = new WeaponInventoryItem("Shotgun",
     this.resourceManager.getResource("item_shotgun"),
     new Damage(DMG_BULLET, 5, false), 8, 8);
   rangedWeapon.slowReload = true;
+  rangedWeapon.description = "An 8 shot shotgun.";
   this.player.equipMelee(meleeWeapon);
   this.player.equipRanged(rangedWeapon);
   this.player.animationSet = playerAnimationSet;

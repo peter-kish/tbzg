@@ -112,21 +112,40 @@ Game.prototype.initGui_inventory = function () {
   var inv_window = new GuiPanel(new Rect2d(0, 0, 256, 320));
   inv_window.positioning = GUI_POS_FLOAT_CENTER;
   var inv_title = new GuiText(new Rect2d(0, 0, 256, 32), "Inventory WIP");
-  var inv_list = new GuiInventoryItemList(new Rect2d(0, 32, 64, 256));
-  inv_list.addInventoryItem(this.simulation.player.meleeSlot, handleInventoryListItem);
-  inv_list.addInventoryItem(this.simulation.player.rangedSlot, handleInventoryListItem);
-  inv_list.name = "gui_inventory_item_list";
-  var inv_text_item_name = new GuiText(new Rect2d(64, 32, 192, 32), "");
+
+  var inv_item_list = new GuiInventoryItemList(new Rect2d(0, 32, 64, 256));
+  inv_item_list.addInventoryItem(this.simulation.player.meleeSlot, handleInventoryListItem);
+  inv_item_list.addInventoryItem(this.simulation.player.rangedSlot, handleInventoryListItem);
+  inv_item_list.name = "gui_inventory_item_list";
+
+  var inv_item_stats = new GuiFrameList(new Rect2d(72, 32, 240, 256));
+  var inv_text_item_name = new GuiText(new Rect2d(0, 0, 176, 32), "");
   inv_text_item_name.align = "center";
   inv_text_item_name.name = "gui_inventory_txt_item_name";
+  inv_text_item_name.style = "bold";
+  var inv_text_item_damage = new GuiText(new Rect2d(0, 0, 176, 32), "");
+  inv_text_item_damage.align = "left";
+  inv_text_item_damage.name = "gui_inventory_txt_item_damage";
+  var inv_text_item_reload = new GuiText(new Rect2d(0, 0, 176, 32), "");
+  inv_text_item_reload.align = "left";
+  inv_text_item_reload.name = "gui_inventory_txt_item_reload";
+  var inv_text_item_description = new GuiText(new Rect2d(0, 0, 176, 32), "");
+  inv_text_item_description.align = "left";
+  inv_text_item_description.name = "gui_inventory_txt_item_description";
+
   var inv_button_close = new GuiTextButton(new Rect2d(4, 292, 248, 26),
     "Close",
     null,
     function(ge) {game_instance.closeInventory()});
   inv_button_close.color = "#888888";
+
+  inv_item_stats.addChild(inv_text_item_name);
+  inv_item_stats.addChild(inv_text_item_damage);
+  inv_item_stats.addChild(inv_text_item_reload);
+  inv_item_stats.addChild(inv_text_item_description);
   inv_window.addChild(inv_title);
-  inv_window.addChild(inv_list);
-  inv_window.addChild(inv_text_item_name);
+  inv_window.addChild(inv_item_list);
+  inv_window.addChild(inv_item_stats);
   inv_window.addChild(inv_button_close);
   inventory.addChild(inv_window);
 
@@ -137,11 +156,27 @@ Game.prototype.initGui_inventory = function () {
 function handleInventoryListItem(item) {
   if (item) {
     var inv_txt_item_name = game_instance.gui.getElement("gui_inventory_txt_item_name");
+    var inv_txt_item_description = game_instance.gui.getElement("gui_inventory_txt_item_description");
+    var inv_txt_item_damage = game_instance.gui.getElement("gui_inventory_txt_item_damage");
+    var inv_txt_item_reload = game_instance.gui.getElement("gui_inventory_txt_item_reload");
     inv_txt_item_name.text = item.name;
+    inv_txt_item_description.text = item.description;
+    inv_txt_item_damage.text = "Damage: ";
+    if (item.damage) {
+      inv_txt_item_damage.text += item.damage.hitPoints;
+    } else {
+      inv_txt_item_damage.text += "N/A"
+    }
+    inv_txt_item_reload.text = "Reload: ";
+    if (item.slowReload) {
+      inv_txt_item_reload.text += "slow";
+    } else {
+      inv_txt_item_reload.text += "fast";
+    }
   }
 }
 
-// Gets called when the weapon icon is clicked on the HUD
+// Gets called when the weapon icon is clicked on the
 function handleWeaponIcon(guiElement) {
   game_instance.simulation.player.reload();
 }
