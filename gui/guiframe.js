@@ -15,7 +15,9 @@ var GUI_POS_FLOAT_CENTER = 12;
 
 var GUI_DIM_FIXED = 0;
 var GUI_DIM_FLOOD = 1;
-var GUI_DIM_CUTOFF = 2;
+var GUI_DIM_HORIZONTAL_FLOOD = 2;
+var GUI_DIM_VERTICAL_FLOOD = 3;
+var GUI_DIM_CUTOFF = 4;
 
 // Frame class constructor
 var GuiFrame = function (rect) {
@@ -87,7 +89,7 @@ GuiFrame.prototype.getWidth = function () {
     return this.rect.width;
   }
 
-  if (this.dimensions == GUI_DIM_FLOOD) {
+  if (this.dimensions == GUI_DIM_FLOOD || this.dimensions == GUI_DIM_HORIZONTAL_FLOOD) {
     return this.parentFrame.getWidth() - this.rect.x;
   } else if (this.dimensions == GUI_DIM_CUTOFF) {
     if (this.rect.x + this.rect.width > this.parentFrame.getWidth()) {
@@ -102,7 +104,7 @@ GuiFrame.prototype.getHeight = function () {
     return this.rect.height;
   }
 
-  if (this.dimensions == GUI_DIM_FLOOD) {
+  if (this.dimensions == GUI_DIM_FLOOD || this.dimensions == GUI_DIM_VERTICAL_FLOOD) {
     return this.parentFrame.getHeight() - this.rect.y;
   } else if (this.dimensions == GUI_DIM_CUTOFF) {
     if (this.rect.y + this.rect.height > this.parentFrame.getHeight()) {
