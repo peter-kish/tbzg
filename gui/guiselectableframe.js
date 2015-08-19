@@ -43,16 +43,9 @@ GuiSelectableFrame.prototype.render = function () {
 };
 
 GuiSelectableFrame.prototype.handleMouseClick = function (x, y) {
-  if (!this.visible) {
-    return false;
+  var result = GuiFrame.prototype.handleMouseClick.call(this, x, y);
+  if (result) {
+    this.setSelected(!this.getSelected());
   }
-
-  var screenRect = this.getScreenRect();
-  if (x > screenRect.x && x < screenRect.x + screenRect.width) {
-    if (y > screenRect.y && y < screenRect.y + screenRect.height) {
-      this.setSelected(!this.getSelected());
-      return true;
-    }
-  }
-  return false;
+  return result;
 };

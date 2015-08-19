@@ -192,9 +192,14 @@ GuiInventoryItemList.prototype.handleMouseClick = function (x, y) {
 };
 
 // Adds the given inventory item to the list
-GuiInventoryItemList.prototype.addInventoryItem = function (item) {
+GuiInventoryItemList.prototype.addInventoryItem = function (item, onSelectCallback) {
   var newFrame = new GuiSelectableFrame(new Rect2d(0, 0, 64, 32));
-  var newButton = new GuiInventoryItemButton(new Rect2d(0, 0, 64, 32), item, function(){});
+  var newButton = new GuiInventoryItemButton(new Rect2d(0, 0, 64, 32), item, null);
+  if (!onSelectCallback) {
+    newButton.onMouseClick = function(ge) {};
+  } else {
+    newButton.onMouseClick = function(ge) {onSelectCallback(ge.item);};
+  }
   newFrame.addChild(newButton);
   this.addChild(newFrame);
 };

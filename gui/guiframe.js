@@ -197,7 +197,7 @@ GuiFrame.prototype.handleMouseClick = function (x, y) {
   if (x > screenRect.x && x < screenRect.x + screenRect.width) {
     if (y > screenRect.y && y < screenRect.y + screenRect.height) {
       if (this.onMouseClick) {
-        this.onMouseClick();
+        this.onMouseClick(this);
         return true;
       }
     }

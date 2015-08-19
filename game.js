@@ -68,10 +68,10 @@ Game.prototype.initGui = function () {
 Game.prototype.initGui_hud = function () {
   var toolbar = this.initGui_toolbar();
   var button_ranged_slot = new GuiInventoryItemButton(new Rect2d(this.scrWidth - 64, this.scrHeight - 32, 64, 32),
-    this.simulation.player.rangedSlot, reloadWeapon);
+    this.simulation.player.rangedSlot, handleWeaponIcon);
   button_ranged_slot.positioning = GUI_POS_FLOAT_BOTTOM_RIGHT;
   var button_melee_slot = new GuiInventoryItemButton(new Rect2d(0, this.scrHeight - 32, 64, 32),
-    this.simulation.player.meleeSlot, reloadWeapon);
+    this.simulation.player.meleeSlot, null);
   button_melee_slot.positioning = GUI_POS_FLOAT_BOTTOM_LEFT;
 
   var hud = new GuiFrame(new Rect2d(0, 0, this.scrWidth, this.scrHeight));
@@ -89,13 +89,13 @@ Game.prototype.initGui_toolbar = function () {
   var toolbar = new GuiFrame(new Rect2d(0, 0, 96, 32));
   var button_skip_turn = new GuiImageButton(new Rect2d(64, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_skip_turn"),
-    function() {game_instance.simulation.player.doNothing();});
+    function(ge) {game_instance.simulation.player.doNothing();});
   var button_inventory = new GuiImageButton(new Rect2d(32, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_inventory"),
-    function() {game_instance.openInventory()});
+    function(ge) {game_instance.openInventory()});
   var button_menu = new GuiImageButton(new Rect2d(0, 0, 32, 32),
     this.simulation.resourceManager.getResource("button_menu"),
-    function() {alert("Main menu not yet implemented.")});
+    function(ge) {alert("Main menu not yet implemented.")});
   toolbar.addChild(button_skip_turn);
   toolbar.addChild(button_inventory);
   toolbar.addChild(button_menu);
@@ -109,25 +109,44 @@ Game.prototype.initGui_inventory = function () {
   inventory.name = "gui_inventory"
   inventory.dimensions = GUI_DIM_FLOOD;
   inventory.hide();
-  var inv_window = new GuiPanel(new Rect2d(0, 0, 250, 300));
+  var inv_window = new GuiPanel(new Rect2d(0, 0, 256, 320));
   inv_window.positioning = GUI_POS_FLOAT_CENTER;
-  var inv_title = new GuiText(new Rect2d(0, 0, 250, 50), "Inventory not implemented");
-  var inv_list = new GuiInventoryItemList(new Rect2d(0, 50, 64, 200));
-  inv_list.addInventoryItem(this.simulation.player.meleeSlot);
-  inv_list.addInventoryItem(this.simulation.player.rangedSlot);
-  var inv_button_close = new GuiTextButton(new Rect2d(10, 250, 230, 40),
+  var inv_title = new GuiText(new Rect2d(0, 0, 256, 32), "Inventory WIP");
+  var inv_list = new GuiInventoryItemList(new Rect2d(0, 32, 64, 256));
+  inv_list.addInventoryItem(this.simulation.player.meleeSlot, handleInventoryListItem);
+  inv_list.addInventoryItem(this.simulation.player.rangedSlot, handleInventoryListItem);
+  inv_list.name = "gui_inventory_item_list";
+  var inv_text_item_name = new GuiText(new Rect2d(64, 32, 192, 32), "");
+  inv_text_item_name.align = "center";
+  inv_text_item_name.name = "gui_inventory_txt_item_name";
+  var inv_button_close = new GuiTextButton(new Rect2d(4, 292, 248, 26),
     "Close",
     null,
-    function() {game_instance.closeInventory()});
+    function(ge) {game_instance.closeInventory()});
   inv_button_close.color = "#888888";
   inv_window.addChild(inv_title);
   inv_window.addChild(inv_list);
+  inv_window.addChild(inv_text_item_name);
   inv_window.addChild(inv_button_close);
   inventory.addChild(inv_window);
 
   return inventory;
 };
 
+// Gets called when an item is selected in the inventory
+function handleInventoryListItem(item) {
+  if (item) {
+    var inv_txt_item_name = game_instance.gui.getElement("gui_inventory_txt_item_name");
+    inv_txt_item_name.text = item.name;
+  }
+}
+
+// Gets called when the weapon icon is clicked on the HUD
+function handleWeaponIcon(guiElement) {
+  game_instance.simulation.player.reload();
+}
+
+// Opens the inventory screen
 Game.prototype.openInventory = function () {
   var hud = this.gui.getElement("gui_hud");
   var inventory = this.gui.getElement("gui_inventory");
@@ -138,6 +157,7 @@ Game.prototype.openInventory = function () {
   }
 };
 
+// Closes the inventory screen
 Game.prototype.closeInventory = function () {
   var hud = this.gui.getElement("gui_hud");
   var inventory = this.gui.getElement("gui_inventory");
@@ -148,6 +168,7 @@ Game.prototype.closeInventory = function () {
   }
 };
 
+// Checks if the inventory screen is open
 Game.prototype.isInventoryOpen = function () {
   var inventory = this.gui.getElement("gui_inventory");
 
@@ -156,10 +177,6 @@ Game.prototype.isInventoryOpen = function () {
   }
   return false;
 };
-
-function reloadWeapon() {
-  game_instance.simulation.player.reload();
-}
 
 // Input handler
 function inputHandler(input, game, x, y) {
