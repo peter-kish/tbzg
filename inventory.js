@@ -123,8 +123,8 @@ var GuiInventoryItemButton = function (rect, item, onClickCallback) {
   GuiImageButton.prototype.constructor.call(this, rect, item.image, onClickCallback);
   this.item = item;
   this.guiText = new GuiText(new Rect2d(0, 0, rect.width, rect.height), "0/0");
-  this.guiText.align = "left";
-  this.guiText.baseline = "top";
+  this.guiText.align = "right";
+  this.guiText.baseline = "bottom";
   this.guiText.size = 10;
   this.guiText.style = "bold";
   this.addChild(this.guiText);

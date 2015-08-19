@@ -19,8 +19,16 @@ inherit(GuiText, GuiFrame);
 // Renders the text centered
 GuiText.prototype.render = function () {
   var screenRect = this.getScreenRect();
-  drawText(screenRect.x + screenRect.width / 2,
-    screenRect.y + screenRect.height / 2,
+  var delta;
+  if (this.align == "center") {
+    delta = new Vector2d(screenRect.width / 2, screenRect.height / 2);
+  } else if (this.align == "left") {
+    delta = new Vector2d(0, 0);
+  } else if (this.align == "right") {
+    delta = new Vector2d(screenRect.width, screenRect.height);
+  }
+  drawText(screenRect.x + delta.x,
+    screenRect.y + delta.y,
     this.text,
     "Arial",
     this.size,
