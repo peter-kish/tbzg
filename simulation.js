@@ -349,13 +349,20 @@ Simulation.prototype.createPlayer = function (position) {
     this.resourceManager.getResource("item_fists"),
     new Damage(DMG_MELEE, 1, true), 1, 1);
   meleeWeapon.description = "Your bare fists."
-  var rangedWeapon = new WeaponInventoryItem("Shotgun",
+  var rangedWeapon = new WeaponInventoryItem("Sawed-off shotgun",
     this.resourceManager.getResource("item_shotgun"),
-    new Damage(DMG_BULLET, 5, false), 8, 8);
+    new Damage(DMG_BULLET, 5, false), 2, 2);
   rangedWeapon.slowReload = true;
-  rangedWeapon.description = "An 8 shot shotgun.";
+  rangedWeapon.description = "An 2 shot shotgun.";
+  rangedWeapon.ammoName = "Shotgun shells"
+  var shotgunAmmo = new InventoryItem("Shotgun shells", this.resourceManager.getResource("item_shotgun_shells"));
+  shotgunAmmo.count = 8;
+  shotgunAmmo.maxCount = 8;
+  shotgunAmmo.description = "Shotgun ammo."
   this.player.equipMelee(meleeWeapon);
   this.player.equipRanged(rangedWeapon);
+  this.player.inventory.addItem(shotgunAmmo);
+
   this.player.animationSet = playerAnimationSet;
   this.player.setImage(playerAnimationSet.idle_ranged);
   this.player.setLegsImage(playerAnimationSet.legs_idle);
@@ -453,6 +460,7 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/gui/button_menu.png", "button_menu");
 
   this.resourceManager.loadImage("images/items/item_shotgun.png", "item_shotgun");
+  this.resourceManager.loadImage("images/items/item_shotgun_shells.png", "item_shotgun_shells");
   this.resourceManager.loadImage("images/items/item_fists.png", "item_fists");
 };
 

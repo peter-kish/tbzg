@@ -19,7 +19,7 @@ InventoryItem.prototype.isUsable = function () {
 };
 
 // Use the item (if usable)
-InventoryItem.prototype.use = function ( ) {
+InventoryItem.prototype.use = function () {
   if (this.onUse)
     this.onUse();
 };
@@ -115,6 +115,16 @@ Inventory.prototype.removeItem = function (item) {
     }
   }
   return false;
+};
+
+// Finds the item with the given name in the inventory.
+Inventory.prototype.find = function (itemName) {
+  for (var i = 0; i < this.items.length; i++) {
+    if (this.items[i].name == itemName) {
+      return this.items[i];
+    }
+  }
+  return null;
 };
 
 

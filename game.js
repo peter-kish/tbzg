@@ -116,6 +116,9 @@ Game.prototype.initGui_inventory = function () {
   var inv_item_list = new GuiInventoryItemList(new Rect2d(0, 32, 64, 256));
   inv_item_list.addInventoryItem(this.simulation.player.meleeSlot, handleInventoryListItem);
   inv_item_list.addInventoryItem(this.simulation.player.rangedSlot, handleInventoryListItem);
+  for (var i = 0; i < this.simulation.player.inventory.items.length; i++) {
+    inv_item_list.addInventoryItem(this.simulation.player.inventory.items[i], handleInventoryListItem);
+  }
   inv_item_list.name = "gui_inventory_item_list";
 
   var inv_item_stats = new GuiFrameList(new Rect2d(72, 32, 240, 256));
@@ -176,7 +179,7 @@ function handleInventoryListItem(item) {
   }
 }
 
-// Gets called when the weapon icon is clicked on the
+// Gets called when the weapon icon is clicked on the HUD
 function handleWeaponIcon(guiElement) {
   game_instance.simulation.player.reload();
 }
