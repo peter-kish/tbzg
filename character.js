@@ -140,12 +140,29 @@ Character.prototype.move = function (direction, speed) {
 
 // Equips the given melee weapon
 Character.prototype.equipMelee = function (weapon) {
-  this.meleeSlot = weapon;
+  if (this.inventory.find(weapon)) {
+    this.meleeSlot = weapon;
+  }
 };
 
 // Equips the given ranged weapon
 Character.prototype.equipRanged = function (weapon) {
-  this.rangedSlot = weapon;
+  if (this.inventory.find(weapon)) {
+    this.rangedSlot = weapon;
+  }
+};
+
+// Discards the given item from the inventory
+Character.prototype.discardItem = function (item) {
+  if (this.inventory.find(item) && item.discardable) {
+    if (this.rangedSlot == item) {
+      this.rangedSlot = null;
+    }
+    if (this.meleeSlot == item) {
+      this.meleeSlot = null;
+    }
+    this.inventory.removeItem(item);
+  }
 };
 
 // Perform a melee Attack in the given direction
@@ -215,7 +232,7 @@ Character.prototype.reload = function (item) {
 
   if (item) {
     var ammoAvailable = 0;
-    var ammoItem = this.inventory.find(item.ammoName);
+    var ammoItem = this.inventory.findByName(item.ammoName);
     if (ammoItem) {
       ammoAvailable = ammoItem.count;
       if (ammoAvailable == 0) {

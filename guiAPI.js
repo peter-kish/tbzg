@@ -21,6 +21,15 @@ function ga_reload_selected_item() {
   ga_update_gui();
 }
 
+function ga_discard_selected_item() {
+  if (!ga_inventory_selected_item) {
+    return;
+  }
+
+  getGameInstance().simulation.player.discardItem(ga_inventory_selected_item);
+  ga_update_gui();
+}
+
 function ga_skip_turn() {
   getGameInstance().simulation.player.doNothing();
 }
@@ -102,9 +111,6 @@ function ga_inventory_select_item(item) {
 
 function ga_update_inventory() {
   ga_clear_inventory();
-
-  ga_add_inventory_item(getGameInstance().simulation.player.rangedSlot);
-  ga_add_inventory_item(getGameInstance().simulation.player.meleeSlot);
 
   var item_array = getGameInstance().simulation.player.inventory.items;
   for (var i = 0; i < item_array.length; i++) {

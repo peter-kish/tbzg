@@ -360,9 +360,11 @@ Simulation.prototype.createPlayer = function (position) {
   shotgunAmmo.count = 8;
   shotgunAmmo.maxCount = 8;
   shotgunAmmo.description = "Shotgun ammo."
+  this.player.inventory.addItem(meleeWeapon);
+  this.player.inventory.addItem(rangedWeapon);
+  this.player.inventory.addItem(shotgunAmmo);
   this.player.equipMelee(meleeWeapon);
   this.player.equipRanged(rangedWeapon);
-  this.player.inventory.addItem(shotgunAmmo);
 
   this.player.animationSet = playerAnimationSet;
   this.player.setImage(playerAnimationSet.idle_ranged);

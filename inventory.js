@@ -118,8 +118,18 @@ Inventory.prototype.removeItem = function (item) {
   return false;
 };
 
+// Checks if the given item is in the inventory
+Inventory.prototype.find = function (item) {
+  for (var i = 0; i < this.items.length; i++) {
+    if (this.items[i] == item) {
+      return this.items[i];
+    }
+  }
+  return null;
+};
+
 // Finds the item with the given name in the inventory.
-Inventory.prototype.find = function (itemName) {
+Inventory.prototype.findByName = function (itemName) {
   for (var i = 0; i < this.items.length; i++) {
     if (this.items[i].name == itemName) {
       return this.items[i];
