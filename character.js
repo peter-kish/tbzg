@@ -280,6 +280,25 @@ Character.prototype.reload = function (item) {
   return false;
 };
 
+// Extracts ammo from the given weapon
+Character.prototype.extractAmmo = function (weapon) {
+  if (!weapon) {
+    weapon = this.rangedSlot;
+  }
+
+  // TODO: Work in progress...
+  /*if (weapon && weapon.isWeapon()) {
+    var ammo = new InventoryItem(weapon.ammoName, this.parentSim.resourceManager.getResource("item_shotgun_shells"));
+    ammo.count = weapon.count;
+    ammo.maxCount = weapon.maxCount;
+    if (!this.inventory.addItem(ammo)) {
+      weapon.count = ammo.count;
+    } else {
+      weapon.count = 0;
+    }
+  }*/
+};
+
 // Apply the given damage on the character
 Character.prototype.takeDamage = function (damage, direction) {
   if (this.isAlive()) {

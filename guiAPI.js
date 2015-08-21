@@ -21,6 +21,15 @@ function ga_reload_selected_item() {
   ga_update_gui();
 }
 
+function ga_extract_selected_item() {
+  if (!ga_inventory_selected_item) {
+    return;
+  }
+
+  getGameInstance().simulation.player.extractAmmo(ga_inventory_selected_item);
+  ga_update_gui();
+}
+
 function ga_discard_selected_item() {
   if (!ga_inventory_selected_item) {
     return;
@@ -104,6 +113,7 @@ function ga_inventory_select_item(item) {
   }
 
   document.getElementById("guiInventoryButtonReload").disabled = !(item.isWeapon() && item.isStackable());
+  document.getElementById("guiInventoryButtonExtract").disabled = !(item.isWeapon() && item.isStackable() && item.count > 0);
   document.getElementById("guiInventoryButtonDiscard").disabled = !item.discardable;
 
   // Select the given item

@@ -51,6 +51,17 @@ InventoryItem.prototype.consume = function (amount) {
   return false;
 };
 
+// Merges two stackable items
+InventoryItem.prototype.merge = function (item) {
+  if (this.name == item.name && item.isStackable() && item.count > 0) {
+    if (this.count < this.maxCount) {
+      var delta = Math.min(item.count, this.maxCount - this.count);
+      item.count -= delta;
+      this.count += delta;
+    }
+  }
+};
+
 // WeaponInventoryItem class constructor
 var WeaponInventoryItem = function (name, image, damage, ammo, maxAmmo) {
   InventoryItem.prototype.constructor.call(this, name, image);
@@ -99,11 +110,25 @@ var Inventory = function (capacity) {
 
 // Adds the given item to the inventory
 Inventory.prototype.addItem = function (item) {
-  if (this.items.length < this.capacity) {
-    this.items.push(item);
-    return true;
+  // Check if the item can be stacked
+  if (item.isStackable()) {
+    for (var i = 0; i < this.items.length; i++) {
+      if (this.items[i].name == item.name && this.items[i].count < this.items[i].maxCount) {
+        this.items[i].merge(item);
+      }
+    }
+  }
+
+  // Add the item to the inventory
+  if (item.count > 0) {
+    if (this.items.length < this.capacity) {
+      this.items.push(item);
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    return true;
   }
 };
 
