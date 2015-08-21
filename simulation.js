@@ -349,6 +349,7 @@ Simulation.prototype.createPlayer = function (position) {
     this.resourceManager.getResource("item_fists"),
     new Damage(DMG_MELEE, 1, true), 1, 1);
   meleeWeapon.description = "Your bare fists."
+  meleeWeapon.discardable = false;
   var rangedWeapon = new WeaponInventoryItem("Sawed-off shotgun",
     this.resourceManager.getResource("item_shotgun"),
     new Damage(DMG_BULLET, 5, false), 2, 2);

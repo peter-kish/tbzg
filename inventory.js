@@ -6,6 +6,7 @@ var InventoryItem = function (name, image) {
   this.count = 1;
   this.maxCount = 1;
   this.onUse = null;
+  this.discardable = true;
 }
 
 // Returns true if the item is stackable

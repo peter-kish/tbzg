@@ -81,6 +81,9 @@ function ga_inventory_select_item(item) {
     return;
   }
 
+  document.getElementById("guiInventoryButtonReload").disabled = !(item.isWeapon() && item.isStackable());
+  document.getElementById("guiInventoryButtonDiscard").disabled = !item.discardable;
+
   // Select the given item
   divToSelect.style.border = "2px solid #ffcf00";
   document.getElementById("guiInventoryItemName").innerHTML = item.name;
