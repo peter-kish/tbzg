@@ -183,34 +183,17 @@ function handleWeaponIcon(guiElement) {
 
 // Opens the inventory screen
 Game.prototype.openInventory = function () {
-  var hud = this.gui.getElement("gui_hud");
-  var inventory = this.gui.getElement("gui_inventory");
-
-  if (hud && inventory) {
-    hud.hide();
-    inventory.show();
-  }
+  // TODO: Check if this needs to be removed
 };
 
 // Closes the inventory screen
 Game.prototype.closeInventory = function () {
-  var hud = this.gui.getElement("gui_hud");
-  var inventory = this.gui.getElement("gui_inventory");
-
-  if (hud && inventory) {
-    inventory.hide();
-    hud.show();
-  }
+  // TODO: Check if this needs to be removed
 };
 
 // Checks if the inventory screen is open
 Game.prototype.isInventoryOpen = function () {
-  var inventory = this.gui.getElement("gui_inventory");
-
-  if (inventory) {
-    return inventory.visible;
-  }
-  return false;
+  // TODO: Check if this needs to be removed
 };
 
 // Input handler
