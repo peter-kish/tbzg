@@ -138,6 +138,27 @@ Character.prototype.move = function (direction, speed) {
   return true;
 };
 
+// Equips the given weapon
+Character.prototype.equip = function (weapon) {
+  if (weapon.isWeapon()) {
+    if (weapon.damage.type == DMG_MELEE) {
+      this.equipMelee(weapon);
+    } else {
+      this.equipRanged(weapon);
+    }
+  }
+};
+
+// Holsters the given weapon
+Character.prototype.holster = function (weapon) {
+  if (this.meleeSlot == weapon) {
+    this.meleeSlot = null;
+  } else if (this.rangedSlot == weapon) {
+    this.rangedSlot = null;
+    this.setImage(this.animationSet.idle_melee);
+  }
+};
+
 // Equips the given melee weapon
 Character.prototype.equipMelee = function (weapon) {
   if (this.inventory.find(weapon)) {
@@ -155,12 +176,7 @@ Character.prototype.equipRanged = function (weapon) {
 // Discards the given item from the inventory
 Character.prototype.discardItem = function (item) {
   if (this.inventory.find(item) && item.discardable) {
-    if (this.rangedSlot == item) {
-      this.rangedSlot = null;
-    }
-    if (this.meleeSlot == item) {
-      this.meleeSlot = null;
-    }
+    this.holster(item);
     this.inventory.removeItem(item);
   }
 };

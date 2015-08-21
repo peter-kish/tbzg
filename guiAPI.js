@@ -27,6 +27,7 @@ function ga_discard_selected_item() {
   }
 
   getGameInstance().simulation.player.discardItem(ga_inventory_selected_item);
+  ga_inventory_select_item(null);
   ga_update_gui();
 }
 
@@ -40,6 +41,10 @@ function ga_clear_inventory() {
 }
 
 function ga_create_inventory_item_div(item) {
+  if (!item){
+    return null;
+  }
+
   var newDiv = document.createElement("div");
   var newP = document.createElement("p");
   var newImg = document.createElement("img");
@@ -73,6 +78,14 @@ function ga_on_inventory_item_click() {
 
 function ga_inventory_select_item(item) {
   ga_inventory_selected_item = item;
+
+  if (!item) {
+    document.getElementById("guiInventoryItemName").innerHTML = "";
+    document.getElementById("guiInventoryItemDesc").innerHTML = "";
+    document.getElementById("guiInventoryItemDamage").innerHTML = "";
+    document.getElementById("guiInventoryItemCount").innerHTML = "";
+    return;
+  }
 
   var inventoryItemList = document.getElementById("guiInventoryItemList");
   var divToSelect = null;
@@ -149,9 +162,13 @@ function ga_update_weapon_icons() {
   ga_clear_children(document.getElementById("guiRangedSlot"));
   var meleeSlotDiv = ga_create_inventory_item_div(getGameInstance().simulation.player.meleeSlot);
   var rangedSlotDiv = ga_create_inventory_item_div(getGameInstance().simulation.player.rangedSlot);
-  rangedSlotDiv.onclick = ga_reload;
-  document.getElementById("guiMeleeSlot").appendChild(meleeSlotDiv);
-  document.getElementById("guiRangedSlot").appendChild(rangedSlotDiv);
+  if (meleeSlotDiv) {
+    document.getElementById("guiMeleeSlot").appendChild(meleeSlotDiv);
+  }
+  if (rangedSlotDiv) {
+    rangedSlotDiv.onclick = ga_reload;
+    document.getElementById("guiRangedSlot").appendChild(rangedSlotDiv);
+  }
 }
 
 function ga_update_gui() {

@@ -363,8 +363,8 @@ Simulation.prototype.createPlayer = function (position) {
   this.player.inventory.addItem(meleeWeapon);
   this.player.inventory.addItem(rangedWeapon);
   this.player.inventory.addItem(shotgunAmmo);
-  this.player.equipMelee(meleeWeapon);
-  this.player.equipRanged(rangedWeapon);
+  this.player.equip(meleeWeapon);
+  this.player.equip(rangedWeapon);
 
   this.player.animationSet = playerAnimationSet;
   this.player.setImage(playerAnimationSet.idle_ranged);
@@ -375,7 +375,9 @@ Simulation.prototype.createPlayer = function (position) {
 Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
   var meleeWeapon = new WeaponInventoryItem("Fists", null, new Damage(DMG_MELEE, 5, true), 1, 1);
-  newAI.equipMelee(meleeWeapon);
+  meleeWeapon.discardable = false;
+  newAI.inventory.addItem(meleeWeapon);
+  newAI.equip(meleeWeapon);
   newAI.rangedSlot = null;
   newAI.animationSet = enemyAnimationSet;
   newAI.setImage(enemyAnimationSet.idle_melee);
