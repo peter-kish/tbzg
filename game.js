@@ -8,11 +8,10 @@ function getGameInstance() {
 // Game class constructor
 var Game = function (scrWidth, scrHeight) {
   this.simulation = new Simulation();
-  this.gui = new Gui(scrWidth, scrHeight);
   this.scrWidth = scrWidth;
   this.scrHeight = scrHeight;
+  this.updateGUI = null;
 
-  //this.initGui();
   this.simulation.input.addHandler(inputHandler, this);
 
   game_instance = this;
@@ -21,7 +20,6 @@ var Game = function (scrWidth, scrHeight) {
 // Render the game
 Game.prototype.render = function () {
   this.simulation.render();
-  this.gui.render();
 };
 
 // Clear the screen
@@ -39,7 +37,6 @@ Game.prototype.drawLoadingScreen = function () {
 
 // Update the game
 Game.prototype.update = function () {
-  this.gui.update();
   this.simulation.update();
 };
 
@@ -245,8 +242,7 @@ function inputHandler(input, game, x, y) {
     }
     break;
   case INPUT_CLICK:
-    if (!game.gui.handleMouseClick(x, y))
-      game.simulation.onFieldClick(game.simulation.getMapCoords(new Vector2d(x + game.simulation.camera.x, y + game.simulation.camera.y)));
+    game.simulation.onFieldClick(game.simulation.getMapCoords(new Vector2d(x + game.simulation.camera.x, y + game.simulation.camera.y)));
     break;
   }
 }
@@ -256,6 +252,4 @@ Game.prototype.onWindowResize = function (newWidth, newHeight) {
   this.scrWidth = newWidth;
   this.scrHeight = newHeight;
   this.simulation.onWindowResize(newWidth, newHeight);
-  this.gui.mainFrame.rect.width = newWidth;
-  this.gui.mainFrame.rect.height = newHeight;
 };
