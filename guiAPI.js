@@ -9,8 +9,16 @@ function ga_clear_children(element) {
 function ga_reload() {
   getGameInstance().simulation.player.reload();
 
-  ga_update_weapon_icons();
-  ga_update_inventory();
+  ga_update_gui();
+}
+
+function ga_reload_selected_item() {
+  if (!ga_inventory_selected_item) {
+    return;
+  }
+
+  getGameInstance().simulation.player.reload(ga_inventory_selected_item);
+  ga_update_gui();
 }
 
 function ga_skip_turn() {
@@ -51,26 +59,39 @@ function ga_add_inventory_item(item) {
 }
 
 function ga_on_inventory_item_click() {
-  ga_inventory_selected_item = this.item;
+  ga_inventory_select_item(this.item);
+}
 
-  // First unselect all items
+function ga_inventory_select_item(item) {
+  ga_inventory_selected_item = item;
+
   var inventoryItemList = document.getElementById("guiInventoryItemList");
+  var divToSelect = null;
   for (var i = 0; i < inventoryItemList.children.length; i++) {
+    // Unselect everything
     var itemDiv = inventoryItemList.children[i];
     itemDiv.style.border = "";
+    // Get the div for the given item
+    if (item == itemDiv.item) {
+      divToSelect = itemDiv;
+    }
   }
 
-  // Select the clicked item
-  this.style.border = "2px solid #ffcf00";
-  document.getElementById("guiInventoryItemName").innerHTML = this.item.name;
-  document.getElementById("guiInventoryItemDesc").innerHTML = "Description: " + this.item.description;
-  if (this.item.damage) {
-    document.getElementById("guiInventoryItemDamage").innerHTML = "Damage: " + this.item.damage.hitPoints;
+  if (!divToSelect) {
+    return;
+  }
+
+  // Select the given item
+  divToSelect.style.border = "2px solid #ffcf00";
+  document.getElementById("guiInventoryItemName").innerHTML = item.name;
+  document.getElementById("guiInventoryItemDesc").innerHTML = "Description: " + item.description;
+  if (item.damage) {
+    document.getElementById("guiInventoryItemDamage").innerHTML = "Damage: " + item.damage.hitPoints;
   } else {
     document.getElementById("guiInventoryItemDamage").innerHTML = "";
   }
-  if (this.item.isStackable()) {
-    document.getElementById("guiInventoryItemCount").innerHTML = "Count: " + this.item.count + "/" + this.item.maxCount;
+  if (item.isStackable()) {
+    document.getElementById("guiInventoryItemCount").innerHTML = "Count: " + item.count + "/" + item.maxCount;
   } else {
     document.getElementById("guiInventoryItemCount").innerHTML = "";
   }
@@ -86,6 +107,8 @@ function ga_update_inventory() {
   for (var i = 0; i < item_array.length; i++) {
     ga_add_inventory_item(item_array[i]);
   }
+
+  ga_inventory_select_item(ga_inventory_selected_item);
 }
 
 function ga_open_inventory() {
@@ -106,7 +129,6 @@ function ga_close_inventory() {
   document.getElementById('guiMeleeSlot').style.visibility='visible';
   document.getElementById('guiRangedSlot').style.visibility='visible';
   document.getElementById('guiInventoryOverlay').style.visibility='hidden';
-  ga_inventory_selected_item = null;
 }
 
 function ga_is_inventory_open() {

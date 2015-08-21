@@ -208,33 +208,35 @@ Character.prototype.rangedAttack = function (position, direction) {
 };
 
 // Reloads the ranged weapon
-Character.prototype.reload = function () {
-  if (this.rangedSlot) {
+Character.prototype.reload = function (item) {
+  if (!item) {
+    item = this.rangedSlot;
+  }
+
+  if (item) {
     var ammoAvailable = 0;
-    var ammoItem = this.inventory.find(this.rangedSlot.ammoName);
+    var ammoItem = this.inventory.find(item.ammoName);
     if (ammoItem) {
       ammoAvailable = ammoItem.count;
       if (ammoAvailable == 0) {
-        console.log("No ammo!");
         return false;
       }
     } else {
-      console.log("No ammo item!");
       return false;
     }
 
-    if (this.rangedSlot.getAmmo() < this.rangedSlot.maxCount) {
-      if (this.rangedSlot.slowReload) {
+    if (item.getAmmo() < item.maxCount) {
+      if (item.slowReload) {
         if (ammoAvailable >= 1) {
-          this.rangedSlot.reload(1);
+          item.reload(1);
           ammoItem.consume(1);
         }
       } else {
-        if (ammoAvailable >= this.rangedSlot.maxCount - this.rangedSlot.count) {
-          this.rangedSlot.reload();
-          ammoItem.consume(this.rangedSlot.maxCount - this.rangedSlot.count);
+        if (ammoAvailable >= item.maxCount - item.count) {
+          item.reload();
+          ammoItem.consume(item.maxCount - item.count);
         } else {
-          this.rangedSlot.reload(ammoAvailable);
+          item.reload(ammoAvailable);
           ammoItem.consume(ammoAvailable);
         }
       }
