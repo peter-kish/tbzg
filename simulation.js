@@ -353,7 +353,7 @@ Simulation.prototype.createPlayer = function (position) {
     this.resourceManager.getResource("item_shotgun"),
     new Damage(DMG_BULLET, 5, false), 2, 2);
   rangedWeapon.slowReload = true;
-  rangedWeapon.description = "An 2 shot shotgun.";
+  rangedWeapon.description = "A 2 shot shotgun.";
   rangedWeapon.ammoName = "Shotgun shells"
   var shotgunAmmo = new InventoryItem("Shotgun shells", this.resourceManager.getResource("item_shotgun_shells"));
   shotgunAmmo.count = 8;

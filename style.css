@@ -1,0 +1,97 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  border: 0;
+  overflow: hidden; /*  Disable scrollbars */
+  display: block;  /* No floating content on sides */
+  background-color: black;
+}
+
+p {
+  color: white;
+  font-family: "Arial";
+}
+
+p.center {
+  text-align: center;
+}
+
+button.center {
+  display: block;
+  margin: 0 auto;
+}
+
+div.dialog {
+  background-color: black;
+  border: 1px solid #ffffff
+}
+
+.left {
+  float: left;
+}
+
+.inventoryItem {
+  position: relative;
+}
+
+.inventoryItemCount {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0px;
+  padding: 0px;
+  font-weight: bold;
+  font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+p.inventoryTitle {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+p.inventoryItemStat {
+  margin: 0px;
+  padding: 0px;
+  font-size: 16px;
+  height: 16px;
+}
+
+#guiToolbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+#guiInventoryOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#guiInventory {
+  /*width: 320px;*/
+  /*height: 320px;*/
+  margin: auto;
+}
+
+#guiInventoryItemStats {
+  width: 200px;
+  padding-left: 16px;
+}
+
+#guiMeleeSlot {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+#guiRangedSlot {
+  position: fixed;
+  right	: 0;
+  bottom: 0;
+}

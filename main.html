@@ -2,19 +2,9 @@
 <html>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<head>
-		<style>
-		html, body {
-			width: 100%;
-			height: 100%;
-			margin: 0px;
-			border: 0;
-			overflow: hidden; /*  Disable scrollbars */
-			display: block;  /* No floating content on sides */
-			background-color: black;
-		}
-		</style>
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
-	<body>
+	<body onload="ga_onload()";>
 		<canvas id="myCanvas" width="640" height="480"></canvas>
 		<script type="text/javascript" src="core/utils.js"></script>
 		<script type="text/javascript" src="core/canvasDraw.js"></script>
@@ -48,5 +38,34 @@
 		<script type="text/javascript" src="simulation.js"></script>
 		<script type="text/javascript" src="game.js"></script>
 		<script type="text/javascript" src="main.js"></script>
+
+		<script type="text/javascript" src="guiAPI.js"></script>
+
+		<div id="guiToolbar">
+			<img src="images/gui/button_skip_turn.png" onclick="ga_skip_turn()"></img>
+			<img src="images/gui/button_menu.png" onclick="alert('Not implemented!')"></img>
+			<img src="images/gui/button_inventory.png" onclick="ga_open_inventory()"></img>
+		</div>
+
+		<div id="guiMeleeSlot">
+		</div>
+		<div id="guiRangedSlot">
+		</div>
+
+		<div id="guiInventoryOverlay">
+			<div id="guiInventory" class="dialog">
+				<p class="inventoryTitle">Inventory WIP</p>
+				<div id="guiInventoryItemList" class="left"> </div>
+				<div id="guiInventoryItemStats" class="left">
+					<p id="guiInventoryItemName" class="inventoryTitle"></p>
+					<p id="guiInventoryItemDamage" class="inventoryItemStat"></p>
+					<p id="guiInventoryItemCount" class="inventoryItemStat"></p>
+					<p id="guiInventoryItemDesc" class="inventoryItemStat"></p>
+				</div>
+				<button type="button" class="center" onclick="ga_close_inventory()" style="clear: both;">
+					Close Inventory
+				</button>
+			</div>
+		</div>
 	</body>
 </html>

@@ -12,7 +12,7 @@ var Game = function (scrWidth, scrHeight) {
   this.scrWidth = scrWidth;
   this.scrHeight = scrHeight;
 
-  this.initGui();
+  //this.initGui();
   this.simulation.input.addHandler(inputHandler, this);
 
   game_instance = this;
