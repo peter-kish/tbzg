@@ -63,7 +63,7 @@ function ga_on_inventory_item_click() {
   // Select the clicked item
   this.style.border = "2px solid #ffcf00";
   document.getElementById("guiInventoryItemName").innerHTML = this.item.name;
-  document.getElementById("guiInventoryItemDesc").innerHTML = this.item.description;
+  document.getElementById("guiInventoryItemDesc").innerHTML = "Description: " + this.item.description;
   if (this.item.damage) {
     document.getElementById("guiInventoryItemDamage").innerHTML = "Damage: " + this.item.damage.hitPoints;
   } else {
@@ -94,6 +94,11 @@ function ga_open_inventory() {
   document.getElementById('guiMeleeSlot').style.visibility='hidden';
   document.getElementById('guiRangedSlot').style.visibility='hidden';
   document.getElementById('guiInventoryOverlay').style.visibility='visible';
+
+  document.getElementById("guiInventoryItemName").innerHTML = "";
+  document.getElementById("guiInventoryItemDesc").innerHTML = "";
+  document.getElementById("guiInventoryItemCount").innerHTML = "";
+  document.getElementById("guiInventoryItemDamage").innerHTML = "";
 }
 
 function ga_close_inventory() {
@@ -120,6 +125,7 @@ function ga_update_gui() {
 }
 
 function ga_onload() {
+  getGameInstance().simulation.input.addHandler(guiInputHandler);
   ga_update_weapon_icons();
   ga_close_inventory();
   document.getElementById("myCanvas").addEventListener('click', ga_on_canvas_click, false);
@@ -127,4 +133,15 @@ function ga_onload() {
 
 function ga_on_canvas_click(e) {
   ga_update_gui();
+}
+
+function guiInputHandler(input, game, x, y) {
+  switch (input) {
+  case INPUT_RELOAD:
+    ga_update_gui();
+    break;
+  case INPUT_INVENTORY:
+    ga_open_inventory();
+    break;
+  }
 }
