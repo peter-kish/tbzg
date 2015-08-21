@@ -52,6 +52,16 @@ function ga_add_inventory_item(item) {
 
 function ga_on_inventory_item_click() {
   ga_inventory_selected_item = this.item;
+
+  // First unselect all items
+  var inventoryItemList = document.getElementById("guiInventoryItemList");
+  for (var i = 0; i < inventoryItemList.children.length; i++) {
+    var itemDiv = inventoryItemList.children[i];
+    itemDiv.style.border = "";
+  }
+
+  // Select the clicked item
+  this.style.border = "2px solid #ffcf00";
   document.getElementById("guiInventoryItemName").innerHTML = this.item.name;
   document.getElementById("guiInventoryItemDesc").innerHTML = this.item.description;
   if (this.item.damage) {
