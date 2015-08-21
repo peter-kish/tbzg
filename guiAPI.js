@@ -109,6 +109,10 @@ function ga_close_inventory() {
   ga_inventory_selected_item = null;
 }
 
+function ga_is_inventory_open() {
+  return document.getElementById('guiInventoryOverlay').style.visibility=='visible';
+}
+
 function ga_update_weapon_icons() {
   ga_clear_children(document.getElementById("guiMeleeSlot"));
   ga_clear_children(document.getElementById("guiRangedSlot"));
@@ -141,7 +145,11 @@ function guiInputHandler(input, game, x, y) {
     ga_update_gui();
     break;
   case INPUT_INVENTORY:
-    ga_open_inventory();
+    if (ga_is_inventory_open()) {
+      ga_close_inventory();
+    } else {
+      ga_open_inventory();
+    }
     break;
   }
 }
