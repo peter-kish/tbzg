@@ -55,6 +55,7 @@ var Simulation = function() {
   this.input = new Input();
   //this.input.addHandler(inputHandler, this);
   this.turnNumber = 0;
+  this.prefabItems = new PrefabItemSet(this);
 
   this.player = null;
   this.enemies = [];
@@ -345,21 +346,9 @@ Simulation.prototype.createPlayer = function (position) {
   this.player = new Character(this, position);
   this.player.maxHitPoints = 100;
   this.player.hitPoints = this.player.maxHitPoints;
-  var meleeWeapon = new WeaponInventoryItem("Fists",
-    this.resourceManager.getResource("item_fists"),
-    new Damage(DMG_MELEE, 1, true), 1, 1);
-  meleeWeapon.description = "Your bare fists."
-  meleeWeapon.discardable = false;
-  var rangedWeapon = new WeaponInventoryItem("Sawed-off shotgun",
-    this.resourceManager.getResource("item_shotgun"),
-    new Damage(DMG_BULLET, 5, false), 2, 2);
-  rangedWeapon.slowReload = true;
-  rangedWeapon.description = "A 2 shot shotgun.";
-  rangedWeapon.ammoName = "Shotgun shells"
-  var shotgunAmmo = new InventoryItem("Shotgun shells", this.resourceManager.getResource("item_shotgun_shells"));
-  shotgunAmmo.count = 8;
-  shotgunAmmo.maxCount = 8;
-  shotgunAmmo.description = "Shotgun ammo."
+  var meleeWeapon = this.prefabItems.getPrefabItemInstance("Fists");
+  var rangedWeapon = this.prefabItems.getPrefabItemInstance("Sawed-off shotgun");
+  var shotgunAmmo = this.prefabItems.getPrefabItemInstance("Shotgun shells");
   this.player.inventory.addItem(meleeWeapon);
   this.player.inventory.addItem(rangedWeapon);
   this.player.inventory.addItem(shotgunAmmo);
@@ -374,8 +363,7 @@ Simulation.prototype.createPlayer = function (position) {
 // Creates an enemy at the given coordinates
 Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
-  var meleeWeapon = new WeaponInventoryItem("Fists", null, new Damage(DMG_MELEE, 5, true), 1, 1);
-  meleeWeapon.discardable = false;
+  var meleeWeapon = this.prefabItems.getPrefabItemInstance("Zombie Fists");
   newAI.inventory.addItem(meleeWeapon);
   newAI.equip(meleeWeapon);
   newAI.rangedSlot = null;

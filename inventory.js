@@ -9,6 +9,25 @@ var InventoryItem = function (name, image) {
   this.discardable = true;
 }
 
+// Sets the properties from the given item
+InventoryItem.prototype.set = function (item) {
+  this.name = item.name;
+  this.description = item.description;
+  this.image = item.image;
+  this.count = item.count;
+  this.maxCount = item.maxCount;
+  this.onUse = item.onUse;
+  this.discardable = item.discardable;
+};
+
+// Clones the item
+InventoryItem.prototype.clone = function () {
+  var newItem = new InventoryItem(this.name, this.image);
+  newItem.set(this);
+
+  return newItem
+};
+
 // Returns true if the item is stackable
 InventoryItem.prototype.isStackable = function () {
   return this.maxCount > 1;
@@ -74,6 +93,22 @@ var WeaponInventoryItem = function (name, image, damage, ammo, maxAmmo) {
 
 // WeaponInventoryItem class inherits the InventoryItem class
 inherit(WeaponInventoryItem, InventoryItem);
+
+// Sets the properties from the given weapon
+WeaponInventoryItem.prototype.set = function (weapon) {
+  InventoryItem.prototype.set.call(this, weapon);
+  this.damage = weapon.damage;
+  this.ammoName = weapon.ammoName;
+  this.slowReload = weapon.slowReload;
+};
+
+// Clones the weapon
+WeaponInventoryItem.prototype.clone = function () {
+  var newWeapon = new WeaponInventoryItem(this.name, this.image, this.damage.clone(), this.ammo, this.maxAmmo);
+  newWeapon.set(this);
+
+  return newWeapon;
+};
 
 // Returns true if the weapon is a weapon (Duh!)
 WeaponInventoryItem.prototype.isWeapon = function () {
