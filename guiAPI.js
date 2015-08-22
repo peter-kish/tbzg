@@ -121,8 +121,9 @@ function ga_inventory_select_item(item) {
     return;
   }
 
-  document.getElementById("guiInventoryButtonReload").disabled = !(item.isWeapon() && item.isStackable());
+  document.getElementById("guiInventoryButtonReload").disabled = !(item.isWeapon() && item.isStackable() && item.count < item.maxCount);
   document.getElementById("guiInventoryButtonExtract").disabled = !(item.isWeapon() && item.isStackable() && item.count > 0);
+  document.getElementById("guiInventoryButtonEquip").disabled = !item.isWeapon();
   document.getElementById("guiInventoryButtonDiscard").disabled = !item.discardable;
 
   // Select the given item
