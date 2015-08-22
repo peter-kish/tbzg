@@ -247,30 +247,28 @@ Character.prototype.reload = function (item) {
   }
 
   if (item) {
-    var ammoAvailable = 0;
-    var ammoItem = this.inventory.findByName(item.ammoName);
-    if (ammoItem) {
-      ammoAvailable = ammoItem.count;
-      if (ammoAvailable == 0) {
-        return false;
-      }
-    } else {
+    var ammoAvailable = this.inventory.getTotalCount(item.ammoName);
+    if (ammoAvailable <= 0) {
       return false;
     }
 
     if (item.getAmmo() < item.maxCount) {
       if (item.slowReload) {
+        // Slow reload - reload only 1 ammo
         if (ammoAvailable >= 1) {
           item.reload(1);
-          ammoItem.consume(1);
+          this.inventory.consume(item.ammoName, 1);
         }
       } else {
+        // Fast reload
         if (ammoAvailable >= item.maxCount - item.count) {
+          // Reload to full capacity
           item.reload();
-          ammoItem.consume(item.maxCount - item.count);
+          this.inventory.consume(item.ammoName, item.maxCount - item.count);
         } else {
+          // Use only the available ammo
           item.reload(ammoAvailable);
-          ammoItem.consume(ammoAvailable);
+          this.inventory.consume(ammoAvailable);
         }
       }
       this.stateMachine.setState(CHR_ST_RELOAD, CHR_RELOAD_SPEED);
@@ -286,17 +284,15 @@ Character.prototype.extractAmmo = function (weapon) {
     weapon = this.rangedSlot;
   }
 
-  // TODO: Work in progress...
-  /*if (weapon && weapon.isWeapon()) {
-    var ammo = new InventoryItem(weapon.ammoName, this.parentSim.resourceManager.getResource("item_shotgun_shells"));
+  if (weapon && weapon.isWeapon()) {
+    var ammo = getGameInstance().simulation.prefabItems.getPrefabItemInstance(weapon.ammoName);
     ammo.count = weapon.count;
-    ammo.maxCount = weapon.maxCount;
     if (!this.inventory.addItem(ammo)) {
       weapon.count = ammo.count;
     } else {
       weapon.count = 0;
     }
-  }*/
+  }
 };
 
 // Apply the given damage on the character

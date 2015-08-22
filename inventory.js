@@ -198,6 +198,52 @@ Inventory.prototype.findByName = function (itemName) {
   return null;
 };
 
+// Finds the smallest item batch with the given name in the Inventory.
+Inventory.prototype.findSmallestBatch = function (itemName) {
+  var smallestBatch = null;
+  for (var i = 0; i < this.items.length; i++) {
+    if (this.items[i].name == itemName) {
+      if (!smallestBatch || this.items[i].count < smallestBatch.count) {
+        smallestBatch = this.items[i];
+      }
+    }
+  }
+  return smallestBatch;
+};
+
+// Returns the total count of items with the given name
+Inventory.prototype.getTotalCount = function (itemName) {
+  var sum = 0;
+  for (var i = 0; i < this.items.length; i++) {
+    if (this.items[i].name == itemName) {
+      sum += this.items[i].count;
+    }
+  }
+  return sum;
+};
+
+// Consumes the given amount of items with the given name
+Inventory.prototype.consume = function (itemName, count) {
+  var totalConsumed = 0;
+  var batch = this.findSmallestBatch(itemName);
+  while (batch && totalConsumed < count) {
+    if (batch.count < count - totalConsumed) {
+      totalConsumed += batch.count;
+      batch.count = 0;
+    } else {
+      var temp = batch.count;
+      batch.count -= count - totalConsumed;
+      totalConsumed += temp;
+    }
+    if (batch.count == 0) {
+      this.removeItem(batch);
+    }
+    batch = this.findSmallestBatch(itemName);
+  }
+
+  return (totalConsumed == count);
+};
+
 
 // Inventory item button class constructor
 var GuiInventoryItemButton = function (rect, item, onClickCallback) {
