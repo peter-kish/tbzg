@@ -110,7 +110,7 @@ function ga_inventory_select_item(item) {
   for (var i = 0; i < inventoryItemList.children.length; i++) {
     // Unselect everything
     var itemDiv = inventoryItemList.children[i];
-    itemDiv.style.border = "";
+    itemDiv.className = "inventoryItem";
     // Get the div for the given item
     if (item == itemDiv.item) {
       divToSelect = itemDiv;
@@ -127,7 +127,7 @@ function ga_inventory_select_item(item) {
   document.getElementById("guiInventoryButtonDiscard").disabled = !item.discardable;
 
   // Select the given item
-  divToSelect.style.border = "2px solid #ffcf00";
+  divToSelect.className = "inventoryItemSelected";
   document.getElementById("guiInventoryItemName").innerHTML = item.name;
   document.getElementById("guiInventoryItemDesc").innerHTML = "Description: " + item.description;
   if (item.damage) {

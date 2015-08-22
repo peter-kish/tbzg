@@ -35,6 +35,11 @@ div.dialog {
   position: relative;
 }
 
+.inventoryItemSelected {
+  position: relative;
+  background-color: #474747;
+}
+
 .inventoryItemCount {
   position: absolute;
   right: 0;
@@ -80,6 +85,7 @@ p.inventoryItemStat {
 
 #guiInventoryItemStats {
   width: 200px;
+  min-height: 200px;
   padding-left: 16px;
 }
 
