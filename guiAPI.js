@@ -30,6 +30,15 @@ function ga_extract_selected_item() {
   ga_update_gui();
 }
 
+function ga_equip_selected_item() {
+  if (!ga_inventory_selected_item) {
+    return;
+  }
+
+  getGameInstance().simulation.player.equip(ga_inventory_selected_item);
+  ga_update_gui();
+}
+
 function ga_discard_selected_item() {
   if (!ga_inventory_selected_item) {
     return;
