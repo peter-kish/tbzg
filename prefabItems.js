@@ -24,10 +24,23 @@ PrefabItemSet.prototype.initPrefabItems = function () {
   newItem.ammoName = "Shotgun shells"
   this.addPrefabItem(newItem);
 
+  newItem = new WeaponInventoryItem("Handgun",
+    this.parentSim.resourceManager.getResource("item_handgun"),
+    new Damage(DMG_BULLET, 3, false), 15, 15);
+  newItem.description = "A 9mm handgun.";
+  newItem.ammoName = "9mm"
+  this.addPrefabItem(newItem);
+
   newItem = new InventoryItem("Shotgun shells", this.parentSim.resourceManager.getResource("item_shotgun_shells"));
   newItem.count = 8;
   newItem.maxCount = 8;
   newItem.description = "Shotgun ammo."
+  this.addPrefabItem(newItem);
+
+  newItem = new InventoryItem("9mm", this.parentSim.resourceManager.getResource("item_9mm"));
+  newItem.count = 15;
+  newItem.maxCount = 15;
+  newItem.description = "9mm ammo."
   this.addPrefabItem(newItem);
 
   var newItem = new WeaponInventoryItem("Zombie Fists",

@@ -147,6 +147,7 @@ Character.prototype.equip = function (weapon) {
       this.equipRanged(weapon);
     }
   }
+  this.doNothing();
 };
 
 // Holsters the given weapon
@@ -263,12 +264,12 @@ Character.prototype.reload = function (item) {
         // Fast reload
         if (ammoAvailable >= item.maxCount - item.count) {
           // Reload to full capacity
-          item.reload();
           this.inventory.consume(item.ammoName, item.maxCount - item.count);
+          item.reload();
         } else {
           // Use only the available ammo
-          item.reload(ammoAvailable);
           this.inventory.consume(ammoAvailable);
+          item.reload(ammoAvailable);
         }
       }
       this.stateMachine.setState(CHR_ST_RELOAD, CHR_RELOAD_SPEED);

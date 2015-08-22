@@ -351,6 +351,8 @@ Simulation.prototype.createPlayer = function (position) {
   var shotgunAmmo = this.prefabItems.getPrefabItemInstance("Shotgun shells");
   this.player.inventory.addItem(meleeWeapon);
   this.player.inventory.addItem(rangedWeapon);
+  this.player.inventory.addItem(this.prefabItems.getPrefabItemInstance("Handgun"));
+  this.player.inventory.addItem(this.prefabItems.getPrefabItemInstance("9mm"));
   this.player.inventory.addItem(shotgunAmmo);
   this.player.equip(meleeWeapon);
   this.player.equip(rangedWeapon);
@@ -453,7 +455,9 @@ Simulation.prototype.loadResources = function () {
   this.resourceManager.loadImage("images/gui/button_menu.png", "button_menu");
 
   this.resourceManager.loadImage("images/items/item_shotgun.png", "item_shotgun");
+  this.resourceManager.loadImage("images/items/item_handgun.png", "item_handgun");
   this.resourceManager.loadImage("images/items/item_shotgun_shells.png", "item_shotgun_shells");
+  this.resourceManager.loadImage("images/items/item_9mm.png", "item_9mm");
   this.resourceManager.loadImage("images/items/item_fists.png", "item_fists");
 };
 
@@ -471,7 +475,5 @@ Simulation.prototype.onFieldClick = function (position) {
     if (enemy.isAlive() && enemy.position.chebyshevDistance(this.player.position) < 5) {
       this.player.rangedAttack(position, this.player.getDirection(position));
     }
-  } else {
-    this.player.doNothing();
   }
 };
