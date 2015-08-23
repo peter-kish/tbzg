@@ -1,17 +1,21 @@
+// Holds the currently selected item in the inventory
 var ga_inventory_selected_item = null;
 
+// Removes all the element children
 function ga_clear_children(element) {
   while (element.firstChild) {
     element.removeChild(element.firstChild);
   }
 }
 
+// Reload
 function ga_reload() {
   getGameInstance().simulation.player.reload();
 
   ga_update_gui();
 }
 
+// Reloads the currently selected item in the inventory
 function ga_reload_selected_item() {
   if (!ga_inventory_selected_item) {
     return;
@@ -21,6 +25,7 @@ function ga_reload_selected_item() {
   ga_update_gui();
 }
 
+// Extracts ammo from the currently selected item in the inventory
 function ga_extract_selected_item() {
   if (!ga_inventory_selected_item) {
     return;
@@ -30,6 +35,7 @@ function ga_extract_selected_item() {
   ga_update_gui();
 }
 
+// Equips the currently selected item in the inventory
 function ga_equip_selected_item() {
   if (!ga_inventory_selected_item) {
     return;
@@ -39,6 +45,7 @@ function ga_equip_selected_item() {
   ga_update_gui();
 }
 
+// Discards the currently selected item in the inventory
 function ga_discard_selected_item() {
   if (!ga_inventory_selected_item) {
     return;
@@ -49,15 +56,18 @@ function ga_discard_selected_item() {
   ga_update_gui();
 }
 
+// Skips a turn
 function ga_skip_turn() {
   getGameInstance().simulation.player.doNothing();
 }
 
+// Clears all inventory elements in the GUI
 function ga_clear_inventory() {
   var parentNode = document.getElementById('guiInventoryItemList');
   ga_clear_children(parentNode);
 }
 
+// Creates a div for the given inventory item
 function ga_create_inventory_item_div(item) {
   if (!item){
     return null;
@@ -80,6 +90,7 @@ function ga_create_inventory_item_div(item) {
   return newDiv;
 }
 
+// Adds the given item to the inventory GUI
 function ga_add_inventory_item(item) {
   if (!item) {
     return;
@@ -90,10 +101,12 @@ function ga_add_inventory_item(item) {
   document.getElementById('guiInventoryItemList').appendChild(newDiv);
 }
 
+// Handles a click on an inventory item
 function ga_on_inventory_item_click() {
   ga_inventory_select_item(this.item);
 }
 
+// Selects the given item in the inventory
 function ga_inventory_select_item(item) {
   ga_inventory_selected_item = item;
 
@@ -142,6 +155,7 @@ function ga_inventory_select_item(item) {
   }
 }
 
+// Updates the inventory GUI
 function ga_update_inventory() {
   ga_clear_inventory();
 
@@ -153,6 +167,7 @@ function ga_update_inventory() {
   ga_inventory_select_item(ga_inventory_selected_item);
 }
 
+// Shows the inventory GUI
 function ga_open_inventory() {
   ga_update_inventory();
   document.getElementById('guiToolbar').style.visibility='hidden';
@@ -166,6 +181,7 @@ function ga_open_inventory() {
   document.getElementById("guiInventoryItemDamage").innerHTML = "";
 }
 
+// Hides the inventory GUI
 function ga_close_inventory() {
   document.getElementById('guiToolbar').style.visibility='visible';
   document.getElementById('guiMeleeSlot').style.visibility='visible';
@@ -173,11 +189,13 @@ function ga_close_inventory() {
   document.getElementById('guiInventoryOverlay').style.visibility='hidden';
 }
 
+// Returns if the inventory GUI is visible
 function ga_is_inventory_open() {
   var element = document.getElementById('guiInventoryOverlay');
   return element.style.visibility=='visible';
 }
 
+// Updates the weapon icons
 function ga_update_weapon_icons() {
   ga_clear_children(document.getElementById("guiMeleeSlot"));
   ga_clear_children(document.getElementById("guiRangedSlot"));
@@ -192,11 +210,13 @@ function ga_update_weapon_icons() {
   }
 }
 
+// Updates the GUI
 function ga_update_gui() {
   ga_update_inventory();
   ga_update_weapon_icons();
 }
 
+// Initialize the GUI
 function ga_onload() {
   getGameInstance().guiOpenInventory = ga_open_inventory;
   getGameInstance().guiCloseInventory = ga_close_inventory;
