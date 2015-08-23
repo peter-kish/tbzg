@@ -184,6 +184,7 @@ function ga_update_inventory() {
 function ga_open_inventory() {
   ga_update_inventory();
   ga_set_HUD_visibility(false);
+  ga_close_loot_dialog();
   document.getElementById('guiInventoryOverlay').style.visibility='visible';
 
   if (!ga_inventory_selected_item) {
@@ -281,8 +282,10 @@ function ga_loot_select_item(item) {
 // Transfers loot from right panel to the left
 function ga_loot_transfer_to_1() {
   if (ga_loot_inventory_2.find(ga_loot_selected_item)) {
+    getGameInstance().simulation.player.holster(ga_loot_selected_item);
     ga_loot_inventory_2.transfer(ga_loot_selected_item, ga_loot_inventory_1);
     ga_update_loot_dialog();
+    ga_update_gui();
   }
 }
 
