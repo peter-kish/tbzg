@@ -3,6 +3,7 @@ var ga_inventory_selected_item = null;
 
 var ga_loot_inventory_1 = null;
 var ga_loot_inventory_2 = null;
+var ga_loot_selected_item = null;
 
 // Removes all the element children
 function ga_clear_children(element) {
@@ -93,6 +94,26 @@ function ga_create_inventory_item_div(item) {
   return newDiv;
 }
 
+// Selects the div containing the given item and return it
+function ga_select_item_div(item, parentElement) {
+  var divToSelect = null;
+  for (var i = 0; i < parentElement.children.length; i++) {
+    // Unselect everything
+    var itemDiv = parentElement.children[i];
+    itemDiv.className = "inventoryItem";
+    // Get the div for the given item
+    if (item == itemDiv.item) {
+      divToSelect = itemDiv;
+    }
+  }
+
+  if (divToSelect) {
+    divToSelect.className = "inventoryItemSelected";
+  }
+
+  return divToSelect;
+}
+
 // Adds the given item to the inventory GUI
 function ga_add_inventory_item(item) {
   if (!item) {
@@ -111,8 +132,6 @@ function ga_on_inventory_item_click() {
 
 // Selects the given item in the inventory
 function ga_inventory_select_item(item) {
-  ga_inventory_selected_item = item;
-
   if (!item) {
     document.getElementById("guiInventoryItemName").innerHTML = "";
     document.getElementById("guiInventoryItemDesc").innerHTML = "";
@@ -121,22 +140,13 @@ function ga_inventory_select_item(item) {
     return;
   }
 
-  var inventoryItemList = document.getElementById("guiInventoryItemList");
-  var divToSelect = null;
-  for (var i = 0; i < inventoryItemList.children.length; i++) {
-    // Unselect everything
-    var itemDiv = inventoryItemList.children[i];
-    itemDiv.className = "inventoryItem";
-    // Get the div for the given item
-    if (item == itemDiv.item) {
-      divToSelect = itemDiv;
-    }
-  }
+  var divToSelect = ga_select_item_div(item, document.getElementById("guiInventoryItemList"))
 
   if (!divToSelect) {
     return;
   }
 
+  ga_inventory_selected_item = item;
   document.getElementById("guiInventoryButtonReload").disabled = !(item.isWeapon() && item.isStackable() && item.count < item.maxCount);
   document.getElementById("guiInventoryButtonExtract").disabled = !(item.isWeapon() && item.isStackable() && item.count > 0);
   document.getElementById("guiInventoryButtonEquip").disabled = !item.isWeapon();
@@ -211,6 +221,7 @@ function ga_open_loot_dialog(inventory1, inventory2) {
   ga_loot_inventory_1 = inventory1;
   ga_loot_inventory_2 = inventory2;
   ga_update_loot_dialog();
+  ga_loot_selected_item = null;
 }
 
 // Closes the loot dialog
@@ -244,11 +255,42 @@ function ga_add_loot_item(item, inv_num) {
   }
 
   var newDiv = ga_create_inventory_item_div(item);
-  //newDiv.onclick = ga_on_inventory_item_click;
+  newDiv.onclick = ga_on_loot_item_click;
   if (inv_num == 1) {
     document.getElementById('guiLootItemList1').appendChild(newDiv);
   } else {
     document.getElementById('guiLootItemList2').appendChild(newDiv);
+  }
+}
+
+// Handles a click on an item in the loot dialog
+function ga_on_loot_item_click() {
+  ga_loot_select_item(this.item);
+}
+
+// Selects the given item in the inventory
+function ga_loot_select_item(item) {
+  var divToSelect1 = ga_select_item_div(item, document.getElementById("guiLootItemList1"));
+  var divToSelect2 = ga_select_item_div(item, document.getElementById("guiLootItemList2"));
+  if (!divToSelect1 && !divToSelect2) {
+    return;
+  }
+  ga_loot_selected_item = item;
+}
+
+// Transfers loot from right panel to the left
+function ga_loot_transfer_to_1() {
+  if (ga_loot_inventory_2.find(ga_loot_selected_item)) {
+    ga_loot_inventory_2.transfer(ga_loot_selected_item, ga_loot_inventory_1);
+    ga_update_loot_dialog();
+  }
+}
+
+// Transfers loot from left panel to the right
+function ga_loot_transfer_to_2() {
+  if (ga_loot_inventory_1.find(ga_loot_selected_item)) {
+    ga_loot_inventory_1.transfer(ga_loot_selected_item, ga_loot_inventory_2);
+    ga_update_loot_dialog();
   }
 }
 

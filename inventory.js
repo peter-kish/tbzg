@@ -246,6 +246,23 @@ Inventory.prototype.consume = function (itemName, count) {
   return (totalConsumed == count);
 };
 
+// Transfers the given item from the current inventory to the given inventory
+Inventory.prototype.transfer = function (item, inventory) {
+  if (!item || !inventory) {
+    return false;
+  }
+
+  if (!this.find(item)) {
+    return false;
+  }
+
+  if (inventory.addItem(item)) {
+    this.removeItem(item);
+  }
+
+  return true;
+};
+
 
 // Inventory item button class constructor
 var GuiInventoryItemButton = function (rect, item, onClickCallback) {

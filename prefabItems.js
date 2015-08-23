@@ -47,6 +47,7 @@ PrefabItemSet.prototype.initPrefabItems = function () {
     this.parentSim.resourceManager.getResource("item_fists"),
     new Damage(DMG_MELEE, 5, true), 1, 1, 1);
   newItem.discardable = false;
+  newItem.description = "Fists of a zombie."
   this.addPrefabItem(newItem);
 };
 
