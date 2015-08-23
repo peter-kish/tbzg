@@ -24,7 +24,16 @@ button.center {
 
 div.dialog {
   background-color: black;
-  border: 1px solid #ffffff
+  border: 1px solid #ffffff;
+  margin: auto;
+}
+
+div.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .left {
@@ -51,7 +60,7 @@ div.dialog {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-p.inventoryTitle {
+p.dialogTitle {
   text-align: center;
   font-weight: bold;
   font-size: 16px;
@@ -67,20 +76,6 @@ p.inventoryItemStat {
   position: fixed;
   top: 0;
   right: 0;
-}
-
-#guiInventoryOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-#guiInventory {
-  /*width: 320px;*/
-  /*height: 320px;*/
-  margin: auto;
 }
 
 #guiInventoryItemStats {

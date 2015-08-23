@@ -53,12 +53,12 @@
 		<div id="guiRangedSlot" style="visibility: hidden;">
 		</div>
 
-		<div id="guiInventoryOverlay" style="visibility: hidden;">
+		<div id="guiInventoryOverlay" class="overlay" style="visibility: hidden;">
 			<div id="guiInventory" class="dialog">
-				<p class="inventoryTitle">Inventory WIP</p>
+				<p class="dialogTitle">Inventory WIP</p>
 				<div id="guiInventoryItemList" class="left"> </div>
 				<div id="guiInventoryItemStats" class="left">
-					<p id="guiInventoryItemName" class="inventoryTitle"></p>
+					<p id="guiInventoryItemName" class="dialogTitle"></p>
 					<p id="guiInventoryItemDamage" class="inventoryItemStat"></p>
 					<p id="guiInventoryItemCount" class="inventoryItemStat"></p>
 					<p id="guiInventoryItemDesc" class="inventoryItemStat"></p>
@@ -71,6 +71,22 @@
 				</div>
 				<button type="button" class="center" onclick="ga_close_inventory()">
 					Close Inventory
+				</button>
+			</div>
+		</div>
+
+		<div id="guiLootDialogOverlay" class="overlay" style="visibility: hidden;">
+			<div id="guiLootDialog" class="dialog">
+				<p class="dialogTitle">Loot</p>
+				<div id="guiLootItemList1" class="left"> </div>
+				<div class="left">
+					<button type="button"> <<< </button>
+					<button type="button"> >>> </button>
+				</div>
+				<div id="guiLootItemList2" class="left"> </div>
+				<div style="clear: both;"></div>
+				<button type="button" class="center" onclick="ga_close_loot_dialog()">
+					Ok
 				</button>
 			</div>
 		</div>

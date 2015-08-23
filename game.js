@@ -20,6 +20,7 @@ var Game = function (scrWidth, scrHeight) {
   this.guiOpenInventory = null;
   this.guiCloseInventory = null;
   this.guiIsInventoryOpen = null;
+  this.guiLoot = null;
   this.guiUpdate = null;
 }
 

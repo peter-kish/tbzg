@@ -1,6 +1,9 @@
 // Holds the currently selected item in the inventory
 var ga_inventory_selected_item = null;
 
+var ga_loot_inventory_1 = null;
+var ga_loot_inventory_2 = null;
+
 // Removes all the element children
 function ga_clear_children(element) {
   while (element.firstChild) {
@@ -170,22 +173,20 @@ function ga_update_inventory() {
 // Shows the inventory GUI
 function ga_open_inventory() {
   ga_update_inventory();
-  document.getElementById('guiToolbar').style.visibility='hidden';
-  document.getElementById('guiMeleeSlot').style.visibility='hidden';
-  document.getElementById('guiRangedSlot').style.visibility='hidden';
+  ga_set_HUD_visibility(false);
   document.getElementById('guiInventoryOverlay').style.visibility='visible';
 
-  document.getElementById("guiInventoryItemName").innerHTML = "";
-  document.getElementById("guiInventoryItemDesc").innerHTML = "";
-  document.getElementById("guiInventoryItemCount").innerHTML = "";
-  document.getElementById("guiInventoryItemDamage").innerHTML = "";
+  if (!ga_inventory_selected_item) {
+    document.getElementById("guiInventoryItemName").innerHTML = "";
+    document.getElementById("guiInventoryItemDesc").innerHTML = "";
+    document.getElementById("guiInventoryItemCount").innerHTML = "";
+    document.getElementById("guiInventoryItemDamage").innerHTML = "";
+  }
 }
 
 // Hides the inventory GUI
 function ga_close_inventory() {
-  document.getElementById('guiToolbar').style.visibility='visible';
-  document.getElementById('guiMeleeSlot').style.visibility='visible';
-  document.getElementById('guiRangedSlot').style.visibility='visible';
+  ga_set_HUD_visibility(true);
   document.getElementById('guiInventoryOverlay').style.visibility='hidden';
 }
 
@@ -193,6 +194,68 @@ function ga_close_inventory() {
 function ga_is_inventory_open() {
   var element = document.getElementById('guiInventoryOverlay');
   return element.style.visibility=='visible';
+}
+
+// Sets the HUD visibility
+function ga_set_HUD_visibility(visible) {
+  document.getElementById('guiToolbar').style.visibility=visible?'visible':'hidden';
+  document.getElementById('guiMeleeSlot').style.visibility=visible?'visible':'hidden';
+  document.getElementById('guiRangedSlot').style.visibility=visible?'visible':'hidden';
+}
+
+// Opens the loot dialog
+function ga_open_loot_dialog(inventory1, inventory2) {
+  ga_close_inventory();
+  ga_set_HUD_visibility(false);
+  document.getElementById('guiLootDialogOverlay').style.visibility='visible';
+  ga_loot_inventory_1 = inventory1;
+  ga_loot_inventory_2 = inventory2;
+  ga_update_loot_dialog();
+}
+
+// Closes the loot dialog
+function ga_close_loot_dialog() {
+  document.getElementById('guiLootDialogOverlay').style.visibility='hidden';
+  ga_set_HUD_visibility(true);
+  ga_loot_inventory_1 = null;
+  ga_loot_inventory_2 = null;
+}
+
+// Updates the loot dialog
+function ga_update_loot_dialog() {
+  ga_clear_loot_dialog();
+
+  if (ga_loot_inventory_1 && ga_loot_inventory_2) {
+    var item_array = ga_loot_inventory_1.items;
+    for (var i = 0; i < item_array.length; i++) {
+      ga_add_loot_item(item_array[i], 1);
+    }
+    item_array = ga_loot_inventory_2.items;
+    for (var i = 0; i < item_array.length; i++) {
+      ga_add_loot_item(item_array[i], 2);
+    }
+  }
+}
+
+// Adds the given item to the loot dialog
+function ga_add_loot_item(item, inv_num) {
+  if (!item) {
+    return;
+  }
+
+  var newDiv = ga_create_inventory_item_div(item);
+  //newDiv.onclick = ga_on_inventory_item_click;
+  if (inv_num == 1) {
+    document.getElementById('guiLootItemList1').appendChild(newDiv);
+  } else {
+    document.getElementById('guiLootItemList2').appendChild(newDiv);
+  }
+}
+
+// Clears all elements in the loot dialog
+function ga_clear_loot_dialog() {
+  ga_clear_children(document.getElementById('guiLootItemList1'));
+  ga_clear_children(document.getElementById('guiLootItemList2'));
 }
 
 // Updates the weapon icons
@@ -214,6 +277,7 @@ function ga_update_weapon_icons() {
 function ga_update_gui() {
   ga_update_inventory();
   ga_update_weapon_icons();
+  ga_update_loot_dialog();
 }
 
 // Initialize the GUI
@@ -222,6 +286,7 @@ function ga_onload() {
   getGameInstance().guiCloseInventory = ga_close_inventory;
   getGameInstance().guiIsInventoryOpen = ga_is_inventory_open;
   getGameInstance().guiUpdate = ga_update_gui;
+  getGameInstance().guiLoot = ga_open_loot_dialog;
   ga_update_weapon_icons();
   ga_close_inventory();
 }

@@ -449,6 +449,10 @@ Simulation.prototype.onFieldClick = function (position) {
   if (enemy && this.isVisible(position)) {
     if (enemy.isAlive()) {
       this.player.rangedAttack(position, this.player.getDirection(position));
+    } else {
+      if (this.player.position.chebyshevDistance(enemy.position) == 1) {
+        if (getGameInstance().guiLoot) getGameInstance().guiLoot(enemy.inventory, this.player.inventory);
+      }
     }
   }
 };
