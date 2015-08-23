@@ -11,14 +11,14 @@ PrefabItemSet.prototype.initPrefabItems = function () {
 
   newItem = new WeaponInventoryItem("Fists",
     this.parentSim.resourceManager.getResource("item_fists"),
-    new Damage(DMG_MELEE, 1, true), 1, 1);
+    new Damage(DMG_MELEE, 1, true), 1, 1, 1);
   newItem.description = "Your bare fists."
   newItem.discardable = false;
   this.addPrefabItem(newItem);
 
   newItem = new WeaponInventoryItem("Sawed-off shotgun",
     this.parentSim.resourceManager.getResource("item_shotgun"),
-    new Damage(DMG_BULLET, 5, false), 2, 2);
+    new Damage(DMG_BULLET, 5, false), 5, 2, 2);
   newItem.slowReload = true;
   newItem.description = "A 2 shot shotgun.";
   newItem.ammoName = "Shotgun shells"
@@ -26,7 +26,7 @@ PrefabItemSet.prototype.initPrefabItems = function () {
 
   newItem = new WeaponInventoryItem("Handgun",
     this.parentSim.resourceManager.getResource("item_handgun"),
-    new Damage(DMG_BULLET, 3, false), 15, 15);
+    new Damage(DMG_BULLET, 3, false), 5, 15, 15);
   newItem.description = "A 9mm handgun.";
   newItem.ammoName = "9mm"
   this.addPrefabItem(newItem);
@@ -45,7 +45,7 @@ PrefabItemSet.prototype.initPrefabItems = function () {
 
   var newItem = new WeaponInventoryItem("Zombie Fists",
     this.parentSim.resourceManager.getResource("item_fists"),
-    new Damage(DMG_MELEE, 5, true), 1, 1);
+    new Damage(DMG_MELEE, 5, true), 1, 1, 1);
   newItem.discardable = false;
   this.addPrefabItem(newItem);
 };

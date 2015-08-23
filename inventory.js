@@ -82,13 +82,14 @@ InventoryItem.prototype.merge = function (item) {
 };
 
 // WeaponInventoryItem class constructor
-var WeaponInventoryItem = function (name, image, damage, ammo, maxAmmo) {
+var WeaponInventoryItem = function (name, image, damage, range, ammo, maxAmmo) {
   InventoryItem.prototype.constructor.call(this, name, image);
   this.damage = damage;
   this.count = ammo;
   this.maxCount = maxAmmo;
   this.ammoName = null;
   this.slowReload = false;
+  this.range = range;
 }
 
 // WeaponInventoryItem class inherits the InventoryItem class
@@ -100,6 +101,7 @@ WeaponInventoryItem.prototype.set = function (weapon) {
   this.damage = weapon.damage;
   this.ammoName = weapon.ammoName;
   this.slowReload = weapon.slowReload;
+  this.range = weapon.range;
 };
 
 // Clones the weapon

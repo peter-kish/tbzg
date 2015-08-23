@@ -223,6 +223,14 @@ Character.prototype.rangedAttack = function (position, direction) {
     if (!character)
       return false;
 
+    if (!this.parentSim.testVisibility(this.position, position)) {
+      return false;
+    }
+
+    if (this.position.chebyshevDistance(position) > this.rangedSlot.range) {
+      return false;
+    }
+
     if (!this.rangedSlot.consume(1)) {
       return false;
     }

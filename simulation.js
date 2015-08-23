@@ -447,7 +447,7 @@ Simulation.prototype.onWindowResize = function (newWidth, newHeight) {
 Simulation.prototype.onFieldClick = function (position) {
   var enemy = this.getEnemyAt(position);
   if (enemy && this.isVisible(position)) {
-    if (enemy.isAlive() && enemy.position.chebyshevDistance(this.player.position) < 5) {
+    if (enemy.isAlive()) {
       this.player.rangedAttack(position, this.player.getDirection(position));
     }
   }
