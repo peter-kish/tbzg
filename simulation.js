@@ -53,7 +53,6 @@ var Simulation = function() {
   this.camera = new Rect2d(0, 0, canvas.width, canvas.height);
   this.mapFieldSize = SIM_MAP_FIELD_SIZE;
   this.input = new Input();
-  //this.input.addHandler(inputHandler, this);
   this.turnNumber = 0;
   this.prefabItems = new PrefabItemSet(this);
 
@@ -72,30 +71,6 @@ var Simulation = function() {
 
   this.cameraFocus(this.player.getWorldPosition());
   this.updateVisibilityMap();
-}
-
-// Main input handler
-function inputHandler(input, sim, x, y) {
-  switch (input) {
-  case INPUT_LEFT:
-    sim.player.walkAttack(CHR_DIR_LEFT);
-    break;
-  case INPUT_UP:
-    sim.player.walkAttack(CHR_DIR_UP);
-    break;
-  case INPUT_RIGHT:
-    sim.player.walkAttack(CHR_DIR_RIGHT);
-    break;
-  case INPUT_DOWN:
-    sim.player.walkAttack(CHR_DIR_DOWN);
-    break;
-  case INPUT_SKIP:
-    sim.player.doNothing();
-    break;
-  case INPUT_CLICK:
-    sim.onFieldClick(sim.getMapCoords(new Vector2d(x + sim.camera.x, y + sim.camera.y)));
-    break;
-  }
 }
 
 // Update the simulation

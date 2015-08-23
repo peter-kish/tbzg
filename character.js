@@ -236,6 +236,7 @@ Character.prototype.rangedAttack = function (position, direction) {
     this.stateMachine.setState(CHR_ST_ATTACK, CHR_ATTACK_SPEED);
     this.playAnimation(this.animationSet.attack_ranged);
     this.setImage(this.animationSet.idle_ranged);
+    getGameInstance().guiUpdate();
     return true;
   }
   return false;
@@ -273,6 +274,8 @@ Character.prototype.reload = function (item) {
         }
       }
       this.stateMachine.setState(CHR_ST_RELOAD, CHR_RELOAD_SPEED);
+
+      getGameInstance().guiUpdate();
       return true;
     }
   }

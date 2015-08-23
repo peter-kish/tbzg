@@ -174,7 +174,8 @@ function ga_close_inventory() {
 }
 
 function ga_is_inventory_open() {
-  return document.getElementById('guiInventoryOverlay').style.visibility=='visible';
+  var element = document.getElementById('guiInventoryOverlay');
+  return element.style.visibility=='visible';
 }
 
 function ga_update_weapon_icons() {
@@ -197,27 +198,10 @@ function ga_update_gui() {
 }
 
 function ga_onload() {
-  getGameInstance().simulation.input.addHandler(guiInputHandler);
+  getGameInstance().guiOpenInventory = ga_open_inventory;
+  getGameInstance().guiCloseInventory = ga_close_inventory;
+  getGameInstance().guiIsInventoryOpen = ga_is_inventory_open;
+  getGameInstance().guiUpdate = ga_update_gui;
   ga_update_weapon_icons();
   ga_close_inventory();
-  document.getElementById("myCanvas").addEventListener('click', ga_on_canvas_click, false);
-}
-
-function ga_on_canvas_click(e) {
-  ga_update_gui();
-}
-
-function guiInputHandler(input, game, x, y) {
-  switch (input) {
-  case INPUT_RELOAD:
-    ga_update_gui();
-    break;
-  case INPUT_INVENTORY:
-    if (ga_is_inventory_open()) {
-      ga_close_inventory();
-    } else {
-      ga_open_inventory();
-    }
-    break;
-  }
 }

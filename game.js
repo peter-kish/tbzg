@@ -15,6 +15,12 @@ var Game = function (scrWidth, scrHeight) {
   this.simulation.input.addHandler(inputHandler, this);
 
   game_instance = this;
+
+  // Needed for communication with some sort of a GUI
+  this.guiOpenInventory = null;
+  this.guiCloseInventory = null;
+  this.guiIsInventoryOpen = null;
+  this.guiUpdate = null;
 }
 
 // Render the game
@@ -183,17 +189,17 @@ function handleWeaponIcon(guiElement) {
 
 // Opens the inventory screen
 Game.prototype.openInventory = function () {
-  // TODO: Check if this needs to be removed
+  if (game.guiOpenInventory) game.guiOpenInventory();
 };
 
 // Closes the inventory screen
 Game.prototype.closeInventory = function () {
-  // TODO: Check if this needs to be removed
+  if (game.guiCloseInventory) game.guiCloseInventory();
 };
 
 // Checks if the inventory screen is open
 Game.prototype.isInventoryOpen = function () {
-  // TODO: Check if this needs to be removed
+  if (game.guiIsInventoryOpen) return game.guiIsInventoryOpen();
 };
 
 // Input handler
