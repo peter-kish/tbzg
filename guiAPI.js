@@ -240,11 +240,13 @@ function ga_update_loot_dialog() {
   if (ga_loot_inventory_1 && ga_loot_inventory_2) {
     var item_array = ga_loot_inventory_1.items;
     for (var i = 0; i < item_array.length; i++) {
-      ga_add_loot_item(item_array[i], 1);
+      if (item_array[i].discardable)
+        ga_add_loot_item(item_array[i], 1);
     }
     item_array = ga_loot_inventory_2.items;
     for (var i = 0; i < item_array.length; i++) {
-      ga_add_loot_item(item_array[i], 2);
+      if (item_array[i].discardable)
+        ga_add_loot_item(item_array[i], 2);
     }
   }
 }
