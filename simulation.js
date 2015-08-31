@@ -424,7 +424,7 @@ Simulation.prototype.loadResources = function () {
 
   this.resourceManager.loadImage("images/zombie_idle_melee.png", "zombie_idle_melee");
   this.resourceManager.loadAnimation("images/zombie_attack_melee.png", "zombie_attack_melee", 32, 32, CHR_ATTACK_SPEED);
-  this.resourceManager.loadAnimation("images/zombie_die.png", "zombie_die", 32, 32, 300);
+  this.resourceManager.loadAnimation("images/zombie_die.png", "zombie_die", 40, 32, 300);
   this.resourceManager.loadImage("images/zombie_dead.png", "zombie_dead");
 
   this.resourceManager.loadImage("images/gui/button_skip_turn.png", "button_skip_turn");

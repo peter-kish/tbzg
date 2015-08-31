@@ -459,7 +459,7 @@ AI.prototype.render = function () {
     drawLine(screenPosition.x+16, screenPosition.y+16, targetScreenPosition.x+16, targetScreenPosition.y+16, 1, "#FFFFFF");
   }*/
   if (this.hitPoints > 0)
-    drawProgressBar(screenPosition.x, screenPosition.y + 32, 32, 4, this.hitPoints / this.maxHitPoints, '#00FF00');
+    drawProgressBar(screenPosition.x, screenPosition.y + 32, 32, 4, this.hitPoints / this.maxHitPoints, '#6daa2c');
 };
 
 // Walk closer to the given parameters
