@@ -136,7 +136,8 @@ WeaponInventoryItem.prototype.reload = function (amount) {
 };
 
 // Inventory class constructor
-var Inventory = function (capacity) {
+var Inventory = function (name, capacity) {
+  this.name = name;
   this.items = [];
   if (capacity) {
     this.capacity = capacity;

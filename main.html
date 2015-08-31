@@ -56,21 +56,23 @@
 		<div id="guiInventoryOverlay" class="overlay" style="visibility: hidden;">
 			<div id="guiInventory" class="dialog">
 				<p class="dialogTitle">Inventory WIP</p>
-				<div id="guiInventoryItemList" class="left itemlist"> </div>
-				<div id="guiInventoryItemStats" class="left">
-					<p id="guiInventoryItemName" class="dialogTitle"></p>
-					<p id="guiInventoryItemDamage" class="inventoryItemStat"></p>
-					<p id="guiInventoryItemCount" class="inventoryItemStat"></p>
-					<p id="guiInventoryItemDesc" class="inventoryItemStat"></p>
+				<div class="center">
+					<div id="guiInventoryItemList" class="left itemlist"> </div>
+					<div id="guiInventoryItemStats" class="left">
+						<p id="guiInventoryItemName" class="dialogTitle"></p>
+						<p id="guiInventoryItemDamage" class="inventoryItemStat"></p>
+						<p id="guiInventoryItemCount" class="inventoryItemStat"></p>
+						<p id="guiInventoryItemDesc" class="inventoryItemStat"></p>
+					</div>
+					<div style="clear: both;">
+						<button id="guiInventoryButtonReload" type="button" class="invButton" onclick="ga_reload_selected_item()">Reload</button>
+						<button id="guiInventoryButtonExtract" type="button" class="invButton" onclick="ga_extract_selected_item()">Extract Ammo</button>
+						<button id="guiInventoryButtonEquip" type="button" class="invButton" onclick="ga_equip_selected_item()">Equip</button>
+						<button id="guiInventoryButtonDiscard" type="button" class="invButton" onclick="ga_discard_selected_item()">Discard</button>
+					</div>
 				</div>
-				<div style="clear: both;">
-					<button id="guiInventoryButtonReload" type="button" onclick="ga_reload_selected_item()">Reload</button>
-					<button id="guiInventoryButtonExtract" type="button" onclick="ga_extract_selected_item()">Extract Ammo</button>
-					<button id="guiInventoryButtonEquip" type="button" onclick="ga_equip_selected_item()">Equip</button>
-					<button id="guiInventoryButtonDiscard" type="button" onclick="ga_discard_selected_item()">Discard</button>
-				</div>
-				<button type="button" class="center" onclick="ga_close_inventory()">
-					Close Inventory
+				<button type="button" class="center invButton" onclick="ga_close_inventory()">
+					Close
 				</button>
 			</div>
 		</div>
@@ -78,14 +80,22 @@
 		<div id="guiLootDialogOverlay" class="overlay" style="visibility: hidden;">
 			<div id="guiLootDialog" class="dialog">
 				<p class="dialogTitle">Loot</p>
-				<div id="guiLootItemList1" class="left itemlist"> </div>
-				<div class="left">
-					<button type="button" onclick="ga_loot_transfer_to_1();"> <<< </button>
-					<button type="button" onclick="ga_loot_transfer_to_2();"> >>> </button>
+				<div class="center">
+					<div class="left">
+						<p id="guiLootList1Name" class="dialogSubTitle">text1</p>
+						<div id="guiLootItemList1" class="itemlist"> </div>
+					</div>
+					<div class="left verticalButtonStack">
+						<button type="button" class="invButton" onclick="ga_loot_transfer_to_1();"> <<< </button>
+						<button type="button" class="invButton" onclick="ga_loot_transfer_to_2();"> >>> </button>
+					</div>
+					<div class="left">
+						<p id="guiLootList2Name" class="dialogSubTitle">text2</p>
+						<div id="guiLootItemList2" class="itemlist"> </div>
+					</div>
+					<div style="clear: both;"></div>
 				</div>
-				<div id="guiLootItemList2" class="left itemlist"> </div>
-				<div style="clear: both;"></div>
-				<button type="button" class="center" onclick="ga_close_loot_dialog()">
+				<button type="button" class="center invButton" onclick="ga_close_loot_dialog()">
 					Ok
 				</button>
 			</div>

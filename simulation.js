@@ -329,6 +329,7 @@ Simulation.prototype.createPlayer = function (position) {
   this.player.inventory.addItem(this.prefabItems.getPrefabItemInstance("Handgun"));
   this.player.inventory.addItem(this.prefabItems.getPrefabItemInstance("9mm"));
   this.player.inventory.addItem(shotgunAmmo);
+  this.player.inventory.name = "Backpack";
   this.player.equip(meleeWeapon);
   this.player.equip(rangedWeapon);
 
@@ -342,6 +343,7 @@ Simulation.prototype.createEnemy = function (position) {
   var newAI = new AI(this, position);
   var meleeWeapon = this.prefabItems.getPrefabItemInstance("Zombie Fists");
   newAI.inventory.addItem(meleeWeapon);
+  newAI.inventory.name = "Zombie";
   newAI.equip(meleeWeapon);
   newAI.rangedSlot = null;
   newAI.animationSet = enemyAnimationSet;

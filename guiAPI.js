@@ -238,6 +238,8 @@ function ga_update_loot_dialog() {
   ga_clear_loot_dialog();
 
   if (ga_loot_inventory_1 && ga_loot_inventory_2) {
+    ga_set_loot_inv_name(ga_loot_inventory_1.name, 1);
+    ga_set_loot_inv_name(ga_loot_inventory_2.name, 2);
     var item_array = ga_loot_inventory_1.items;
     for (var i = 0; i < item_array.length; i++) {
       if (item_array[i].discardable)
@@ -263,6 +265,15 @@ function ga_add_loot_item(item, inv_num) {
     document.getElementById('guiLootItemList1').appendChild(newDiv);
   } else {
     document.getElementById('guiLootItemList2').appendChild(newDiv);
+  }
+}
+
+// Sets the name of the inventory being looted
+function ga_set_loot_inv_name(name, inv_num) {
+  if (inv_num == 1) {
+    document.getElementById('guiLootList1Name').innerHTML = name;
+  } else {
+    document.getElementById('guiLootList2Name').innerHTML = name;
   }
 }
 

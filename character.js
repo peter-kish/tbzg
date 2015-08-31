@@ -29,7 +29,7 @@ var Character = function(parentSim, position) {
   this.animationSet = null;
   this.torsoSprite = new Sprite();
   this.legsSprite = new Sprite();
-  this.inventory = new Inventory(10);
+  this.inventory = new Inventory("", 10);
   this.meleeSlot = null;
   this.rangedSlot = null;
 }
